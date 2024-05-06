@@ -1,7 +1,7 @@
 package org.egov.im.consumer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashMap;
+
 import org.egov.im.service.MigrationService;
 import org.egov.im.util.IMConstants;
 import org.egov.im.web.models.imV1.ServiceResponse;
@@ -13,7 +13,9 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 @ConditionalOnProperty(
         value="migration.enabled",

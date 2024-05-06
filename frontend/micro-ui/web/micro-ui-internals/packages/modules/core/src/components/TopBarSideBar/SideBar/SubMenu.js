@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import ReactTooltip from "react-tooltip";
 
 const SubMenu = ({ item }) => {
-  console.log("itemss", item)
+ // console.log("itemss", item)
   const [subnav, setSubnav] = useState(false);
   const location = useLocation();
   const { pathname } = location;

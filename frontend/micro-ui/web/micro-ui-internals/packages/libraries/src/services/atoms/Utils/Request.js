@@ -69,7 +69,7 @@ export const Request = async ({
   reqTimestamp = false,
   plainAccessRequest = null
 }) => {
-  console.log("ur1", url)
+ // console.log("ur1", url)
   if (method.toUpperCase() === "POST") {
     const ts = new Date().getTime();
     data.RequestInfo = {
@@ -90,7 +90,7 @@ export const Request = async ({
     if (reqTimestamp) {
       data.RequestInfo = { ...data.RequestInfo, ts: Number(ts) };
     }
-console.log("url23", url)
+//console.log("url23", url)
     /* 
     Feature :: Privacy
     

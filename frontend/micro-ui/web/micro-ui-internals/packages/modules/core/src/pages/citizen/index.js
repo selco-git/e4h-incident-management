@@ -67,7 +67,7 @@ const Home = ({
       },
     }
   );
-  console.log("linkdata", linkData)
+  //console.log("linkdata", linkData)
 
   const classname = "";
   const { t } = useTranslation();

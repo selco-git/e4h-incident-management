@@ -12,8 +12,8 @@ export const Complaint = {
   }) => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     let mobileNumber = JSON.parse(sessionStorage.getItem("Digit.User"))?.value?.info?.mobileNumber;
-    console.log("citycode, ", cityCode)
-    console.log("mbl",mobileNumber)
+   // console.log("citycode, ", cityCode)
+   // console.log("mbl",mobileNumber)
     const defaultData = {
       incident: {
         district: district,

@@ -328,13 +328,13 @@ export const WorkflowService = {
       }
     
    
-    console.log("workflow", workflow)
+   //// console.log("workflow", workflow)
     const applicationProcessInstance = cloneDeep(workflow?.ProcessInstances);
     const getLocationDetails = window.location.href.includes("/obps/") || window.location.href.includes("noc/inbox");
     const moduleCodeData = "IM"
     console.log("modulecode", moduleCodeData)
     const businessServiceResponse = (await Digit.WorkflowService.init(tenantId, moduleCodeData))?.BusinessServices[0]?.states;
-    console.log("busre", businessServiceResponse)
+    //console.log("busre", businessServiceResponse)
     if (workflow && workflow.ProcessInstances) {
       const processInstances = workflow.ProcessInstances;
       const nextStates = processInstances[0]?.nextActions.map((action) => ({ action: action?.action, nextState: processInstances[0]?.state.uuid }));

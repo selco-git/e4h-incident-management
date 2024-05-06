@@ -224,6 +224,7 @@ export const ComplaintDetails = (props) => {
   const workflowDetails = Digit.Hooks.useWorkflowDetails({ tenantId, id, moduleCode: "PGR", role: "EMPLOYEE" });
   console.log("wff", workflowDetails)
   const [imagesToShowBelowComplaintDetails, setImagesToShowBelowComplaintDetails] = useState([])
+  console.log("imagesToShowBelowComplaintDetails", imagesToShowBelowComplaintDetails)
   
   // RAIN-5692 PGR : GRO is assigning complaint, Selecting employee and assign. Its not getting assigned.
   // Fix for next action  assignee dropdown issue
@@ -236,8 +237,10 @@ export const ComplaintDetails = (props) => {
     if(workflowDetails){
       const {data:{timeline: complaintTimelineData}={}} = workflowDetails
       if(complaintTimelineData){
+        console.log("complaintTimelineData", complaintTimelineData)
         const actionByCitizenOnComplaintCreation = complaintTimelineData?.find( e => e?.performedAction === "APPLY")
         const { thumbnailsToShow } = actionByCitizenOnComplaintCreation
+        console.log("thumbs666", thumbnailsToShow)
         thumbnailsToShow ? setImagesToShowBelowComplaintDetails(thumbnailsToShow) : null
       }
     }

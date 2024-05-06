@@ -8,7 +8,7 @@ import _, { findIndex } from "lodash";
 const EmployeeSideBar = () => {
   const sidebarRef = useRef(null);
   const { isLoading, data } = Digit.Hooks.useAccessControl();
-  console.log("data", data)
+ // console.log("data", data)
   const [search, setSearch] = useState("");
   const { t } = useTranslation();
   useEffect(() => {
@@ -51,7 +51,7 @@ let configEmployeeSideBar1 = {};
     .filter((e) => e.url === "url"&& e.serviceCode==="PGR")
     .forEach((item) => {
       let index = item.path.split(".")[0];
-      console.log("index", index)
+     // console.log("index", index)
       if (search == "" && item.path !== "") {
          index = item.path.split(".")[0];
         if (index === "TradeLicense") index = "Trade License";
@@ -277,7 +277,7 @@ let configEmployeeSideBar1 = {};
   //   ]
   // };
   
-  console.log("configemp", configEmployeeSideBar, configEmployeeSideBar1)
+  //console.log("configemp", configEmployeeSideBar, configEmployeeSideBar1)
   const renderSearch = () => {
     return (
       <div className="submenu-container">

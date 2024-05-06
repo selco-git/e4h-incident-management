@@ -22,7 +22,7 @@ import { initOBPSComponents } from "@egovernments/digit-ui-module-obps";
 
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 
-import { initCustomisationComponents } from "./Customisations";
+//import { initCustomisationComponents } from "./Customisations";
 import { initCommonPTComponents } from "@egovernments/digit-ui-module-commonpt";
 import { initBillsComponents } from "@egovernments/digit-ui-module-bills";
 // import { initReportsComponents } from "@egovernments/digit-ui-module-reports";
@@ -77,7 +77,7 @@ initEngagementComponents();
 initCommonPTComponents();
 initBillsComponents();
 // initReportsComponents();
-initCustomisationComponents();
+//initCustomisationComponents();
 
 const moduleReducers = (initData) => ({
   pgr: PGRReducers(initData),

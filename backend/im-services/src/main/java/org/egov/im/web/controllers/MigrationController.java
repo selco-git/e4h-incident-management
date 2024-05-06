@@ -1,6 +1,10 @@
 package org.egov.im.web.controllers;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.Map;
+
+import javax.validation.Valid;
+
 import org.egov.im.service.MigrationService;
 import org.egov.im.web.models.imV1.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @ConditionalOnProperty(
         value="migration.enabled",

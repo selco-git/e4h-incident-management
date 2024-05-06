@@ -80,6 +80,7 @@ public class IMRepository {
             throw new CustomException("PGR_UPDATE_ERROR",
                     "TenantId length is not sufficient to replace query schema in a multi state instance");
         }
+        
         List<Incident> services =  jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
         return services;
     }

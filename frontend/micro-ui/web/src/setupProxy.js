@@ -1,6 +1,6 @@
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const createProxy = createProxyMiddleware({
-  target: process.env.REACT_APP_PROXY_URL,
+  target: "https://e4h-dev.selcofoundation.org",
   changeOrigin: true,
 });
 module.exports = function (app) {

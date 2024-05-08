@@ -8,10 +8,7 @@
     "micro-ui-internals/packages/react-components",
     "micro-ui-internals/packages/modules/common",
     "micro-ui-internals/packages/modules/core",
-   
-   
-    "micro-ui-internals/packages/modules/im"
-    
+    "micro-ui-internals/packages/modules/im" 
   ],
   "engines": {
     "node": ">=14"

@@ -1,37 +1,17 @@
-import React from "react";
 import { useQuery } from "react-query";
 import { MdmsService } from "../../services/elements/MDMS";
 
-const usePGRMDMS = {
-    ComplainClosingTime: (tenantId) =>
-    useQuery(
-      [tenantId, "PGR_COMPLAIN_IDLE_TIME"],
-      () =>
-        MdmsService.getDataByCriteria(
-          tenantId,
-          {
-            details: {
-              tenantId: tenantId,
-              moduleDetails: [
-                {
-                  moduleName: "Incident",
-                  masterDetails: [
-                    {
-                      name: "ComplainClosingTime",
-                    },
-                  ],
-                },
-              ],
-            },
-          },
-          "Incident"
-        ),
-      {
-        select: (data) =>
-         data[`Incident`].ComplainClosingTime?.[0]?.ComplainMaxIdleTime,
-      }
-     
-    ),
-};
+const useMDMS = (tenantId, moduleCode, type, config = {}, payload = []) => {
+  const queryConfig = { staleTime: Infinity, ...config };
 
-export default usePGRMDMS;
+  const _default = () => {
+    return useQuery([tenantId, moduleCode, type], () => MdmsService.getMultipleTypes(tenantId, moduleCode, type), config);
+  };
+
+  switch (type) {
+    default:
+      return _default();
+  }
+}
+
+export default useMDMS;

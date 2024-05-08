@@ -9,12 +9,7 @@
     "packages/react-components",
     "packages/modules/common",
     "packages/modules/core",
-    
-   
-    
-    
     "packages/modules/im"
-    
   ],
   "author": "Abhinav Kushwaha <abhinav.kushwaha@egovernments.org>",
   "license": "MIT",

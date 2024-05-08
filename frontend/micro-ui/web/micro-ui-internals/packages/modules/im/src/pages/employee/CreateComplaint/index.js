@@ -32,6 +32,13 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [subType, setSubType]=useState(JSON?.parse(sessionStorage.getItem("subType")) || {});
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
+  console.log("menu", menu)
+  const state = Digit.ULBService.getStateId();
+const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block","ServiceDefs"]);
+useEffect(()=>{
+  console.log("blockMenublockMenu",mdmsData)
+
+},[mdmsData])
   useEffect(() => {
       (async () => {
         setError(null);
@@ -58,6 +65,12 @@ export const CreateComplaint = ({ parentUrl }) => {
         }
       })();
     }, [file]);
+    const districtMenu=[
+      {
+        "name":"karnataka",
+        "code":"karnataka"
+      }
+    ]
   const blockMenu = [
     {
       "name": "Block1",
@@ -142,12 +155,12 @@ export const CreateComplaint = ({ parentUrl }) => {
   async function selectedHealthCentreType(value){
     setHealthCareType(value);
   }
+
   
   async function selectedBlock(value){
     setBlock(value);
   }
-  const handleDistrict = (event) => {
-    const { value } = event.target;
+  const selectedDistrict = (value) => {
     setDistrict(value);
   };
   async function selectFile(e){
@@ -165,7 +178,7 @@ export const CreateComplaint = ({ parentUrl }) => {
     if (!canSubmit) return;
     const { key } = subType;
     const complaintType = key;
-    const formData = { ...data,complaintType, block, healthCareType, healthcentre, reporterName, uploadedFile};
+    const formData = { ...data,complaintType, district, block, healthCareType, healthcentre, reporterName, uploadedFile};
     console.log("formdat", formData)
     await dispatch(createComplaint(formData));
     await client.refetchQueries(["fetchInboxData"]);
@@ -182,15 +195,10 @@ export const CreateComplaint = ({ parentUrl }) => {
         
         {
           label :t("INCIDENT_DISTRICT"),
-          type: "text",
+          type: "dropdown",
           isMandatory:true,
-          value:district,
-         
           populators:  (
-            {
-            name: "district",
-            onChange:handleDistrict,
-          }),
+            <Dropdown option={mdmsData?.Incident?.District} optionKey="name" id="district" selected={district} select={selectedDistrict}/>),
            
          },
         
@@ -199,7 +207,7 @@ export const CreateComplaint = ({ parentUrl }) => {
           isMandatory:true,
           type: "dropdown",
              populators: (
-              <Dropdown option={blockMenu} optionKey="name" id="block" selected={block} select={selectedBlock} 
+              <Dropdown option={mdmsData?.Incident?.Block} optionKey="name" id="block" selected={block} select={selectedBlock} 
              />
              
              )

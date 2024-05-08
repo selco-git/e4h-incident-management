@@ -156,7 +156,7 @@ const getModuleServiceDefsCriteria = (tenantId, moduleCode) => ({
     tenantId: tenantId,
     moduleDetails: [
       {
-        moduleName: `RAINMAKER-${moduleCode}`,
+        moduleName: `Incident`,
         masterDetails: [
           {
             name: "ServiceDefs",
@@ -1223,6 +1223,7 @@ const GetDocumentsTypes = (MdmsRes) => MdmsRes["BPA"].DocTypeMapping;
 const GetChecklist = (MdmsRes) => MdmsRes["BPA"].CheckList;
 
 const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
+  console.log("modulke", moduleCode)
   switch (type) {
     case "citymodule":
       return GetCitiesWithi18nKeys(MdmsRes, moduleCode);
@@ -1409,6 +1410,7 @@ export const MdmsService = {
   },
   getDataByCriteria: async (tenantId, mdmsDetails, moduleCode) => {
     const key = `MDMS.${tenantId}.${moduleCode}.${mdmsDetails.type}.${JSON.stringify(mdmsDetails.details)}`;
+    console.log("keyy", key)
     const inStoreValue = PersistantStorage.get(key);
     if (inStoreValue) {
       return inStoreValue;

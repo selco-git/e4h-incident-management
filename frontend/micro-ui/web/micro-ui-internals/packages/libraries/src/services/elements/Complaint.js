@@ -16,7 +16,7 @@ export const Complaint = {
    // console.log("mbl",mobileNumber)
     const defaultData = {
       incident: {
-        district: district,
+        district: district?.code,
        complaintType:complaintType,
        phcType:healthcentre?.code,
        phcSubType:healthCareType?.code,

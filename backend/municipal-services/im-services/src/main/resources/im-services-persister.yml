@@ -1,0 +1,118 @@
+serviceMaps:
+  serviceName: im-services
+  mappings:
+  - version: 1.0
+    description: Persists im service request in tables
+    fromTopic: save-im-request
+    isTransaction: true
+    queryMaps:
+
+    - query: INSERT INTO eg_incident_v2(id, tenantid, incidenttype, incidentsubtype, incidentid, additionaldetails, applicationstatus, district, block, phctype, phcsubtype, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?);
+      basePath: incident
+      jsonMaps:
+      - jsonPath: $.incident.id
+
+      - jsonPath: $.incident.tenantId
+
+      - jsonPath: $.incident.incidentType
+
+      - jsonPath: $.incident.incidentsubtype
+
+      - jsonPath: $.incident.incidentid
+
+      - jsonPath: $.incident.additionalDetail
+        type: JSON
+        dbType: JSONB
+
+      - jsonPath: $.incident.applicationStatus
+
+      - jsonPath: $.incident.district
+
+      - jsonPath: $.incident.block
+
+      - jsonPath: $.incident.phctype
+
+      - jsonPath: $.incident.phcsubttype
+
+      - jsonPath: $.incident.auditDetails.createdBy
+
+      - jsonPath: $.incident.auditDetails.createdTime
+
+      - jsonPath: $.incident.auditDetails.lastModifiedBy
+
+      - jsonPath: $.incident.auditDetails.lastModifiedTime
+
+
+  - version: 1.0
+    description: Updates im service request in tables
+    fromTopic: update-im-request
+    isTransaction: true
+    queryMaps:
+
+    - query: UPDATE eg_incident_v2 SET incidenttype=?, rating = ?,incidentid=?, description=?, accountid=?, additionaldetails=?, applicationstatus=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=?;
+      basePath: incident
+      jsonMaps:
+      - jsonPath: $.incident.incidentType
+
+      - jsonPath: $.incident.rating
+
+      - jsonPath: $.incident.incidentid
+
+      - jsonPath: $.incident.description
+
+      - jsonPath: $.incident.accountId
+
+      - jsonPath: $.incident.additionalDetail
+        type: JSON
+        dbType: JSONB
+
+      - jsonPath: $.incident.applicationStatus
+
+      - jsonPath: $.incident.auditDetails.lastModifiedBy
+
+      - jsonPath: $.incident.auditDetails.lastModifiedTime
+
+      - jsonPath: $.incident.id
+
+
+    - query: UPDATE eg_incident_address_v2 SET doorno=?, plotno=?, buildingname=?, street=?, landmark=?, city=?, pincode=?, locality=?, district=?, region=?, state=?, country=?, latitude=?, longitude=?,additionaldetails=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=?;
+      basePath: incident.address
+      jsonMaps:
+
+      - jsonPath: $.incident.address.doorNo
+
+      - jsonPath: $.incident.address.plotNo
+
+      - jsonPath: $.incident.address.buildingName
+
+      - jsonPath: $.incident.address.street
+
+      - jsonPath: $.incident.address.landmark
+
+      - jsonPath: $.incident.address.city
+
+      - jsonPath: $.incident.address.pincode
+
+      - jsonPath: $.incident.address.locality.code
+
+      - jsonPath: $.incident.address.district
+
+      - jsonPath: $.incident.address.region
+
+      - jsonPath: $.incident.address.state
+
+      - jsonPath: $.incident.address.country
+
+      - jsonPath: $.incident.address.geoLocation.latitude
+
+      - jsonPath: $.incident.address.geoLocation.longitude
+
+      - jsonPath: $.incident.address.additionDetails
+        type: JSON
+        dbType: JSONB
+
+      - jsonPath: $.incident.auditDetails.lastModifiedBy
+
+      - jsonPath: $.incident.auditDetails.lastModifiedTime
+
+      - jsonPath: $.incident.address.id

@@ -18,12 +18,12 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 
 
 import { initReceiptsComponents, ReceiptsModule } from "@egovernments/digit-ui-module-receipts";
-import { initOBPSComponents } from "@egovernments/digit-ui-module-obps";
+//import { initOBPSComponents } from "@egovernments/digit-ui-module-obps";
 
-import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
+//import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 
 //import { initCustomisationComponents } from "./Customisations";
-import { initCommonPTComponents } from "@egovernments/digit-ui-module-commonpt";
+//import { initCommonPTComponents } from "@egovernments/digit-ui-module-commonpt";
 import { initBillsComponents } from "@egovernments/digit-ui-module-bills";
 // import { initReportsComponents } from "@egovernments/digit-ui-module-reports";
 
@@ -53,15 +53,15 @@ const enabledModules = [
 ];
 window.Digit.ComponentRegistryService.setupRegistry({
   ...paymentConfigs,
-  PTModule,
-  PTLinks,
+  // PTModule,
+  // PTLinks,
   PaymentModule,
   PaymentLinks,
-  ...PTComponents,
+  //...PTComponents,
  
   HRMSModule,
-  TLModule,
-  TLLinks,
+  // TLModule,
+  // TLLinks,
   // ReceiptsModule
 });
 
@@ -70,11 +70,11 @@ initPGRComponents();
 
 
 // initReceiptsComponents();
-initOBPSComponents();
+//initOBPSComponents();
 
-initEngagementComponents();
+//initEngagementComponents();
 
-initCommonPTComponents();
+//initCommonPTComponents();
 initBillsComponents();
 // initReportsComponents();
 //initCustomisationComponents();

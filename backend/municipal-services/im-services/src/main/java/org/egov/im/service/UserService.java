@@ -2,6 +2,7 @@ package org.egov.im.service;
 
 
 import org.egov.common.contract.request.RequestInfo;
+
 import org.egov.im.config.IMConfiguration;
 import org.egov.im.util.UserUtils;
 import org.egov.im.web.models.*;
@@ -17,7 +18,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.egov.im.util.IMConstants.USERTYPE_CITIZEN;
+import static org.egov.im.util.IMConstants.USERTYPE_EMPLOYEE;
 
 @org.springframework.stereotype.Service
 public class UserService {
@@ -79,7 +80,7 @@ public class UserService {
         User userServiceResponse = null;
 
         // Search on mobile number as user name
-        UserDetailResponse userDetailResponse = searchUser(userUtils.getStateLevelTenant(tenantId),null, user.getMobileNumber());
+        UserDetailResponse userDetailResponse = searchUser(tenantId,null, user.getMobileNumber());
         if (!userDetailResponse.getUser().isEmpty()) {
             User userFromSearch = userDetailResponse.getUser().get(0);
             if(!user.getName().equalsIgnoreCase(userFromSearch.getName())){
@@ -106,7 +107,7 @@ public class UserService {
         String accountId = request.getIncident().getAccountId();
         String tenantId = request.getIncident().getTenantId();
 
-        UserDetailResponse userDetailResponse = searchUser(userUtils.getStateLevelTenant(tenantId),accountId,null);
+        UserDetailResponse userDetailResponse = searchUser(tenantId,accountId,null);
 
         if(userDetailResponse.getUser().isEmpty())
             throw new CustomException("INVALID_ACCOUNTID","No user exist for the given accountId");
@@ -170,7 +171,7 @@ public class UserService {
 
         UserSearchRequest userSearchRequest =new UserSearchRequest();
         userSearchRequest.setActive(true);
-        userSearchRequest.setUserType(USERTYPE_CITIZEN);
+        userSearchRequest.setUserType(USERTYPE_EMPLOYEE);
         userSearchRequest.setTenantId(stateLevelTenant);
 
         if(StringUtils.isEmpty(accountId) && StringUtils.isEmpty(userName))
@@ -196,7 +197,7 @@ public class UserService {
 
         UserSearchRequest userSearchRequest =new UserSearchRequest();
         userSearchRequest.setActive(true);
-        userSearchRequest.setUserType(USERTYPE_CITIZEN);
+        userSearchRequest.setUserType(USERTYPE_EMPLOYEE);
 
 
         if(!CollectionUtils.isEmpty(uuids))
@@ -226,7 +227,7 @@ public class UserService {
 
         UserSearchRequest userSearchRequest =new UserSearchRequest();
         userSearchRequest.setActive(true);
-        userSearchRequest.setUserType(USERTYPE_CITIZEN);
+        userSearchRequest.setUserType(USERTYPE_EMPLOYEE);
         userSearchRequest.setTenantId(tenantId);
         userSearchRequest.setMobileNumber(mobileNumber);
 

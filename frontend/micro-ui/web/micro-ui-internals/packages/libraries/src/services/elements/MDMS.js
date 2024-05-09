@@ -914,7 +914,7 @@ const GetEgovLocations = (MdmsRes) => {
   }));
 };
 
-const GetServiceDefs = (MdmsRes, moduleCode) => MdmsRes[`RAINMAKER-${moduleCode}`].ServiceDefs.filter((def) => def.active);
+const GetServiceDefs = (MdmsRes, moduleCode) => MdmsRes["Incident"].ServiceDefs.filter((def) => def.active);
 
 const GetSanitationType = (MdmsRes) => MdmsRes["FSM"].SanitationType.filter((type) => type.active);
 

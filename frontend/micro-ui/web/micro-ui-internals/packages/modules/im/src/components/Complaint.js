@@ -8,14 +8,15 @@ import { LOCALIZATION_KEY } from "../constants/Localization";
 // import { ConvertTimestampToDate } from "../@egovernments/digit-utils/services/date";
 
 const Complaint = ({ data, path }) => {
-  console.log("dddd", data)
-  let { serviceCode, serviceRequestId, applicationStatus } = data;
+  console.log("dddd99", data)
+  let { complaintSubType, incidentId, applicationStatus } = data;
+  console.log("ttt", complaintSubType, incidentId, applicationStatus)
 
   const history = useHistory();
   const { t } = useTranslation();
 
   const handleClick = () => {
-    history.push(`${path}/${serviceRequestId}`);
+    history.push(`${path}/${incidentId}`);
   };
 
   const closedStatus = ["RESOLVED", "REJECTED", "CLOSEDAFTERREJECTION", "CLOSEDAFTERRESOLUTION"];

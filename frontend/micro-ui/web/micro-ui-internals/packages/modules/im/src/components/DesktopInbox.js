@@ -22,7 +22,7 @@ const DesktopInbox = ({
   totalRecords,
 }) => {
   const { t } = useTranslation();
-  console.log("data", data)
+  console.log("data123", data)
   const GetCell = (value) => <span className="cell-text">{value}</span>;
   const GetSlaCell = (value) => {
     return value < 0 ? <span className="sla-cell-error">{value || ""}</span> : <span className="sla-cell-success">{value || ""}</span>;
@@ -37,7 +37,7 @@ const DesktopInbox = ({
           return (
             <div>
               <span className="link">
-                <Link to={"/digit-ui/employee/pgr/complaint/details/" + row.original["serviceRequestId"]}>{row.original["serviceRequestId"]}</Link>
+                <Link to={"/digit-ui/employee/im/complaint/details/" + row.original["incidentId"]}>{row.original["incidentId"]}</Link>
               </span>
               {/* <a onClick={() => goTo(row.row.original["serviceRequestId"])}>{row.row.original["serviceRequestId"]}</a> */}
               <br />

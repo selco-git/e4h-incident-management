@@ -4,14 +4,14 @@ import { useTranslation } from "react-i18next";
 import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg } from "@egovernments/digit-ui-react-components";
 
 const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
-  console.log("serachparams", searchParams)
   const [complaintNo, setComplaintNo] = useState(searchParams?.search?.serviceRequestId || "");
+  console.log("ccc", complaintNo)
   const [mobileNo, setMobileNo] = useState(searchParams?.search?.mobileNumber || "");
   const { register, errors, handleSubmit, reset } = useForm();
   const { t } = useTranslation();
 
   const onSubmitInput = (data) => {
-    console.log("daaa", data)
+    console.log("subdatra", data)
     if (!Object.keys(errors).filter((i) => errors[i]).length) {
       if (data.serviceRequestId !== "") {
         onSearch({ incidentId: data.serviceRequestId });
@@ -63,9 +63,9 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
                 </span>
               </div>
             )}
-            <div className="complaint-input-container">
+            <div className="complaint-input-container" style={{display:"grid"}}>
               <span className="complaint-input">
-                <Label>{t("TICKET_NUMBER")}.</Label>
+                <Label>{t("CS_COMMON_COMPLAINT_NO")}.</Label>
                 <TextInput
                   name="serviceRequestId"
                   value={complaintNo}

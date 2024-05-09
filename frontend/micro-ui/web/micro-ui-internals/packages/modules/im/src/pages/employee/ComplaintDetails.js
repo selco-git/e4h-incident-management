@@ -213,7 +213,9 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
 };
 
 export const ComplaintDetails = (props) => {
+  console.log("props", props)
   let { id } = useParams();
+  console.log("id965", id)
   const { t } = useTranslation();
   const [fullscreen, setFullscreen] = useState(false);
   const [imageZoom, setImageZoom] = useState(null);
@@ -221,7 +223,8 @@ export const ComplaintDetails = (props) => {
   const [toast, setToast] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { isLoading, complaintDetails, revalidate: revalidateComplaintDetails } = Digit.Hooks.pgr.useComplaintDetails({ tenantId, id });
-  const workflowDetails = Digit.Hooks.useWorkflowDetails({ tenantId, id, moduleCode: "PGR", role: "EMPLOYEE" });
+  console.log("cd", complaintDetails)
+  const workflowDetails = Digit.Hooks.useWorkflowDetails({ tenantId, id, moduleCode: "Incident", role: "EMPLOYEE" });
   console.log("wff", workflowDetails)
   const [imagesToShowBelowComplaintDetails, setImagesToShowBelowComplaintDetails] = useState([])
   console.log("imagesToShowBelowComplaintDetails", imagesToShowBelowComplaintDetails)

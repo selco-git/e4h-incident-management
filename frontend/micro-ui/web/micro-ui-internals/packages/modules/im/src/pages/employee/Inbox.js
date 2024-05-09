@@ -46,6 +46,7 @@ const Inbox = () => {
 
   // let complaints = Digit.Hooks.pgr.useInboxData(searchParams) || [];
   let { data: complaints, isLoading } = Digit.Hooks.pgr.useInboxData({ ...searchParams, offset: pageOffset, limit: pageSize }) ;
+  console.log("complai", complaints)
 
   let isMobile = Digit.Utils.browser.isMobile();
 

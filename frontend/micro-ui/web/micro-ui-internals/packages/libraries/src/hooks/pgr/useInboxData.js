@@ -12,95 +12,37 @@ const useInboxData = (searchParams) => {
     let serviceIds = [];
     let commonFilters = { start: 1, end: 10 };
     const { limit, offset } = searchParams;
+    console.log("sss", searchParams)
+    console.log("ccomm", commonFilters)
     let appFilters = { ...commonFilters, ...searchParams.filters.pgrQuery, ...searchParams.search, limit, offset };
     let wfFilters = { ...commonFilters, ...searchParams.filters.wfQuery };
     let complaintDetailsResponse = null;
     let combinedRes = [];
     complaintDetailsResponse = await Digit.PGRService.search(tenantId, appFilters);
-    //complaintDetailsResponse=
-   let  complaintDetailsResponse1=[
-      {
-      
-      
-        "responseInfo": {
-            "apiId": "Rainmaker",
-            "ver": null,
-            "ts": null,
-            "resMsgId": "uief87324",
-            "msgId": "1711553495063|en_IN",
-            "status": "successful"
-        },
-        "ServiceWrappers": [
-            {
-                "service": {
-                    "active": true,
-                    "citizen": {
-                        "id": 2148,
-                        "userName": "8080808000",
-                        "name": "shilpa",
-                        "type": "CITIZEN",
-                        "mobileNumber": "8080808000",
-                        "emailId": "",
-                        "roles": [
-                            {
-                                "id": null,
-                                "name": "Citizen",
-                                "code": "CITIZEN",
-                                "tenantId": "pg"
-                            }
-                        ],
-                        "tenantId": "pg",
-                        "uuid": "dda30b0a-ae2d-4f87-8b52-d1fc73ed7643",
-                        "active": true
-                    },
-                    "id": "b213dcb1-14ab-44bf-8b88-4b3791a75a01",
-                    "tenantId": "pg.citya",
-                    "incidentType": "Bug",
-                    "environmentType":"test",
-                    "serviceRequestId": "PG-IM-2024-03-27-002320",
-                    //"serviceRequestId1": "PG-IM-2024-03-27-002320",
-                    "description": "",
-                    "accountId": "dda30b0a-ae2d-4f87-8b52-d1fc73ed7643",
-                    "rating": null,
-                    "additionalDetail": {},
-                    "applicationStatus": "PENDINGFORASSIGNMENT",
-                    "source": "web",
-                    
-                    "auditDetails": {
-                        "createdBy": "55fa55f0-5348-4eef-922c-2d36c50c56e1",
-                        "lastModifiedBy": "55fa55f0-5348-4eef-922c-2d36c50c56e1",
-                        "createdTime": 1711552512424,
-                        "lastModifiedTime": 1711552512424
-                    },
-                    "priority": "LOW"
-                },
-                "workflow": {
-                    "action": "APPLY",
-                    "assignes": null,
-                    "comments": null,
-                    "verificationDocuments": null
-                }
-            }
-        ],
-      
-        "complaintsResolved": 2,
-        "averageResolutionTime": 6,
-        "complaintTypes": 13
-      },
-    ]
-   complaintDetailsResponse=complaintDetailsResponse1[0]
-    console.log("complaintDetailsResponse", complaintDetailsResponse)
-    complaintDetailsResponse.ServiceWrappers.forEach((service) => serviceIds.push(service.service.serviceRequestId));
+    console.log("complaintDetailsResponse.ServiceWrappers", complaintDetailsResponse)
+    complaintDetailsResponse.IncidentWrappers.forEach((incident) => serviceIds.push(incident.incident.incidentId));
     const serviceIdParams = serviceIds.join();
-    const workflowInstances = await Digit.WorkflowService.getByBusinessId(tenantId, serviceIdParams, wfFilters, false);
+    console.log("serviceids", serviceIds)
+    console.log("servpara", serviceIdParams)
+    console.log("wffilters", wfFilters)
+    let wfFilters1={
+      businessIds :"KA-559-002-09-05-24/000030",
+     end: 10,
+      start: 1
+    }
+    const workflowInstances = await Digit.WorkflowService.getByBusinessId(tenantId, serviceIdParams, wfFilters1, false);
+    console.log("workflow", workflowInstances)
     if (workflowInstances.ProcessInstances.length) {
       combinedRes = combineResponses(complaintDetailsResponse, workflowInstances).map((data) => ({
         ...data,
         sla: Math.round(data.sla / (24 * 60 * 60 * 1000)),
       }));
-      console.log("combres", combineResponses)
+      console.log("combinees", combinedRes)
     }
+    console.log("combinees999", combinedRes)
+   
     return combinedRes;
+   
   };
 
   const result = useQuery(["fetchInboxData", 
@@ -120,21 +62,25 @@ const mapWfBybusinessId = (wfs) => {
 };
 
 const combineResponses = (complaintDetailsResponse, workflowInstances) => {
+  console.log("comres, compl", complaintDetailsResponse)
   let wfMap = mapWfBybusinessId(workflowInstances.ProcessInstances);
+  console.log("wfmap", wfMap)
   let data = [];
-  complaintDetailsResponse.ServiceWrappers.map((complaint) => {
-    if ([complaint.service.serviceRequestId]) {
+  complaintDetailsResponse.IncidentWrappers.map((complaint) => {
+    console.log("compppp", complaint)
+    if (wfMap?.[complaint.incident.incidentId]) {
       data.push({
-        serviceRequestId: complaint.service.serviceRequestId,
-        incidentType: complaint.service.incidentType,
-        environmentType:complaint.service.environmentType,
-        
-        status: complaint.service.applicationStatus,
-        taskOwner: wfMap[complaint.service.serviceRequestId]?.assignes?.[0]?.name || "-",
-        sla: wfMap[complaint.service.serviceRequestId]?.businesssServiceSla,
-        tenantId: complaint.service.tenantId,
+        incidentId: complaint.incident.incidentId,
+        incidentSubType: complaint.incident.incidentType,
+        //priorityLevel : complaint.service.priority,
+        //locality: complaint.service.address.locality.code,
+        status: complaint.incident.applicationStatus,
+        taskOwner: wfMap[complaint.incident.incidentId]?.assignes?.[0]?.name || "-",
+        sla: wfMap[complaint.incident.incidentId]?.businesssServiceSla,
+        tenantId: complaint.incident.tenantId,
       })
     }});
+    console.log("dddd", data)
   return data;
 };
 

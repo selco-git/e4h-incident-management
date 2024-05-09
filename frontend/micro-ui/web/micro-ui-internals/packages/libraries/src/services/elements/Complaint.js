@@ -11,13 +11,25 @@ export const Complaint = {
    healthCareType,
   }) => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
+    console.log("uploadedFile", uploadedFile)
+    let uploadedImages=null
+    if(uploadedFile!==null){
+      uploadedImages=[{
+        documentType: "PHOTO",
+        fileStoreId: uploadedFile||"",
+        documentUid: "",
+        additionalDetails: {},
+      }]
+    }
     let mobileNumber = JSON.parse(sessionStorage.getItem("Digit.User"))?.value?.info?.mobileNumber;
    // console.log("citycode, ", cityCode)
    // console.log("mbl",mobileNumber)
     const defaultData = {
       incident: {
         district: district?.code,
-       complaintType:complaintType,
+        tenantId:"pg.aidbhavisubcentre",
+        incidentType:complaintType,
+       incidentSubtype:complaintType,
        phcType:healthcentre?.code,
        phcSubType:healthCareType?.code,
        comments:comments,
@@ -29,14 +41,12 @@ export const Complaint = {
       },
       workflow: {
         action: "APPLY",
-        verificationDocuments: [{
-          documentType: "PHOTO",
-          fileStoreId: uploadedFile,
-          documentUid: "",
-          additionalDetails: {},
-        }],
+        //: uploadedImages
       },
     };
+    if(uploadedImages!==null){
+      defaultData.incident.workflow={verificationDocuments:uploadedImages};
+    }
 
     if (Digit.SessionStorage.get("user_type") === "employee") {
       defaultData.incident.reporter = {

@@ -7,6 +7,7 @@ import SearchComplaint from "./search";
 import { LOCALE } from "../../constants/Localization";
 
 export const ComplaintCard = ({ data, onFilterChange, onSearch, serviceRequestIdKey, searchParams }) => {
+  console.log("complacard",data)
   const { t } = useTranslation();
   const [popup, setPopup] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState(null);

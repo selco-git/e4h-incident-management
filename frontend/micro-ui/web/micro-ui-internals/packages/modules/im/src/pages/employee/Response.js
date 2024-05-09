@@ -15,13 +15,14 @@ const GetActionMessage = ({ action }) => {
 };
 
 const BannerPicker = ({ response }) => {
+  console.log("response", response)
     const { complaints } = response;
 
   if (complaints && complaints.response && complaints.response.responseInfo) {
     return (
       <Banner
-        message={GetActionMessage(complaints.response.ServiceWrappers[0].workflow)}
-        complaintNumber={complaints.response.ServiceWrappers[0].service.serviceRequestId}
+        message={GetActionMessage(complaints.response.IncidentWrappers[0].workflow)}
+        complaintNumber={complaints.response.IncidentWrappers[0].incident.incidentId}
         successful={true}
       />
     );

@@ -59,7 +59,7 @@ window.Digit.ComponentRegistryService.setupRegistry({
   PaymentLinks,
   //...PTComponents,
  
-  HRMSModule,
+ // HRMSModule,
   // TLModule,
   // TLLinks,
   // ReceiptsModule

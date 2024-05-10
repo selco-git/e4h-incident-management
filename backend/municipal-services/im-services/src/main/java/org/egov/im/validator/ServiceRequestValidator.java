@@ -41,9 +41,9 @@ public class ServiceRequestValidator {
      */
     public void validateCreate(IncidentRequest request, Object mdmsData){
         Map<String,String> errorMap = new HashMap<>();
-        //validateUserData(request,errorMap);
+        validateUserData(request,errorMap);
         //validateSource(request.getService().getSource());
-        //validateMDMS(request, mdmsData);
+        validateMDMS(request, mdmsData);
         //validateDepartment(request, mdmsData);
         if(!errorMap.isEmpty())
             throw new CustomException(errorMap);
@@ -95,11 +95,11 @@ public class ServiceRequestValidator {
         }*/
 
         if(requestInfo.getUserInfo().getType().equalsIgnoreCase(USERTYPE_EMPLOYEE)){
-            User citizen = request.getIncident().getAssigner();
-            if(citizen == null)
-                errorMap.put("INVALID_REQUEST","Citizen object cannot be null");
-            else if(citizen.getMobileNumber()==null || citizen.getName()==null)
-                errorMap.put("INVALID_REQUEST","Name and Mobile Number is mandatory in citizen object");
+            User reporter = request.getIncident().getReporter();
+            if(reporter == null)
+                errorMap.put("INVALID_REQUEST","Reporter object cannot be null");
+            else if(reporter.getMobileNumber()==null || reporter.getName()==null)
+                errorMap.put("INVALID_REQUEST","Name and Mobile Number is mandatory in reporter object");
         }
 
     }
@@ -112,7 +112,7 @@ public class ServiceRequestValidator {
      */
     private void validateMDMS(IncidentRequest request, Object mdmsData){
 
-        String serviceCode = request.getIncident().getIncidentType();
+        String serviceCode = request.getIncident().getIncidentSubType();
         String jsonPath = MDMS_SERVICEDEF_SEARCH.replace("{SERVICEDEF}",serviceCode);
 
         List<Object> res = null;

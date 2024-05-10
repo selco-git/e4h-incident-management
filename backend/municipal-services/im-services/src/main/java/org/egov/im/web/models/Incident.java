@@ -69,8 +69,8 @@ public class Incident   {
         @JsonProperty("applicationStatus")
         private String applicationStatus = null;
 
-        @JsonProperty("assigner")
-        private User assigner = null; 
+        @JsonProperty("reporter")
+        private User reporter = null; 
         
     	@SafeHtml
     	@JsonProperty("district")

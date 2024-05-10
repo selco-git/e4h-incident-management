@@ -24,9 +24,9 @@ public class IMConstants {
 
     public static final String MDMS_SERVICEDEF = "ServiceDefs";
 
-    public static final String MDMS_MODULE_NAME = "RAINMAKER-im";
+    public static final String MDMS_MODULE_NAME = "Incident";
 
-    public static final String MDMS_SERVICEDEF_SEARCH = "$.MdmsRes.RAINMAKER-im.ServiceDefs[?(@.serviceCode=='{SERVICEDEF}')]";
+    public static final String MDMS_SERVICEDEF_SEARCH = "$.MdmsRes.Incident.ServiceDefs[?(@.serviceCode=='{SERVICEDEF}')]";
 
     public static final String MDMS_DEPARTMENT_SEARCH = "$.MdmsRes.RAINMAKER-im.ServiceDefs[?(@.serviceCode=='{SERVICEDEF}')].department";
 

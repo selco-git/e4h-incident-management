@@ -42,7 +42,7 @@ public class UserService {
 
         if(!StringUtils.isEmpty(request.getIncident().getAccountId()))
             enrichUser(request);
-        else if(request.getIncident().getAssigner()!=null)
+        else if(request.getIncident().getReporter()!=null)
             upsertUser(request);
 
     }
@@ -62,7 +62,7 @@ public class UserService {
         Map<String, User> idToUserMap = searchBulkUser(new LinkedList<>(uuids));
 
         incidentWrappers.forEach(incidentWrapper -> {
-        	incidentWrapper.getIncident().setAssigner(idToUserMap.get(incidentWrapper.getIncident().getAccountId()));
+        	incidentWrapper.getIncident().setReporter(idToUserMap.get(incidentWrapper.getIncident().getAccountId()));
         });
 
     }
@@ -75,7 +75,7 @@ public class UserService {
      */
     private void upsertUser(IncidentRequest request){
 
-        User user = request.getIncident().getAssigner();
+        User user = request.getIncident().getReporter();
         String tenantId = request.getIncident().getTenantId();
         User userServiceResponse = null;
 
@@ -112,7 +112,7 @@ public class UserService {
         if(userDetailResponse.getUser().isEmpty())
             throw new CustomException("INVALID_ACCOUNTID","No user exist for the given accountId");
 
-        else request.getIncident().setAssigner(userDetailResponse.getUser().get(0));
+        else request.getIncident().setReporter(userDetailResponse.getUser().get(0));
 
     }
 

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 
 
-const PGRCard = () => {
+const IMCard = () => {
   const { t } = useTranslation();
 
   const allLinks = [
@@ -55,4 +55,4 @@ const PGRCard = () => {
 
   return <EmployeeModuleCard {...propsForModuleCard} />
 };
-export default PGRCard;
+export default IMCard;

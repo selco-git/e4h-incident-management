@@ -7,7 +7,7 @@ import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
 
 
 
-import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
+import { initIMComponents } from "@egovernments/digit-ui-module-pgr";
 
 
 import { initReceiptsComponents, ReceiptsModule } from "@egovernments/digit-ui-module-receipts";
@@ -50,7 +50,8 @@ const enabledModules = [
   
   "Bills",
   "SW",
-  "BillAmendment"
+  "BillAmendment",
+  "IM"
 ];
 
 const initTokens = (stateCode) => {
@@ -97,7 +98,7 @@ const initDigitUI = () => {
   });
 
  
-  initPGRComponents();
+  initIMComponents();
  
  
   

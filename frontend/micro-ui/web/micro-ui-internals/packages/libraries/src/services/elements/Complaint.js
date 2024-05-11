@@ -22,18 +22,18 @@ export const Complaint = {
       }]
     }
     let mobileNumber = JSON.parse(sessionStorage.getItem("Digit.User"))?.value?.info?.mobileNumber;
-   // console.log("citycode, ", cityCode)
-   // console.log("mbl",mobileNumber)
+    var serviceDefs = await Digit.MDMSService.getServiceDefs(tenantId, "Incident");
+    const incidentType = serviceDefs.filter((def) => def.serviceCode === complaintType)[0].menuPath.toUpperCase();
     const defaultData = {
       incident: {
-        district: district?.code,
-        tenantId:"pg.aidbhavisubcentre",
-        incidentType:complaintType,
+        district: district?.name,
+        tenantId:tenantId,
+        incidentType:incidentType,
        incidentSubtype:complaintType,
-       phcType:healthcentre?.code,
-       phcSubType:healthCareType?.code,
+       phcType:healthcentre?.name,
+       phcSubType:healthCareType?.centreType,
        comments:comments,
-        block:block?.code,
+        block:block?.name,
         additionalDetail: {
         },
         source: Digit.Utils.browser.isWebview() ? "mobile" : "web",
@@ -49,7 +49,7 @@ export const Complaint = {
     }
 
     if (Digit.SessionStorage.get("user_type") === "employee") {
-      defaultData.incident.reporter = {
+      defaultData.incident.reporter= {
 
         name:reporterName,
         type: "EMPLOYEE",

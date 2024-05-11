@@ -25,12 +25,7 @@ const useInboxData = (searchParams) => {
     console.log("serviceids", serviceIds)
     console.log("servpara", serviceIdParams)
     console.log("wffilters", wfFilters)
-    let wfFilters1={
-      businessIds :"KA-559-002-09-05-24/000030",
-     end: 10,
-      start: 1
-    }
-    const workflowInstances = await Digit.WorkflowService.getByBusinessId(tenantId, serviceIdParams, wfFilters1, false);
+    const workflowInstances = await Digit.WorkflowService.getByBusinessId(tenantId, serviceIdParams, wfFilters, false);
     console.log("workflow", workflowInstances)
     if (workflowInstances.ProcessInstances.length) {
       combinedRes = combineResponses(complaintDetailsResponse, workflowInstances).map((data) => ({
@@ -64,11 +59,12 @@ const mapWfBybusinessId = (wfs) => {
 const combineResponses = (complaintDetailsResponse, workflowInstances) => {
   console.log("comres, compl", complaintDetailsResponse)
   let wfMap = mapWfBybusinessId(workflowInstances.ProcessInstances);
-  console.log("wfmap", wfMap)
+  console.log("wfmap", wfMap?.[complaint.incident.incidentId])
   let data = [];
   complaintDetailsResponse.IncidentWrappers.map((complaint) => {
-    console.log("compppp", complaint)
+    console.log("comppppCompp", complaint)
     if (wfMap?.[complaint.incident.incidentId]) {
+      console.log("hiii00")
       data.push({
         incidentId: complaint.incident.incidentId,
         incidentSubType: complaint.incident.incidentType,
@@ -80,7 +76,7 @@ const combineResponses = (complaintDetailsResponse, workflowInstances) => {
         tenantId: complaint.incident.tenantId,
       })
     }});
-    console.log("dddd", data)
+    console.log("dddd990875", data)
   return data;
 };
 

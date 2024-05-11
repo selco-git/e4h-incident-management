@@ -75,15 +75,18 @@ const TLCaption = ({ data, comments }) => {
 };
 
 const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup, selectedAction, onAssign, tenantId, t }) => {
+  console.log("empcom", complaintDetails)
   
   // RAIN-5692 PGR : GRO is assigning complaint, Selecting employee and assign. Its not getting assigned.
   // Fix for next action  assignee dropdown issue
   const stateArray = workflowDetails?.data?.initialActionState?.nextActions?.filter( ele => ele?.action == selectedAction );  
+  console.log("statearray", stateArray)
   const useEmployeeData = Digit.Hooks.pgr.useEmployeeFilter(
     tenantId, 
     stateArray?.[0]?.assigneeRoles?.length > 0 ? stateArray?.[0]?.assigneeRoles?.join(",") : "",
     complaintDetails
     );
+    console.log("useemp", useEmployeeData)
   const employeeData = useEmployeeData
     ? useEmployeeData.map((departmentData) => {
       return { heading: departmentData.department, options: departmentData.employees };
@@ -144,19 +147,19 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   function onSelectReopenReason(reason) {
     setSelectedReopenReason(reason);
   }
-
+console.log("employeeData", employeeData)
   return (
     <Modal
       headerBarMain={
         <Heading
           label={
-            selectedAction === "ASSIGN" || selectedAction === "REASSIGN"
-              ? t("CS_ACTION_ASSIGN1")
+            selectedAction === "ASSIGN" || selectedAction === "REASSIGN" 
+              ? t("CS_ACTION_ASSIGN")
               : selectedAction === "REJECT"
                 ? t("CS_ACTION_REJECT")
                 : selectedAction === "REOPEN"
                   ? t("CS_COMMON_REOPEN")
-                  : t("CS_COMMON_RESOLVE")
+                  :selectedAction==="RESOLVE"? t("CS_COMMON_RESOLVE"): selectedAction==="CLOSE" ? t("CS_COMMON_CLOSE") : t("CS_COMMON_SENDBACK")
           }
         />
       }
@@ -170,7 +173,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
             ? t("CS_COMMON_REJECT")
             : selectedAction === "REOPEN"
               ? t("CS_COMMON_REOPEN")
-              : t("CS_COMMON_RESOLVE")
+              :selectedAction==="RESOLVE"? t("CS_COMMON_RESOLVE"): selectedAction==="CLOSE" ? t("CS_COMMON_CLOSE") : t("CS_COMMON_SENDbACK")
       }
       actionSaveOnSubmit={() => {
         if(selectedAction === "REJECT" && !comments)
@@ -185,7 +188,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
         {selectedAction === "REJECT" || selectedAction === "RESOLVE" || selectedAction === "REOPEN" ? null : (
           <React.Fragment>
             <CardLabel>{t("CS_COMMON_EMPLOYEE_NAME")}</CardLabel>
-            {employeeData && <SectionalDropdown selected={selectedEmployee} menuData={employeeData} displayKey="name" select={onSelectEmployee} />}
+            {employeeData && <Dropdown selected={selectedEmployee} menuData={employeeData} displayKey="name" select={onSelectEmployee} />}
           </React.Fragment>
         )}
         {selectedAction === "REOPEN" ? (
@@ -332,6 +335,13 @@ export const ComplaintDetails = (props) => {
       case "REOPEN":
         setPopup(true);
         setDisplayMenu(false);
+      case "CLOSE":
+        setPopup(true);
+        setDisplayMenu(false);
+        break;
+      case "SENDBACK":
+        setPopup(true);
+        setDisplayMenu(false);
         break;
       default:
         setDisplayMenu(false);
@@ -357,7 +367,7 @@ export const ComplaintDetails = (props) => {
   if (isLoading || workflowDetails.isLoading || loader) {
     return <Loader />;
   }
-console.log("wf3", workflowDetails)
+console.log("wfoo", workflowDetails)
   if (workflowDetails.isError) return <React.Fragment>{workflowDetails.error}</React.Fragment>;
 
   const getTimelineCaptions = (checkpoint, index, arr) => {

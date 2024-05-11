@@ -23,14 +23,14 @@ export const PgrRoutes = {
   Landmark: `/landmark`,
   UploadPhotos: `/upload-photos`,
   Details: `/details`,
-  CreateComplaintResponse: `/response`,
+  CreateComplaintResponse: `/incident/response`
 };
 
 export const Employee = {
   Inbox: "/inbox",
   ComplaintDetails: PGR_EMPLOYEE_COMPLAINT_DETAILS,
   CreateComplaint: PGR_EMPLOYEE_CREATE_COMPLAINT,
-  Response: "/response",
+  Response: "/incident/response",
   Home: "/digit-ui/employee",
 };
 

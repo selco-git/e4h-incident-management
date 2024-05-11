@@ -71,7 +71,7 @@ const Complaint = () => {
               component={() => <BreadCrumb crumbs={[breadcrumConfig.home, breadcrumConfig.inbox]}></BreadCrumb>}
             />
             <Route
-              path={match.url + Employee.Response}
+              path={match.url + "/im/incident/response"}
               component={<BreadCrumb crumbs={[breadcrumConfig.home, breadcrumConfig.response]}></BreadCrumb>}
             />
           </Switch>

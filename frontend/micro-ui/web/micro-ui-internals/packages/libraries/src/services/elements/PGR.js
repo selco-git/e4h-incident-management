@@ -24,7 +24,7 @@ export const PGRService = {
     }),
   update: (details) =>
     Request({
-      url: Urls.pgr_update,
+      url: Urls.im_update,
       data: details,
       useCache: true,
       auth: true,

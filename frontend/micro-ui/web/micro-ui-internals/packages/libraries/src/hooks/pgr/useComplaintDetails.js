@@ -14,7 +14,7 @@ const getDetailsRow = ({ id, service, complaintType }) =>({
   CS_COMPLAINT_DETAILS_TICKET_NO: id,
   CS_COMPLAINT_DETAILS_APPLICATION_STATUS: `CS_COMMON_${service.incident.applicationStatus}`,
   CS_ADDCOMPLAINT_TICKET_TYPE: complaintType === "" ? `SERVICEDEFS.OTHERS` : `SERVICEDEFS.${complaintType}`,
-  CS_ADDCOMPLAINT_TICKET_SUB_TYPE: `SERVICEDEFS.${service.incident.incidentType.toUpperCase()}`,
+  CS_ADDCOMPLAINT_TICKET_SUB_TYPE: `SERVICEDEFS.${service.incident.incidentSubType.toUpperCase()}`,
   CS_ADDCOMPLAINT_DISTRICT : service?.incident.district,
   CS_ADDCOMPLAINT_BLOCK: service?.incident?.block,
   CS_ADDCOMPLAINT_HEALTH_CARE_CENTRE: service?.incident?.phcType,
@@ -35,22 +35,21 @@ const transformDetails = ({ id, service, workflow, thumbnails, complaintType }) 
     details: !isEmptyOrNull(customDetails) ? customDetails : getDetailsRow({ id, service, complaintType }),
     thumbnails: thumbnails?.thumbs,
     images: thumbnails?.images,
-    workflow: workflow,
-    service,
+    workflow: workflow.incident,
+    incident:service.incident,
     audit: {
-      citizen: service.citizen,
-      details: service.auditDetails,
-      source: service.source,
+      citizen: service.incident.citizen,
+      details: service.incident.auditDetails,
+      source: service.incident.source,
       rating: service.rating,
-      serviceCode: service.serviceCode,
-      prioritylevel : service.priorityLevel
+      incidentType: service.incident.incidentSubType,
     },
     service: service,
   };
 };
 
 const fetchComplaintDetails = async (tenantId, id) => {
-  console.log("id00", id)
+  
   var serviceDefs = await Digit.MDMSService.getServiceDefs(tenantId, "Incident");
   console.log("servkkkk", serviceDefs)
   const service = (await Digit.PGRService.search(tenantId, {incidentId: id })).IncidentWrappers[0];
@@ -61,7 +60,7 @@ const fetchComplaintDetails = async (tenantId, id) => {
   Digit.SessionStorage.set("complaintDetails", { service, workflow });
   if (service && workflow && serviceDefs) {
     //const complaintType =  service.incident.incidentType
-    const complaintType = serviceDefs.filter((def) => def.serviceCode === service.incident.incidentType)[0].menuPath.toUpperCase();
+    const complaintType = serviceDefs.filter((def) => def.serviceCode === service.incident.incidentSubType)[0].menuPath.toUpperCase();
     console.log("CT", complaintType)
     const ids = workflow.verificationDocuments
       ? workflow.verificationDocuments.filter((doc) => doc.documentType === "PHOTO").map((photo) => photo.fileStoreId || photo.id)
@@ -75,10 +74,10 @@ const fetchComplaintDetails = async (tenantId, id) => {
 };
 
 const useComplaintDetails = ({ tenantId, id }) => {
-  console.log("iiddd", id)
+ 
   const queryClient = useQueryClient();
   const { isLoading, error, data } = useQuery(["complaintDetails", tenantId, id], () => fetchComplaintDetails(tenantId, id));
-  console.log("ggg", data)
+  
   return { isLoading, error, complaintDetails: data, revalidate: () => queryClient.invalidateQueries(["complaintDetails", tenantId, id]) };
 };
 

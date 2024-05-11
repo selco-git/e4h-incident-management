@@ -25,7 +25,7 @@ const IMCard = () => {
     {
       label: t("ES_IM_NEW_INCIDENT"),
       link: `/digit-ui/employee/im/incident/create`,
-      role: "CSR"
+      role: "COMPLAINT_ASSESSOR"
     }
   ]
 

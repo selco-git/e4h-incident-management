@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import PGRCard from "./components/PGRCard";
+import IMCard from "./components/IMCard";
 
 import getRootReducer from "./redux/reducers";
 import CitizenApp from "./pages/citizen";
@@ -23,11 +23,10 @@ import ResponseCitizen from "./pages/citizen/Response";
 
 export const PGRReducers = getRootReducer;
 
-const PGRModule = ({ stateCode, userType, tenants }) => {
+const IMModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = "IM";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
-  console.log("module", moduleCode)
 
   if (isLoading) {
     return <Loader />;
@@ -42,8 +41,7 @@ const PGRModule = ({ stateCode, userType, tenants }) => {
   }
 };
 
-const PGRLinks = ({ matchPath }) => {
-  console.log("matchpath", matchPath)
+const IMLinks = ({ matchPath }) => {
   const { t } = useTranslation();
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage(PGR_CITIZEN_CREATE_COMPLAINT, {});
 
@@ -66,9 +64,9 @@ const PGRLinks = ({ matchPath }) => {
 };
 
 const componentsToRegister = {
-  PGRModule,
-  PGRLinks,
-  PGRCard,
+  IMModule,
+  IMLinks,
+  IMCard,
   PGRComplaintDetails : ComplaintDetails,
   PGRCreateComplaintEmp : CreateComplaintEmp,
   PGRInbox : Inbox,
@@ -80,7 +78,7 @@ const componentsToRegister = {
   PGRResponseCitzen : ResponseCitizen
 };
 
-export const initPGRComponents = () => {
+export const initIMComponents = () => {
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });

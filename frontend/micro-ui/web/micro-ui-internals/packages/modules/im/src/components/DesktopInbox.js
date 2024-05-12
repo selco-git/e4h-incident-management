@@ -22,7 +22,6 @@ const DesktopInbox = ({
   totalRecords,
 }) => {
   const { t } = useTranslation();
-  console.log("data123", data)
   const GetCell = (value) => <span className="cell-text">{value}</span>;
   const GetSlaCell = (value) => {
     return value < 0 ? <span className="sla-cell-error">{value || ""}</span> : <span className="sla-cell-success">{value || ""}</span>;
@@ -33,7 +32,6 @@ const DesktopInbox = ({
       {
         Header: t("CS_COMMON_COMPLAINT_NO1"),
         Cell: ({ row }) => {
-          console.log("row", row)
           return (
             <div>
               <span className="link">
@@ -41,15 +39,15 @@ const DesktopInbox = ({
               </span>
               {/* <a onClick={() => goTo(row.row.original["serviceRequestId"])}>{row.row.original["serviceRequestId"]}</a> */}
               <br />
-              <span className="complain-no-cell-text">{t(`${row.original["incidentType"].toUpperCase()}`)}</span>
+              <span className="complain-no-cell-text">{t(`${row.original["incidentSubType"].toUpperCase()}`)}</span>
             </div>
           );
         },
       },
       {
-        Header: t("CS_COMPLAINT_ENVIRONMENT_TYPE"),
+        Header: t("CS_COMPLAINT_PHC_TYPE"),
         Cell: ({ row }) => {
-          return GetCell(t(row.original["environmentType"]));
+          return GetCell(t(row.original["phcType"]));
         },
       },
       {
@@ -89,7 +87,7 @@ const DesktopInbox = ({
           ))}
       </Card>
     );
-  } else if (data > 0) {
+  } else if (data.length > 0) {
     result = (
       <ComplaintTable
         t={t}

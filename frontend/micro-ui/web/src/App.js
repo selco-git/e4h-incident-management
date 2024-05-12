@@ -1,7 +1,7 @@
 import React from "react";
 
 import {
-  initPGRComponents,
+  initIMComponents,
   PGRReducers,
 } from "@egovernments/digit-ui-module-pgr";
 
@@ -65,7 +65,7 @@ window.Digit.ComponentRegistryService.setupRegistry({
   // ReceiptsModule
 });
 
-initPGRComponents();
+initIMComponents();
 
 
 

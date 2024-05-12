@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 
 
-const PGRCard = () => {
+const IMCard = () => {
   const { t } = useTranslation();
 
   const allLinks = [
@@ -25,7 +25,7 @@ const PGRCard = () => {
     {
       label: t("ES_IM_NEW_INCIDENT"),
       link: `/digit-ui/employee/im/incident/create`,
-      role: "CSR"
+      role: "COMPLAINT_ASSESSOR"
     }
   ]
 
@@ -55,4 +55,4 @@ const PGRCard = () => {
 
   return <EmployeeModuleCard {...propsForModuleCard} />
 };
-export default PGRCard;
+export default IMCard;

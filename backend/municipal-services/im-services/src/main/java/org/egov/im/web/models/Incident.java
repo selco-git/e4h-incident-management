@@ -87,6 +87,10 @@ public class Incident   {
     	@SafeHtml
     	@JsonProperty("phcSubType")
     	private String phcsubtype = null;
+    	
+    	@SafeHtml
+    	@JsonProperty("comments")
+    	private String comments = null;
 
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails = null;

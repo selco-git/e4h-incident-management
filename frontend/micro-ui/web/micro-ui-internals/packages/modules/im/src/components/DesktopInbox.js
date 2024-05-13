@@ -30,7 +30,7 @@ const DesktopInbox = ({
   const columns = React.useMemo(
     () => [
       {
-        Header: t("CS_COMMON_COMPLAINT_NO1"),
+        Header: t("CS_COMMON_TICKET_NO"),
         Cell: ({ row }) => {
           return (
             <div>
@@ -51,7 +51,7 @@ const DesktopInbox = ({
         },
       },
       {
-        Header: t("CS_COMPLAINT_DETAILS_CURRENT_STATUS"),
+        Header: t("CS_TICKET_DETAILS_CURRENT_STATUS"),
         Cell: ({ row }) => {
           return GetCell(t(`CS_COMMON_${row.original["status"]}`));
         },
@@ -96,7 +96,7 @@ const DesktopInbox = ({
         getCellProps={(cellInfo) => {
           return {
             style: {
-              minWidth: cellInfo.column.Header === t("CS_COMMON_COMPLAINT_NO") ? "240px" : "",
+              minWidth: cellInfo.column.Header === t("CS_COMMON_TICKET_NO") ? "240px" : "",
               padding: "20px 18px",
               fontSize: "16px",
             },

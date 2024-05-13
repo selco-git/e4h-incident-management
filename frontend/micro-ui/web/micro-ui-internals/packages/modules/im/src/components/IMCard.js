@@ -8,8 +8,8 @@ const IMCard = () => {
   const { t } = useTranslation();
 
   const allLinks = [
-    { text: t("ES_PGR_INBOX"), link: "/digit-ui/employee/im/inbox" },
-    { text: t("ES_PGR_NEW_COMPLAINT"), link: "/digit-ui/employee/im/incident/create", accessTo: ["CSR"] },
+    { text: t("ES_IM_INBOX"), link: "/digit-ui/employee/im/inbox" },
+    { text: t("ES_IM_NEW_COMPLAINT"), link: "/digit-ui/employee/im/incident/create", accessTo: ["CSR"] },
   ];
 
   if (!Digit.Utils.pgrAccess()) {
@@ -36,7 +36,7 @@ const IMCard = () => {
     moduleName: t("ES_IM_INCIDENTS"),
     kpis: [
         {
-            label: t("TOTAL_PGR"),
+            label: t("TOTAL_IM"),
             link: `/digit-ui/employee/im/inbox`
         },
         {
@@ -46,7 +46,7 @@ const IMCard = () => {
     ],
     links: [
     {
-        label: t("ES_PGR_INBOX"),
+        label: t("ES_IM_INBOX"),
         link: `/digit-ui/employee/im/inbox`
     },
     ...propsForCSR

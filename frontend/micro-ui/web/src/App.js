@@ -24,7 +24,7 @@ import { initReceiptsComponents, ReceiptsModule } from "@egovernments/digit-ui-m
 
 //import { initCustomisationComponents } from "./Customisations";
 //import { initCommonPTComponents } from "@egovernments/digit-ui-module-commonpt";
-import { initBillsComponents } from "@egovernments/digit-ui-module-bills";
+//import { initBillsComponents } from "@egovernments/digit-ui-module-bills";
 // import { initReportsComponents } from "@egovernments/digit-ui-module-reports";
 
 initLibraries();
@@ -75,7 +75,7 @@ initIMComponents();
 //initEngagementComponents();
 
 //initCommonPTComponents();
-initBillsComponents();
+//initBillsComponents();
 // initReportsComponents();
 //initCustomisationComponents();
 

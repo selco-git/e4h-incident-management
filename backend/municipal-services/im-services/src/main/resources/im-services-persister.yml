@@ -7,7 +7,7 @@ serviceMaps:
     isTransaction: true
     queryMaps:
 
-    - query: INSERT INTO eg_incident_v2(id, tenantid, incidenttype, incidentsubtype, incidentid, additionaldetails, applicationstatus, district, block, phctype, phcsubtype, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_incident_v2(id, tenantid, incidenttype, incidentsubtype, incidentid, additionaldetails, applicationstatus, district, block, phctype, phcsubtype, createdby, createdtime, lastmodifiedby, lastmodifiedtime, comments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: incident
       jsonMaps:
       - jsonPath: $.incident.id
@@ -16,9 +16,9 @@ serviceMaps:
 
       - jsonPath: $.incident.incidentType
 
-      - jsonPath: $.incident.incidentsubtype
+      - jsonPath: $.incident.incidentSubType
 
-      - jsonPath: $.incident.incidentid
+      - jsonPath: $.incident.incidentId
 
       - jsonPath: $.incident.additionalDetail
         type: JSON
@@ -30,9 +30,9 @@ serviceMaps:
 
       - jsonPath: $.incident.block
 
-      - jsonPath: $.incident.phctype
+      - jsonPath: $.incident.phcType
 
-      - jsonPath: $.incident.phcsubttype
+      - jsonPath: $.incident.phcSubType
 
       - jsonPath: $.incident.auditDetails.createdBy
 
@@ -42,6 +42,8 @@ serviceMaps:
 
       - jsonPath: $.incident.auditDetails.lastModifiedTime
 
+      - jsonPath: $.incident.comments
+
 
   - version: 1.0
     description: Updates im service request in tables
@@ -49,18 +51,14 @@ serviceMaps:
     isTransaction: true
     queryMaps:
 
-    - query: UPDATE eg_incident_v2 SET incidenttype=?, rating = ?,incidentid=?, description=?, accountid=?, additionaldetails=?, applicationstatus=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=?;
+    - query: UPDATE eg_incident_v2 SET incidenttype=?, incidentid=?, incidentsubtype=?, additionaldetails=?, applicationstatus=?, district=? , block=? , phctype=? , phcsubtype=?, lastmodifiedby=?, lastmodifiedtime=?, comments=? WHERE id=?;
       basePath: incident
       jsonMaps:
       - jsonPath: $.incident.incidentType
 
-      - jsonPath: $.incident.rating
+      - jsonPath: $.incident.incidentId
 
-      - jsonPath: $.incident.incidentid
-
-      - jsonPath: $.incident.description
-
-      - jsonPath: $.incident.accountId
+      - jsonPath: $.incident.incidentSubType
 
       - jsonPath: $.incident.additionalDetail
         type: JSON
@@ -68,51 +66,18 @@ serviceMaps:
 
       - jsonPath: $.incident.applicationStatus
 
+      - jsonPath: $.incident.district
+
+      - jsonPath: $.incident.block
+
+      - jsonPath: $.incident.phcType
+
+      - jsonPath: $.incident.phcSubType
+
       - jsonPath: $.incident.auditDetails.lastModifiedBy
 
       - jsonPath: $.incident.auditDetails.lastModifiedTime
+
+      - jsonPath: $.incident.comments
 
       - jsonPath: $.incident.id
-
-
-    - query: UPDATE eg_incident_address_v2 SET doorno=?, plotno=?, buildingname=?, street=?, landmark=?, city=?, pincode=?, locality=?, district=?, region=?, state=?, country=?, latitude=?, longitude=?,additionaldetails=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=?;
-      basePath: incident.address
-      jsonMaps:
-
-      - jsonPath: $.incident.address.doorNo
-
-      - jsonPath: $.incident.address.plotNo
-
-      - jsonPath: $.incident.address.buildingName
-
-      - jsonPath: $.incident.address.street
-
-      - jsonPath: $.incident.address.landmark
-
-      - jsonPath: $.incident.address.city
-
-      - jsonPath: $.incident.address.pincode
-
-      - jsonPath: $.incident.address.locality.code
-
-      - jsonPath: $.incident.address.district
-
-      - jsonPath: $.incident.address.region
-
-      - jsonPath: $.incident.address.state
-
-      - jsonPath: $.incident.address.country
-
-      - jsonPath: $.incident.address.geoLocation.latitude
-
-      - jsonPath: $.incident.address.geoLocation.longitude
-
-      - jsonPath: $.incident.address.additionDetails
-        type: JSON
-        dbType: JSONB
-
-      - jsonPath: $.incident.auditDetails.lastModifiedBy
-
-      - jsonPath: $.incident.auditDetails.lastModifiedTime
-
-      - jsonPath: $.incident.address.id

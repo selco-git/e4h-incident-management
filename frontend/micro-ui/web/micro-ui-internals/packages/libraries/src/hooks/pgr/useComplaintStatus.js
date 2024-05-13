@@ -16,13 +16,13 @@ const useComplaintStatus = () => {
       //     ? Digit.SessionStorage.get("Employee.tenantId")
       //     : Digit.SessionStorage.get("Citizen.tenantId");
       WorkflowService = await Digit.WorkflowService.init(tenantId,"Incident");
-      // let applicationStatus = WorkflowService.BusinessServices[0].states
-      //   .filter((state) => state.applicationStatus)
-      //   .map((state) => ({
-      //     name: t(`CS_COMMON_${state.applicationStatus}`),
-      //     code: state.applicationStatus,
-      //   }));
-      //setComplaintStatus(applicationStatus);
+      let applicationStatus = WorkflowService.BusinessServices[0].states
+        .filter((state) => state.applicationStatus)
+        .map((state) => ({
+          name: t(`CS_COMMON_${state.applicationStatus}`),
+          code: state.applicationStatus,
+        }));
+      setComplaintStatus(applicationStatus);
     })();
   }, [t, tenantId]);
 

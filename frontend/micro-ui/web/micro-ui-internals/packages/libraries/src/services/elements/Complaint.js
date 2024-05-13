@@ -45,7 +45,16 @@ export const Complaint = {
       },
     };
     if(uploadedImages!==null){
-      defaultData.incident.workflow={verificationDocuments:uploadedImages};
+      defaultData.workflow={
+        ...defaultData.workflow,
+        verificationDocuments: [
+        {
+          documentType: "PHOTO",
+          fileStoreId: uploadedFile,
+          documentUid: "",
+          additionalDetails: {},
+        },
+      ]};
     }
 
     if (Digit.SessionStorage.get("user_type") === "employee") {

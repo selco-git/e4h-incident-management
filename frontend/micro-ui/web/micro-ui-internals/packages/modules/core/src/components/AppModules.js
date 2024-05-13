@@ -23,14 +23,15 @@ export const AppModules = ({ stateCode, userType, modules, appTenants }) => {
   if (!user || !user?.access_token || !user?.info) {
     return <Redirect to={{ pathname: "/digit-ui/employee/user/login", state: { from: location.pathname + location.search } }} />;
   }
-//console.log("path", path)
-const appRoutes = modules.map(({ code, tenants }, index) => {
-  const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
-  return Module ? (
-    <Route key={index} path={`${path}/${code.toLowerCase()}`}>
-      <Module stateCode={stateCode} moduleCode={code} userType={userType} tenants={getTenants(tenants, appTenants)} />
-    </Route>
-  ) :   <Route key={index} path={`${path}/${code.toLowerCase()}`}>
+  console.log("path,modules", path,modules)
+  const appRoutes = modules.map(({ code, tenants }, index) => {
+    const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
+    console.log("Module,Module", Module)
+    return Module ? (
+      <Route key={index} path={`${path}/${code.toLowerCase()}`}>
+        <Module stateCode={stateCode} moduleCode={code} userType={userType} tenants={getTenants(tenants, appTenants)} />
+      </Route>
+    ) :   <Route key={index} path={`${path}/${code.toLowerCase()}`}>
     <Redirect to={{ pathname: "/digit-ui/employee/user/error?type=notfound", state: { from: location.pathname + location.search } }} />
   </Route>;
   });

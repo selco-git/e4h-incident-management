@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
+import { IMReducers } from "@egovernments/digit-ui-module-pgr";
 
 
 
@@ -40,14 +40,11 @@ var Digit = window.Digit || {};
 
 const enabledModules = [
   "PGR",
-  
   "Payment",
   "PT",
   "QuickPayLinks",
-  
   "Receipts",
   "Reports",
-  
   "Bills",
   "SW",
   "BillAmendment",
@@ -84,37 +81,18 @@ const initTokens = (stateCode) => {
 
 const initDigitUI = () => {
   window?.Digit.ComponentRegistryService.setupRegistry({
-    ...pgrComponents,
     PaymentModule,
     ...paymentConfigs,
     PaymentLinks,
-   
-   
     ReceiptsModule,
     BillsModule,
-
-    // TLModule,
-    // TLLinks,
   });
-
- 
   initIMComponents();
- 
- 
-  
   initReceiptsComponents();
-  // initReportsComponents();
-  
- 
-  
-  
   initCommonPTComponents();
   initBillsComponents();
-
-  // initCustomisationComponents();
-
   const moduleReducers = (initData) => ({
-    pgr: PGRReducers(initData),
+    pgr: IMReducers(initData),
   });
 
   window.Digit.Customizations = {

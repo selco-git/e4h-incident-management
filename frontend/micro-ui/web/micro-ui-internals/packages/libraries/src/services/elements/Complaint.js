@@ -30,10 +30,10 @@ export const Complaint = {
         tenantId:tenantId,
         incidentType:incidentType,
        incidentSubtype:complaintType,
-       phcType:healthcentre?.name,
-       phcSubType:healthCareType?.centreType,
+       phcType:healthcentre?.key,
+       phcSubType:healthCareType?.key,
        comments:comments,
-        block:block?.name,
+        block:block?.key,
         additionalDetail: {
         },
         source: Digit.Utils.browser.isWebview() ? "mobile" : "web",

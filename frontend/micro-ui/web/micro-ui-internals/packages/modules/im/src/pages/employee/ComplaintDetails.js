@@ -431,7 +431,7 @@ return (
   <React.Fragment>
     <Card>
       <CardSubHeader>{t(`CS_HEADER_INCIDENT_SUMMARY`)}</CardSubHeader>
-      <CardLabel style={{fontWeight:"700"}}>{t(`CS_INCIDENT_DETAILS`)}</CardLabel>
+     
       {isLoading ? (
         <Loader />
       ) : (

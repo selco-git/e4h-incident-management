@@ -17,6 +17,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [district, setDistrict]=useState(null);
   const [block, setBlock]=useState(null);
   const [error, setError] = useState(null);
+  const [healthcareMenu, setHealthCareMenu]=useState(null);
   let reporterName = JSON.parse(sessionStorage.getItem("Digit.User"))?.value?.info?.name;
   const [canSubmit, setSubmitValve] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -29,6 +30,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   const state = Digit.ULBService.getStateId();
 const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
+console.log("phcMenu", phcMenu)
 useEffect(()=>{
   const fetchDistrictMenu=async()=>{
     const response=phcMenu?.Incident?.Block;
@@ -55,55 +57,64 @@ useEffect(()=>{
   fetchDistrictMenu();
 }, [state, mdmsData,t]);
 
- 
-//  var Menu = [];
-//  const getDistrictMenu=async (tenantId, t) => {
-//   const response1 = mdmsData
-//   console.log("subres11", response1)
-//   if(response1!==undefined){
-//     const response=response1?.Incident?.Block
-//     console.log("respons", response)
-//   await Promise.all(
-//      response.map((def) => {
+const handleDistrictChange =async(selectedDistrict) =>{
+  setDistrict(selectedDistrict);
+  const response=mdmsData?.Incident?.Block;
+  if(response){
+    const blocks=response.filter((def)=>def.districtCode===selectedDistrict.key);
+    setBlockMenu(
+      blocks.map(block=>({
+        key:block.name,
+        name:t(`${(selectedDistrict.key)}.${(block.name)}`).toLowerCase()
+    }))
+    );
+  }
+}
+
+const handleBlockChange= async(selectedBlock)=>{
+  //sessionStorage.setItem("block",JSON.stringify(value))
+  console.log("selectedblock", selectedBlock)
+  setBlock(selectedBlock);
+  const response=mdmsData?.tenant?.tenants;
+  console.log("convert", response[0])
+  if(response){
+    const healthCareOptions=response.filter((def)=>def.city.blockCode===selectedBlock.name);
+    setHealthCareMenu(
+      healthCareOptions.map(def=>({
+        key:def.name,
+        name:t(def.name.toUpperCase())
+    }))
+    );
+  }
+}
+const handleHealthCareChange= async(selectedHealthCentre)=>{
   
-//       if (!Menu.find((e) => e.key === def.districtCode)) {
-//         def.menuPath === ""
-//           ? Menu.push({
-//               name: t("SERVICEDEFS.OTHERS"),
-//               key: def.districtCode,
-//             })
-//           : Menu.push({
-//               name: t(def.districtCode.toUpperCase()),
-//               key: def.districtCode,
-//             });
-//       }
+  
+  setHealthCentre(selectedHealthCentre);
+  const response=mdmsData?.tenant?.tenants;
+  
+  if(response){
+    const healthCareSubTypeOptions=response.filter((def)=>def.name===selectedHealthCentre.key);
     
-//     })
-//   );
-//   }
-//   console.log("menuuuu", Menu)
-//   return Menu;
-  
+    setPhcSubTypeMenu(
+      healthCareSubTypeOptions.map(def=>({
+        key:def.centreType,
+        name:t(def.centreType.toUpperCase())
+    }))
+    );
+    
+  }
+}
+// async function selectedHealthCentre(value){
+//   setHealthCentre(value);
+//   setPhcSubTypeMenu([value])
+//   setHealthCareType(value);
 // }
 
-// getDistrictMenu(state, t)
-// console.log("distmenu", districtMenu)
-
-// // // 
-// const getBlockMenu= async (state, selectedType, t) => {
-//   console.log("slectedType", selectedType)
-//    const fetchServiceDefs = mdmsData?.Incident?.Block
-//    if(fetchServiceDefs!==undefined && selectedType.length!==0){
-//    return fetchServiceDefs
-//     .filter((def) => def.districtCode === selectedType.key)
-//    .map((id) => ({
-//       key: id.name,
-//       name: t("SERVICEDEFS." + id.name.toUpperCase()),
-//      }));
-//     }
-//  }
-//  console.log("dd", district)
-//  getBlockMenu(tenantId, district, t);
+const handlePhcSubType=(value)=>{
+  console.log("value", value) 
+  setHealthCareType(value);
+}
 
   useEffect(() => {
       (async () => {
@@ -162,40 +173,12 @@ useEffect(()=>{
       }
     }
   }
-  const handleDistrictChange =async(selectedDistrict) =>{
-    setDistrict(selectedDistrict);
-    const response=mdmsData?.Incident?.Block;
-    if(response){
-      const blocks=response.filter((def)=>def.districtCode===selectedDistrict.key);
-      setBlockMenu(
-        blocks.map(block=>({
-          key:block.name,
-          name:t(block.name.toUpperCase())
-      }))
-      );
-    }
-  }
   function selectedSubType(value) {
     sessionStorage.setItem("subType",JSON.stringify(value))
     setSubType(value);
   }
-  async function selectedHealthCentre(value){
-    setHealthCentre(value);
-    setPhcSubTypeMenu([value])
-    setHealthCareType(value);
-  }
-  const handleBlockChange= (selectedBlock)=>{
-    //sessionStorage.setItem("block",JSON.stringify(value))
-    setBlock(selectedBlock);
-  }
-  const handlePhcSubType=(value)=>{
-    console.log("value", value) 
-    setHealthCareType(value);
-  }
-  // const selectedDistrict = (value) => {
-  //   setDistrict(value);
-  //   setBlockMenu([value]);
-  // };
+ 
+
   async function selectFile(e){
     setFile(e.target.files[0]);
   }
@@ -253,7 +236,7 @@ useEffect(()=>{
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcMenu?.tenant?.tenants} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} />
+            <Dropdown option={healthcareMenu} optionKey="key" id="name" selected={healthcentre} select={handleHealthCareChange} />
             
           ),
            
@@ -263,7 +246,7 @@ useEffect(()=>{
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcSubTypeMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
+            <Dropdown option={phcSubTypeMenu} optionKey="key" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
              
           ),
            

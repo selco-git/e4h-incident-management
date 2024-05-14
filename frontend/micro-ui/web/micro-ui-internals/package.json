@@ -10,7 +10,7 @@
     "packages/modules/common",
     "packages/modules/core",
     "packages/modules/im",
-    "packages/modules/bills"
+    "packages/modules/hrms"
   ],
   "author": "Abhinav Kushwaha <abhinav.kushwaha@egovernments.org>",
   "license": "MIT",
@@ -30,6 +30,7 @@
     "dev:common": "cd packages/modules/common && yarn start",
     "dev:core": "cd packages/modules/core && yarn start",
     "dev:im": "cd packages/modules/im && yarn start",
+    "dev:hrms": "cd packages/modules/hrms && yarn start",
     "dev:receipts": "cd packages/modules/receipts && yarn start",
     "dev:bills": "cd packages/modules/bills && yarn start",
     "dev:example": "cd example && yarn start",
@@ -39,6 +40,7 @@
     "build:common": "cd packages/modules/common && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
     "build:im": "cd packages/modules/im && yarn build",
+    "build:hrms": "cd packages/modules/hrms && yarn build",
     "build:receipts": "cd packages/modules/receipts && yarn build",
     "build:bills": "cd packages/modules/bills && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh"

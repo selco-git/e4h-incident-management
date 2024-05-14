@@ -129,10 +129,222 @@ const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => 
 
 const EmployeeHome = ({ modules }) => {
   console.log("modulesmodules",modules)
+  let mod=[
+    {
+        "module": "PT",
+        "code": "PT",
+        "bannerImage": "https://egov-uat-assets.s3.amazonaws.com/PT.png",
+        "active": true,
+        "order": 1,
+        "tenants": [
+            {
+                "code": "pg.citya"
+            },
+            {
+                "code": "pg.cityb"
+            },
+            {
+                "code": "pg.cityc"
+            },
+            {
+                "code": "pg.cityd"
+            },
+            {
+                "code": "pg.citye"
+            }
+        ]
+    },
+    {
+        "module": "QuickPayLinks",
+        "code": "QuickPayLinks",
+        "active": true,
+        "order": 1,
+        "tenants": [
+            {
+                "code": "pg.citya"
+            },
+            {
+                "code": "pg.cityb"
+            },
+            {
+                "code": "pg.cityc"
+            }
+        ]
+    },
+    {
+        "module": "Payment",
+        "code": "Payment",
+        "active": true,
+        "order": 1,
+        "tenants": [
+            {
+                "code": "pg.citya"
+            },
+            {
+                "code": "pg.cityb"
+            },
+            {
+                "code": "pg.cityc"
+            },
+            {
+                "code": "pg.cityd"
+            },
+            {
+                "code": "pg.citye"
+            }
+        ]
+    },
+    {
+        "module": "SW",
+        "code": "SW",
+        "active": true,
+        "order": 1,
+        "tenants": [
+            {
+                "code": "pg.citya"
+            },
+            {
+                "code": "pg.cityb"
+            },
+            {
+                "code": "pg.cityc"
+            }
+        ]
+    },
+    {
+        "module": "BillAmendment",
+        "code": "BillAmendment",
+        "active": true,
+        "order": 1,
+        "tenants": [
+            {
+                "code": "pg.citya"
+            },
+            {
+                "code": "pg.cityb"
+            },
+            {
+                "code": "pg.cityc"
+            }
+        ]
+    },
+    {
+        "module": "PGR",
+        "code": "PGR",
+        "bannerImage": "https://egov-uat-assets.s3.amazonaws.com/PGR.png",
+        "active": true,
+        "order": 2,
+        "tenants": [
+            {
+                "code": "pg.citya"
+            },
+            {
+                "code": "pg.cityb"
+            },
+            {
+                "code": "pg.cityc"
+            },
+            {
+                "code": "pg.cityd"
+            },
+            {
+                "code": "pg.citye"
+            }
+        ]
+    },
+    {
+        "module": "HRMS",
+        "code": "HRMS",
+        "active": true,
+        "order": 2,
+        "tenants": [
+          {
+            "code": "pg.aidbhavisubcentre"
+        },
+        {
+            "code": "pg.alkodsubcentre"
+        },
+        {
+            "code": "pg.amdihalsubcentre"
+        },
+        {
+            "code": "pg.ambamathsubcentre"
+        },
+        {
+            "code": "pg"
+        }
+        ]
+    },
+    {
+        "module": "IM",
+        "code": "IM",
+        "bannerImage": "https://egov-uat-assets.s3.amazonaws.com/PGR.png",
+        "active": true,
+        "order": 2,
+        "tenants": [
+            {
+                "code": "pg.aidbhavisubcentre"
+            },
+            {
+                "code": "pg.alkodsubcentre"
+            },
+            {
+                "code": "pg.amdihalsubcentre"
+            },
+            {
+                "code": "pg.ambamathsubcentre"
+            },
+            {
+                "code": "pg"
+            }
+        ]
+    },
+    {
+        "module": "Receipts",
+        "code": "Receipts",
+        "active": true,
+        "order": 3,
+        "tenants": [
+            {
+                "code": "pg.citya"
+            },
+            {
+                "code": "pg.cityb"
+            },
+            {
+                "code": "pg.cityc"
+            },
+            {
+                "code": "pg.cityd"
+            },
+            {
+                "code": "pg.citye"
+            }
+        ]
+    },
+    {
+        "module": "Bills",
+        "code": "Bills",
+        "bannerImage": "https://egov-uat-assets.s3.amazonaws.com/Bill.png",
+        "active": true,
+        "order": 3,
+        "tenants": [
+            {
+                "code": "pg.citya"
+            },
+            {
+                "code": "pg.cityb"
+            },
+            {
+                "code": "pg.cityc"
+            }
+        ]
+    }
+]
   return (
     <div className="employee-app-container">
       <div className="ground-container moduleCardWrapper gridModuleWrapper">
-        {modules.map(({ code }, index) => {
+        {mod.map(({ code }, index) => {
           const Card = Digit.ComponentRegistryService.getComponent(`${code}Card`) || (() => <React.Fragment />);
           return <Card key={index} />;
         })}

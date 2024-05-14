@@ -129,7 +129,13 @@ const pgrAccess = () => {
 };
 
 
-
+const hrmsRoles = ["HRMS_ADMIN"];
+const hrmsAccess = () => {
+  const userInfo = Digit.UserService.getUser();
+  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+  const HRMS_ACCESS = userRoles?.filter((role) => hrmsRoles?.includes(role));
+  return HRMS_ACCESS?.length > 0;
+};
 
 
 
@@ -163,15 +169,11 @@ export default {
   detectDsoRoute,
   routeSubscription,
   pgrAccess,
-  
-  
+  hrmsAccess,
+  hrmsRoles,
   receiptsAccess,
   didEmployeeHasRole,
- 
   getPattern,
-
   getUnique,
- 
-
   ...privacy
 };

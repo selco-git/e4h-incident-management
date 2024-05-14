@@ -10,23 +10,28 @@ import {
 } from "@egovernments/digit-ui-module-common";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-
+import {
+  HRMSModule,
+  initHRMSComponents,
+} from "@upyog/digit-ui-module-hrms";
 initLibraries();
 
 const enabledModules = [
   "IM",
   "HRMS",
-  "Bills"
+  "Bills",
+  "HRMS"
 ];
 window.Digit.ComponentRegistryService.setupRegistry({
   ...paymentConfigs,
   PaymentModule,
   PaymentLinks,
+  HRMSModule
   //HRMSModule,
 });
 
 initIMComponents();
-
+initHRMSComponents();
 const moduleReducers = (initData) => ({
   pgr: IMReducers(initData),
 });

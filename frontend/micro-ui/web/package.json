@@ -9,7 +9,7 @@
     "micro-ui-internals/packages/modules/common",
     "micro-ui-internals/packages/modules/core",
     "micro-ui-internals/packages/modules/im",
-    "micro-ui-internals/packages/modules/bills" 
+    "micro-ui-internals/packages/modules/hrms" 
   ],
   "engines": {
     "node": ">=14"
@@ -22,6 +22,7 @@
     "@egovernments/digit-ui-module-pgr": "1.7.0-beta.2",
     "@egovernments/digit-ui-module-receipts": "1.7.0-beta.2",
     "@egovernments/digit-ui-react-components": "1.7.0-beta.2",
+    "@egovernments/digit-ui-module-hrms":"1.8.0",
     "babel-loader": "8.1.0",
     "clean-webpack-plugin": "4.0.0",
     "react": "17.0.2",

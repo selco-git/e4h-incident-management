@@ -1409,6 +1409,7 @@ export const MdmsService = {
     );
   },
   getDataByCriteria: async (tenantId, mdmsDetails, moduleCode) => {
+    console.log("tenantId, mdmsDetails, moduleCode",tenantId, mdmsDetails, moduleCode)
     const key = `MDMS.${tenantId}.${moduleCode}.${mdmsDetails.type}.${JSON.stringify(mdmsDetails.details)}`;
     console.log("keyy", key)
     const inStoreValue = PersistantStorage.get(key);
@@ -1546,6 +1547,7 @@ export const MdmsService = {
     return MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode);
   },
   getMultipleTypes: (tenantId, moduleCode, types) => {
+    console.log("tenantId, moduleCode, typestenantId, moduleCode, types",tenantId, moduleCode, types)
     return MdmsService.getDataByCriteria(tenantId, getMultipleTypes(tenantId, moduleCode, types), moduleCode);
   },
   getMultipleTypesWithFilter: (tenantId, moduleCode, types) => {

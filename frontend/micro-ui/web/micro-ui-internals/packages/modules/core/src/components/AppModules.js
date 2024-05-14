@@ -23,10 +23,62 @@ export const AppModules = ({ stateCode, userType, modules, appTenants }) => {
   if (!user || !user?.access_token || !user?.info) {
     return <Redirect to={{ pathname: "/digit-ui/employee/user/login", state: { from: location.pathname + location.search } }} />;
   }
-  console.log("path,modules", path,modules)
-  const appRoutes = modules.map(({ code, tenants }, index) => {
+  
+  let mod =[
+ 
+    {
+        "module": "HRMS",
+        "code": "HRMS",
+        "active": true,
+        "order": 2,
+        "tenants": [
+            {
+                "code": "pg.aidbhavisubcentre"
+            },
+            {
+                "code": "pg.alkodsubcentre"
+            },
+            {
+                "code": "pg.amdihalsubcentre"
+            },
+            {
+                "code": "pg.ambamathsubcentre"
+            },
+            {
+                "code": "pg"
+            }
+        ]
+    },
+    {
+        "module": "IM",
+        "code": "IM",
+        "bannerImage": "https://egov-uat-assets.s3.amazonaws.com/PGR.png",
+        "active": true,
+        "order": 2,
+        "tenants": [
+            {
+                "code": "pg.aidbhavisubcentre"
+            },
+            {
+                "code": "pg.alkodsubcentre"
+            },
+            {
+                "code": "pg.amdihalsubcentre"
+            },
+            {
+                "code": "pg.ambamathsubcentre"
+            },
+            {
+                "code": "pg"
+            }
+        ]
+    },
+  
+]
+//console.log("path,modules", path,mod)
+  const appRoutes = mod.map(({ code, tenants }, index) => {
     const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
-    console.log("Module,Module", Module)
+   // console.log("Module,Module", Module)
     return Module ? (
       <Route key={index} path={`${path}/${code.toLowerCase()}`}>
         <Module stateCode={stateCode} moduleCode={code} userType={userType} tenants={getTenants(tenants, appTenants)} />

@@ -11,6 +11,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [healthCareType, setHealthCareType]=useState();
   const [healthcentre, setHealthCentre]=useState();
   const [blockMenu, setBlockMenu]=useState([]);
+  const [blockMenuNew, setBlockMenuNew]=useState([]);
   const [districtMenu, setDistrictMenu]=useState([]);
   const [file, setFile]=useState(null);
   const [uploadedFile, setUploadedFile]=useState(null);
@@ -24,6 +25,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [complaintType, setComplaintType]=useState(JSON?.parse(sessionStorage.getItem("complaintType")) || {});
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [phcSubTypeMenu, setPhcSubTypeMenu]=useState([]);
+  const [phcMenuNew, setPhcMenu] = useState([])
   const [subType, setSubType]=useState(JSON?.parse(sessionStorage.getItem("subType")) || {});
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
   const state = Digit.ULBService.getStateId();
@@ -166,7 +168,9 @@ useEffect(()=>{
     setDistrict(selectedDistrict);
     const response=mdmsData?.Incident?.Block;
     if(response){
+      //setBlockMenuNew(response)
       const blocks=response.filter((def)=>def.districtCode===selectedDistrict.key);
+      setBlockMenuNew(blocks)
       setBlockMenu(
         blocks.map(block=>({
           key:block.name,
@@ -186,6 +190,11 @@ useEffect(()=>{
   }
   const handleBlockChange= (selectedBlock)=>{
     //sessionStorage.setItem("block",JSON.stringify(value))
+    setHealthCareType({})
+    setHealthCentre({})
+    const block  = blockMenuNew.find(item => item.name === selectedBlock.key)
+    const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre.city.blockCode === block.code)
+    setPhcMenu(phcMenuType)
     setBlock(selectedBlock);
   }
   const handlePhcSubType=(value)=>{
@@ -253,7 +262,7 @@ useEffect(()=>{
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcMenu?.tenant?.tenants} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} />
+            <Dropdown option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} />
             
           ),
            

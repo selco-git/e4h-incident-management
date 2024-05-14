@@ -1,29 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { IMReducers } from "@egovernments/digit-ui-module-pgr";
-
-
-
-
+import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
+import { HRMSModule } from "@egovernments/digit-ui-module-hrms";
 import { initIMComponents } from "@egovernments/digit-ui-module-pgr";
-
-
 import { initReceiptsComponents, ReceiptsModule } from "@egovernments/digit-ui-module-receipts";
 // import { initReportsComponents } from "@egovernments/digit-ui-module-reports";
-
-
 import { PaymentModule, PaymentLinks, paymentConfigs } from "@egovernments/digit-ui-module-common";
-
-
-
-
-
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { initCommonPTComponents } from "@egovernments/digit-ui-module-commonpt";
 import { initBillsComponents, BillsModule } from "@egovernments/digit-ui-module-bills";
-
 // import {initCustomisationComponents} from "./customisations";
 
 // import { PGRModule, PGRLinks } from "@egovernments/digit-ui-module-pgr";
@@ -48,7 +35,8 @@ const enabledModules = [
   "Bills",
   "SW",
   "BillAmendment",
-  "IM"
+  "IM",
+  "HRMS"
 ];
 
 const initTokens = (stateCode) => {
@@ -82,6 +70,7 @@ const initTokens = (stateCode) => {
 const initDigitUI = () => {
   window?.Digit.ComponentRegistryService.setupRegistry({
     PaymentModule,
+    HRMSModule,
     ...paymentConfigs,
     PaymentLinks,
     ReceiptsModule,
@@ -91,6 +80,7 @@ const initDigitUI = () => {
   initReceiptsComponents();
   initCommonPTComponents();
   initBillsComponents();
+  initHRMSComponents();
   const moduleReducers = (initData) => ({
     pgr: IMReducers(initData),
   });

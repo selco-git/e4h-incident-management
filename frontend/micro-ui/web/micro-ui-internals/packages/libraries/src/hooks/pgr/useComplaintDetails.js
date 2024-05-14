@@ -18,8 +18,8 @@ const getDetailsRow = ({ id, service, complaintType }) =>({
   CS_ADDCOMPLAINT_DISTRICT : service?.incident.district,
   CS_ADDCOMPLAINT_BLOCK: service?.incident?.block,
   CS_ADDCOMPLAINT_HEALTH_CARE_CENTRE: service?.incident?.phcType,
-  CS_COMPLAINT_COMMENTS: service.incident.comments,
-  CS_ADDCOMPLAINT_HEALTH_CARE_SUB_TYPE:service.incident.phcSybType,
+  CS_COMPLAINT_COMMENTS: service?.incident?.comments,
+  CS_ADDCOMPLAINT_HEALTH_CARE_SUB_TYPE: service?.incident?.phcSubType,
   CS_COMPLAINT_FILED_DATE: Digit.DateUtils.ConvertTimestampToDate(service.incident.auditDetails.createdTime),
 })
 
@@ -62,10 +62,10 @@ const fetchComplaintDetails = async (tenantId, id) => {
     //const complaintType =  service.incident.incidentType
     const complaintType = serviceDefs.filter((def) => def.serviceCode === service.incident.incidentSubType)[0].menuPath.toUpperCase();
     console.log("CT", complaintType)
-    const ids = workflow.verificationDocuments
-      ? workflow.verificationDocuments.filter((doc) => doc.documentType === "PHOTO").map((photo) => photo.fileStoreId || photo.id)
+    const ids = workflow.workflow.verificationDocuments
+      ? workflow.workflow.verificationDocuments.filter((doc) => doc.documentType === "PHOTO").map((photo) => photo.fileStoreId || photo.id)
       : null;
-    const thumbnails = ids ? await getThumbnails(ids, service.tenantId) : null;
+    const thumbnails = ids ? await getThumbnails(ids, service.incident.tenantId) : null;
     const details = transformDetails({ id, service, workflow, thumbnails, complaintType });
     return details;
   } else {

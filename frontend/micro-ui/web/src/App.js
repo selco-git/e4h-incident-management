@@ -13,7 +13,7 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 import {
   HRMSModule,
   initHRMSComponents,
-} from "@upyog/digit-ui-module-hrms";
+} from "@egovernments/digit-ui-module-hrms";
 initLibraries();
 
 const enabledModules = [

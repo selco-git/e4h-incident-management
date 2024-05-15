@@ -104,7 +104,12 @@ import useTenantsBills from "./bills/useTenants";
 
 
 
-
+import useHRMSSearch from "./hrms/useHRMSsearch";
+import useHrmsMDMS from "./hrms/useHRMSMDMS";
+import useHRMSCreate from "./hrms/useHRMScreate";
+import useHRMSUpdate from "./hrms/useHRMSUpdate";
+import useHRMSCount from "./hrms/useHRMSCount";
+import useHRMSGenderMDMS from "./hrms/useHRMSGender";
 import useGetHowItWorksJSON from "./useHowItWorksJSON";
 import useGetFAQsJSON from "./useGetFAQsJSON";
 
@@ -139,7 +144,14 @@ const pgr = {
 
 
 
-
+const hrms = {
+  useHRMSSearch,
+  useHrmsMDMS,
+  useHRMSCreate,
+  useHRMSUpdate,
+  useHRMSCount,
+  useHRMSGenderMDMS,
+};
 const receipts = {
   useReceiptsMDMS,
   useReceiptsSearch,
@@ -197,7 +209,7 @@ const Hooks = {
   useStore,
   useDocumentSearch,
   useTenants,
-
+  hrms,
   useFeedBackSearch,
   useAccessControl,
   useBillSearch,

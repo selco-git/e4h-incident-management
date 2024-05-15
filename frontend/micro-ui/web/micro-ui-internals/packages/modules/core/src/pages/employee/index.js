@@ -35,6 +35,7 @@ const EmployeeApp = ({
   const location = useLocation();
   const showLanguageChange = location?.pathname?.includes("language-selection");
   const isUserProfile = userScreensExempted.some((url) => location?.pathname?.includes(url));
+  //console.log("appTenantsappTenantsappTenants,",appTenants,modules,stateCode)
   useEffect(() => {
     Digit.UserService.setType("employee");
   }, []);

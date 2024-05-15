@@ -431,7 +431,7 @@ return (
   <React.Fragment>
     <Card>
       <CardSubHeader>{t(`CS_HEADER_INCIDENT_SUMMARY`)}</CardSubHeader>
-     
+
       {isLoading ? (
         <Loader />
       ) : (

@@ -33,7 +33,7 @@ export const Complaint = {
        phcType:healthcentre?.key,
        phcSubType:healthCareType?.key,
        comments:comments,
-        block:block?.key,
+       block:block?.key,
         additionalDetail: {
         },
         source: Digit.Utils.browser.isWebview() ? "mobile" : "web",

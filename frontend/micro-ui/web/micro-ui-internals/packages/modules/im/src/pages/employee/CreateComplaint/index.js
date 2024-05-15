@@ -11,13 +11,13 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [healthCareType, setHealthCareType]=useState();
   const [healthcentre, setHealthCentre]=useState();
   const [blockMenu, setBlockMenu]=useState([]);
+  const [blockMenuNew, setBlockMenuNew]=useState([]);
   const [districtMenu, setDistrictMenu]=useState([]);
   const [file, setFile]=useState(null);
   const [uploadedFile, setUploadedFile]=useState(null);
   const [district, setDistrict]=useState(null);
   const [block, setBlock]=useState(null);
   const [error, setError] = useState(null);
-  const [healthcareMenu, setHealthCareMenu]=useState(null);
   let reporterName = JSON.parse(sessionStorage.getItem("Digit.User"))?.value?.info?.name;
   const [canSubmit, setSubmitValve] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -25,12 +25,12 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [complaintType, setComplaintType]=useState(JSON?.parse(sessionStorage.getItem("complaintType")) || {});
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [phcSubTypeMenu, setPhcSubTypeMenu]=useState([]);
+  const [phcMenuNew, setPhcMenu] = useState([])
   const [subType, setSubType]=useState(JSON?.parse(sessionStorage.getItem("subType")) || {});
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
   const state = Digit.ULBService.getStateId();
 const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
-console.log("phcMenu", phcMenu)
 useEffect(()=>{
   const fetchDistrictMenu=async()=>{
     const response=phcMenu?.Incident?.Block;
@@ -57,64 +57,6 @@ useEffect(()=>{
   fetchDistrictMenu();
 }, [state, mdmsData,t]);
 
-const handleDistrictChange =async(selectedDistrict) =>{
-  setDistrict(selectedDistrict);
-  const response=mdmsData?.Incident?.Block;
-  if(response){
-    const blocks=response.filter((def)=>def.districtCode===selectedDistrict.key);
-    setBlockMenu(
-      blocks.map(block=>({
-        key:block.name,
-        name:t(`${(selectedDistrict.key)}.${(block.name)}`).toLowerCase()
-    }))
-    );
-  }
-}
-
-const handleBlockChange= async(selectedBlock)=>{
-  //sessionStorage.setItem("block",JSON.stringify(value))
-  console.log("selectedblock", selectedBlock)
-  setBlock(selectedBlock);
-  const response=mdmsData?.tenant?.tenants;
-  console.log("convert", response[0])
-  if(response){
-    const healthCareOptions=response.filter((def)=>def.city.blockCode===selectedBlock.name);
-    setHealthCareMenu(
-      healthCareOptions.map(def=>({
-        key:def.name,
-        name:t(def.name.toUpperCase())
-    }))
-    );
-  }
-}
-const handleHealthCareChange= async(selectedHealthCentre)=>{
-  
-  
-  setHealthCentre(selectedHealthCentre);
-  const response=mdmsData?.tenant?.tenants;
-  
-  if(response){
-    const healthCareSubTypeOptions=response.filter((def)=>def.name===selectedHealthCentre.key);
-    
-    setPhcSubTypeMenu(
-      healthCareSubTypeOptions.map(def=>({
-        key:def.centreType,
-        name:t(def.centreType.toUpperCase())
-    }))
-    );
-    
-  }
-}
-// async function selectedHealthCentre(value){
-//   setHealthCentre(value);
-//   setPhcSubTypeMenu([value])
-//   setHealthCareType(value);
-// }
-
-const handlePhcSubType=(value)=>{
-  console.log("value", value) 
-  setHealthCareType(value);
-}
 
   useEffect(() => {
       (async () => {
@@ -173,12 +115,47 @@ const handlePhcSubType=(value)=>{
       }
     }
   }
+  const handleDistrictChange =async(selectedDistrict) =>{
+    setDistrict(selectedDistrict);
+    const response=mdmsData?.Incident?.Block;
+    if(response){
+      //setBlockMenuNew(response)
+      const blocks=response.filter((def)=>def.districtCode===selectedDistrict.key);
+      setBlockMenuNew(blocks)
+      setBlockMenu(
+        blocks.map(block=>({
+          key:block.name,
+          name:t(block.name.toUpperCase())
+      }))
+      );
+    }
+  }
   function selectedSubType(value) {
     sessionStorage.setItem("subType",JSON.stringify(value))
     setSubType(value);
   }
- 
-
+  async function selectedHealthCentre(value){
+    setHealthCentre(value);
+    setPhcSubTypeMenu([value])
+    setHealthCareType(value);
+  }
+  const handleBlockChange= (selectedBlock)=>{
+    //sessionStorage.setItem("block",JSON.stringify(value))
+    setHealthCareType({})
+    setHealthCentre({})
+    const block  = blockMenuNew.find(item => item.name === selectedBlock.key)
+    const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre.city.blockCode === block.code)
+    setPhcMenu(phcMenuType)
+    setBlock(selectedBlock);
+  }
+  const handlePhcSubType=(value)=>{
+    console.log("value", value) 
+    setHealthCareType(value);
+  }
+  // const selectedDistrict = (value) => {
+  //   setDistrict(value);
+  //   setBlockMenu([value]);
+  // };
   async function selectFile(e){
     setFile(e.target.files[0]);
   }
@@ -236,7 +213,7 @@ const handlePhcSubType=(value)=>{
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={healthcareMenu} optionKey="key" id="name" selected={healthcentre} select={handleHealthCareChange} />
+            <Dropdown option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} />
             
           ),
            
@@ -246,7 +223,7 @@ const handlePhcSubType=(value)=>{
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcSubTypeMenu} optionKey="key" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
+            <Dropdown option={phcSubTypeMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
              
           ),
            
@@ -314,4 +291,3 @@ const handlePhcSubType=(value)=>{
     />
   );
 };
-

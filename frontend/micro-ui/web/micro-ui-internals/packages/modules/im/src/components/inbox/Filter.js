@@ -187,9 +187,6 @@ console.log("pgrfilters", pgrfilters)
   };
 
   const GetSelectOptions = (lable, options, selected = null, select, optionKey, onRemove, key) => {
-    console.log("selected", selected)
-    console.log("option", optionKey)
-   // console.log("code", code)
     selected = selected || { [optionKey]: " ", code: "" };
     return (
       <div>

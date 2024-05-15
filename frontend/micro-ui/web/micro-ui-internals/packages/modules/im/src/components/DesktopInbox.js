@@ -87,7 +87,7 @@ const DesktopInbox = ({
           ))}
       </Card>
     );
-  } else if (data.length > 0) {
+  } else if (data?.length > 0) {
     result = (
       <ComplaintTable
         t={t}

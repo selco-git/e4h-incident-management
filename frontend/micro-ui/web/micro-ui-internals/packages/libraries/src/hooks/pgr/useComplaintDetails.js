@@ -65,7 +65,8 @@ const fetchComplaintDetails = async (tenantId, id) => {
     const ids = workflow.workflow.verificationDocuments
       ? workflow.workflow.verificationDocuments.filter((doc) => doc.documentType === "PHOTO").map((photo) => photo.fileStoreId || photo.id)
       : null;
-    const thumbnails = ids ? await getThumbnails(ids, service.incident.tenantId) : null;
+    const state = Digit.ULBService.getStateId();
+    const thumbnails = ids ? await getThumbnails(ids, state) : null;
     const details = transformDetails({ id, service, workflow, thumbnails, complaintType });
     return details;
   } else {

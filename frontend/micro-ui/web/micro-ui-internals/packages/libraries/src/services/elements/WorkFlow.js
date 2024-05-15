@@ -3,7 +3,7 @@ import { Request } from "../atoms/Utils/Request";
 import cloneDeep from "lodash/cloneDeep";
 
 const getThumbnails = async (ids, tenantId, documents = []) => {
-  tenantId = window.location.href.includes("/obps/") || window.location.href.includes("/pt/") ? Digit.ULBService.getStateId() : tenantId;
+  tenantId = window.location.href.includes("/obps/") || window.location.href.includes("/pt/") ? Digit.ULBService.getStateId() :  Digit.ULBService.getStateId();;
   
   if (window.location.href.includes("/obps/")) {
     if (documents?.length > 0) {
@@ -35,7 +35,8 @@ const getThumbnails = async (ids, tenantId, documents = []) => {
 
 const makeCommentsSubsidariesOfPreviousActions = async (wf) => {
   const TimelineMap = new Map();
-  const tenantId = window.location.href.includes("/obps/") ? Digit.ULBService.getStateId() : wf?.[0]?.tenantId;
+  const state = Digit.ULBService.getStateId();
+  const tenantId = window.location.href.includes("/obps/") ? Digit.ULBService.getStateId() : state;
   let fileStoreIdsList = [];
   let res = {};
 

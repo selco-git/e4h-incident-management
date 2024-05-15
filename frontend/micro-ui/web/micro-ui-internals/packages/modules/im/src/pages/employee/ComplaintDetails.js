@@ -188,7 +188,7 @@ console.log("employeeData", employeeData)
         {selectedAction === "REJECT" || selectedAction === "RESOLVE" || selectedAction === "REOPEN" ? null : (
           <React.Fragment>
             <CardLabel>{t("CS_COMMON_EMPLOYEE_NAME")}</CardLabel>
-            {employeeData && <Dropdown selected={selectedEmployee} menuData={employeeData} displayKey="name" select={onSelectEmployee} />}
+            {employeeData && <SectionalDropdown selected={selectedEmployee} menuData={employeeData} displayKey="name" select={onSelectEmployee} />}
           </React.Fragment>
         )}
         {selectedAction === "REOPEN" ? (
@@ -431,7 +431,7 @@ return (
   <React.Fragment>
     <Card>
       <CardSubHeader>{t(`CS_HEADER_INCIDENT_SUMMARY`)}</CardSubHeader>
-      {/* <CardLabel style={{fontWeight:"700"}}>{t(`CS_INCIDENT_DETAILS`)}</CardLabel> */}
+
       {isLoading ? (
         <Loader />
       ) : (

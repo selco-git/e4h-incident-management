@@ -27,6 +27,8 @@ const Filter = (props) => {
 
   const [selectedComplaintType, setSelectedComplaintType] = useState(null);
   const [selectedHealthCare, setSelectedHealthCare] = useState(null);
+  console.log("hc", selectedHealthCare)
+  console.log("selecCom", selectedComplaintType)
   const [pgrfilters, setPgrFilters] = useState(
     searchParams?.filters?.pgrfilters || {
       incidentSubType: [],
@@ -185,7 +187,6 @@ console.log("pgrfilters", pgrfilters)
   };
 
   const GetSelectOptions = (lable, options, selected = null, select, optionKey, onRemove, key) => {
-   // console.log("code", code)
     selected = selected || { [optionKey]: " ", code: "" };
     return (
       <div>

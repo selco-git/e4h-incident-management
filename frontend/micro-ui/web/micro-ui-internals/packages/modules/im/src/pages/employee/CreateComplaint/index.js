@@ -57,55 +57,6 @@ useEffect(()=>{
   fetchDistrictMenu();
 }, [state, mdmsData,t]);
 
- 
-//  var Menu = [];
-//  const getDistrictMenu=async (tenantId, t) => {
-//   const response1 = mdmsData
-//   console.log("subres11", response1)
-//   if(response1!==undefined){
-//     const response=response1?.Incident?.Block
-//     console.log("respons", response)
-//   await Promise.all(
-//      response.map((def) => {
-  
-//       if (!Menu.find((e) => e.key === def.districtCode)) {
-//         def.menuPath === ""
-//           ? Menu.push({
-//               name: t("SERVICEDEFS.OTHERS"),
-//               key: def.districtCode,
-//             })
-//           : Menu.push({
-//               name: t(def.districtCode.toUpperCase()),
-//               key: def.districtCode,
-//             });
-//       }
-    
-//     })
-//   );
-//   }
-//   console.log("menuuuu", Menu)
-//   return Menu;
-  
-// }
-
-// getDistrictMenu(state, t)
-// console.log("distmenu", districtMenu)
-
-// // // 
-// const getBlockMenu= async (state, selectedType, t) => {
-//   console.log("slectedType", selectedType)
-//    const fetchServiceDefs = mdmsData?.Incident?.Block
-//    if(fetchServiceDefs!==undefined && selectedType.length!==0){
-//    return fetchServiceDefs
-//     .filter((def) => def.districtCode === selectedType.key)
-//    .map((id) => ({
-//       key: id.name,
-//       name: t("SERVICEDEFS." + id.name.toUpperCase()),
-//      }));
-//     }
-//  }
-//  console.log("dd", district)
-//  getBlockMenu(tenantId, district, t);
 
   useEffect(() => {
       (async () => {
@@ -340,4 +291,3 @@ useEffect(()=>{
     />
   );
 };
-

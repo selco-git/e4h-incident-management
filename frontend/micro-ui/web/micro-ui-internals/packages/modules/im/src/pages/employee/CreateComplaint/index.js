@@ -27,7 +27,20 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [phcSubTypeMenu, setPhcSubTypeMenu]=useState([]);
   const [phcMenuNew, setPhcMenu] = useState([])
   const [subType, setSubType]=useState(JSON?.parse(sessionStorage.getItem("subType")) || {});
+  let sortedSubMenu=[];
+  if(subTypeMenu!==null){
+    sortedSubMenu=subTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
+   }
+   let sortedphcSubMenu=[]
+   if(phcSubTypeMenu!==null){
+    sortedphcSubMenu=phcSubTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
+   }
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
+let  sortedMenu=[];
+  console.log("men)", menu)
+  if(menu!==null){
+   sortedMenu=menu.sort((a,b)=>a.name.localeCompare(b.name))
+  }
   const state = Digit.ULBService.getStateId();
 const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
@@ -43,6 +56,7 @@ useEffect(()=>{
         }
         return false;
       });
+      districts.sort((a,b)=>a.name.localeCompare(b.name))
           setDistrictMenu(
             districts.map(def=>({
            
@@ -70,7 +84,7 @@ useEffect(()=>{
           } else {
             try {
               console.log("ttt", tenantId?.split(".")[0])
-              const response = await Digit.UploadServices.Filestorage("Incident", file, Digit.ULBService.getStateId() || tenantId?.split(".")[0]);
+              const response = await Digit.UploadServices.Filestorage("Incident", file, tenantId);
               console.log("filesres", response)
               if (response?.data?.files?.length > 0) {
                 setUploadedFile(response?.data?.files[0]?.fileStoreId);
@@ -121,6 +135,7 @@ useEffect(()=>{
     if(response){
       //setBlockMenuNew(response)
       const blocks=response.filter((def)=>def.districtCode===selectedDistrict.key);
+      blocks.sort((a,b)=>a.name.localeCompare(b.name))
       setBlockMenuNew(blocks)
       setBlockMenu(
         blocks.map(block=>({
@@ -145,6 +160,7 @@ useEffect(()=>{
     setHealthCentre({})
     const block  = blockMenuNew.find(item => item.name === selectedBlock.key)
     const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre.city.blockCode === block.code)
+    phcMenuType.sort((a,b)=>a.name.localeCompare(b.name))
     setPhcMenu(phcMenuType)
     setBlock(selectedBlock);
   }
@@ -223,7 +239,7 @@ useEffect(()=>{
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcSubTypeMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
+            <Dropdown option={sortedphcSubMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
              
           ),
            
@@ -239,7 +255,7 @@ useEffect(()=>{
           type: "dropdown",
           isMandatory:true,
          
-          populators: <Dropdown option={menu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
+          populators: <Dropdown option={sortedMenu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
            
          
            
@@ -249,7 +265,7 @@ useEffect(()=>{
           type: "dropdown",
           isMandatory:true,
           menu: { ...subTypeMenu },
-          populators: <Dropdown option={subTypeMenu} optionKey="name" id="complaintSubType" selected={subType} select={selectedSubType} />,
+          populators: <Dropdown option={sortedSubMenu} optionKey="name" id="complaintSubType" selected={subType} select={selectedSubType} />,
            
          }
         ]

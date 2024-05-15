@@ -35,6 +35,7 @@ export const Complaint = {
        comments:comments,
        block:block?.key,
         additionalDetail: {
+          fileStoreId: uploadedFile,
         },
         source: Digit.Utils.browser.isWebview() ? "mobile" : "web",
        

@@ -9,6 +9,7 @@ const createComplaint = ({
  reporterName,
  district,
  block,
+ uploadImages,
  uploadedFile,
   mobileNumber,
   name,
@@ -22,6 +23,7 @@ const createComplaint = ({
     healthCareType,
     uploadedFile,
     healthcentre,
+    uploadImages,
     district,
     reporterName
 

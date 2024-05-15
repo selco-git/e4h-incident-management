@@ -217,9 +217,7 @@ console.log("employeeData", employeeData)
 };
 
 export const ComplaintDetails = (props) => {
-  console.log("props", props)
   let { id } = useParams();
-  console.log("id965", id)
   const { t } = useTranslation();
   const [fullscreen, setFullscreen] = useState(false);
   const [imageZoom, setImageZoom] = useState(null);

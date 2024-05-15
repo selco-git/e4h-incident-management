@@ -3,7 +3,7 @@ import { Request } from "../atoms/Utils/Request";
 import cloneDeep from "lodash/cloneDeep";
 
 const getThumbnails = async (ids, tenantId, documents = []) => {
-  tenantId = window.location.href.includes("/obps/") || window.location.href.includes("/pt/") ? Digit.ULBService.getStateId() :  Digit.ULBService.getStateId();;
+  tenantId = window.location.href.includes("/obps/") || window.location.href.includes("/pt/") ? Digit.ULBService.getStateId() : tenantId;
   
   if (window.location.href.includes("/obps/")) {
     if (documents?.length > 0) {
@@ -35,8 +35,7 @@ const getThumbnails = async (ids, tenantId, documents = []) => {
 
 const makeCommentsSubsidariesOfPreviousActions = async (wf) => {
   const TimelineMap = new Map();
-  const state = Digit.ULBService.getStateId();
-  const tenantId = window.location.href.includes("/obps/") ? Digit.ULBService.getStateId() : state;
+  const tenantId = window.location.href.includes("/obps/") ? Digit.ULBService.getStateId() : wf?.[0]?.tenantId;
   let fileStoreIdsList = [];
   let res = {};
 
@@ -126,7 +125,7 @@ export const WorkflowService = {
       /* To check state is updatable and provide edit option*/
       const currentState = businessServiceResponse?.find((state) => state.uuid === processInstances[0]?.state.uuid);
       if (currentState && currentState?.isStateUpdatable) {
-        if (moduleCode === "FSM" || moduleCode === "FSM_POST_PAY_SERVICE" || moduleCode === "FSM_ADVANCE_PAY_SERVICE" || moduleCode === "FSM_ADVANCE_PAY_SERVICE_V1" || moduleCode === "FSM_ZERO_PAY_SERVICE" || moduleCode === "PAY_LATER_SERVICE" || moduleCode === "FSM_VEHICLE_TRIP" || moduleCode === "Incident" || moduleCode === "OBPS") null;
+        if (moduleCode === "FSM" || moduleCode === "FSM_POST_PAY_SERVICE" || moduleCode === "FSM_ADVANCE_PAY_SERVICE" || moduleCode === "FSM_ADVANCE_PAY_SERVICE_V1" || moduleCode === "FSM_ZERO_PAY_SERVICE" || moduleCode === "PAY_LATER_SERVICE" || moduleCode === "FSM_VEHICLE_TRIP" || moduleCode === "PGR" || moduleCode === "OBPS") null;
         else nextActions.push({ action: "EDIT", state: currentState });
       }
 

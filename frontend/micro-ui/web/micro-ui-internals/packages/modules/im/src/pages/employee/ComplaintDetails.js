@@ -210,6 +210,7 @@ console.log("employeeData", employeeData)
           }}
           message={uploadedFile ? `1 ${t(`CS_ACTION_FILEUPLOADED`)}` : t(`CS_ACTION_NO_FILEUPLOADED`)}
         />
+        {selectedAction === "REOPEN" ?  <div> {t("REOPEN_RESOLUTION_REPORT")}</div> : ""}
       </Card>
     </Modal>
   );

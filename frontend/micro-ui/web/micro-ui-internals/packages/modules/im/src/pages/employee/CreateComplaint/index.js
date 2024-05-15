@@ -15,6 +15,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [districtMenu, setDistrictMenu]=useState([]);
   const [file, setFile]=useState(null);
   const [uploadedFile, setUploadedFile]=useState(null);
+  const [uploadedImages, setUploadedImagesIds] = useState(null)
   const [district, setDistrict]=useState(null);
   const [block, setBlock]=useState(null);
   const [error, setError] = useState(null);
@@ -37,7 +38,6 @@ export const CreateComplaint = ({ parentUrl }) => {
    }
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
 let  sortedMenu=[];
-  console.log("men)", menu)
   if(menu!==null){
    sortedMenu=menu.sort((a,b)=>a.name.localeCompare(b.name))
   }
@@ -83,9 +83,7 @@ useEffect(()=>{
             setError(t(`NOT_SUPPORTED_FILE_TYPE`))
           } else {
             try {
-              console.log("ttt", tenantId?.split(".")[0])
               const response = await Digit.UploadServices.Filestorage("Incident", file, tenantId);
-              console.log("filesres", response)
               if (response?.data?.files?.length > 0) {
                 setUploadedFile(response?.data?.files[0]?.fileStoreId);
               } else {
@@ -112,8 +110,6 @@ useEffect(()=>{
     }
   },[complaintType, subType])
   async function selectedType(value) {
-    console.log("value", value)
-    console.log("comp", complaintType)
     if (value.key !== complaintType.key) {
       if (value.key === "Others") {
         setSubType({ name: "" });
@@ -123,7 +119,6 @@ useEffect(()=>{
       } else {
         setSubType({ name: "" });
         setComplaintType(value);
-        console.log("ccccttt", complaintType)
         sessionStorage.setItem("complaintType",JSON.stringify(value))
         setSubTypeMenu(await serviceDefinitions.getSubMenu(tenantId, value, t));
       }
@@ -165,7 +160,6 @@ useEffect(()=>{
     setBlock(selectedBlock);
   }
   const handlePhcSubType=(value)=>{
-    console.log("value", value) 
     setHealthCareType(value);
   }
   // const selectedDistrict = (value) => {
@@ -175,27 +169,34 @@ useEffect(()=>{
   async function selectFile(e){
     setFile(e.target.files[0]);
   }
+  const handleUpload = (ids) => {
+    setUploadedImagesIds(ids);
+  };
 
-  console.log("file", file)
+
    const wrapperSubmit = (data) => {
     if (!canSubmit) return;
     setSubmitted(true);
     !submitted && onSubmit(data);
   };
   const onSubmit = async (data) => {
-    console.log("data2", data)
     if (!canSubmit) return;
     const { key } = subType;
     const complaintType = key;
-    const formData = { ...data,complaintType, district, block, healthCareType, healthcentre, reporterName, uploadedFile};
-    console.log("formdat", formData)
+    let uploadImages=[]
+    if(uploadedImages!==null){
+     uploadImages = uploadedImages?.map((url) => ({
+      documentType: "PHOTO",
+      fileStoreId: url,
+      documentUid: "",
+      additionalDetails: {},
+    }));
+  }
+    const formData = { ...data,complaintType, district, block, healthCareType, healthcentre, reporterName, uploadedFile,uploadImages};
     await dispatch(createComplaint(formData));
     await client.refetchQueries(["fetchInboxData"]);
     history.push(parentUrl + "/incident/response");
   };
-
-  console.log("districttt", district)
-  console.log("complaintType", complaintType)
   const config = [
     
     {
@@ -285,13 +286,7 @@ useEffect(()=>{
         {
           label:t("INCIDENT_UPLOAD_FILE"),
           populators:
-          <UploadFile 
-              id={"doc"} 
-              accept=".jpeg" 
-              onUpload={selectFile} 
-              onDelete={()=>{setUploadedFile(null)}} 
-              message={uploadedFile? `1 ${t(`ACTION_FILEUPLOADED`)}` : t(`ACTION_NO_FILEUPLOADED`)}
-          />,   
+          <ImageUploadHandler tenantId={tenantId} uploadedImages={uploadedImages} onPhotoChange={handleUpload} />
          },
         ]
       }

@@ -4,6 +4,7 @@ import { Loader, Header } from "@egovernments/digit-ui-react-components";
 
 import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
+import { Link } from "react-router-dom";
 
 const Inbox = () => {
   const { t } = useTranslation();
@@ -59,6 +60,8 @@ const Inbox = () => {
       return (
         <div>
           <Header>{t("ES_COMMON_INBOX")}</Header>
+          <div style={{color:"#9e1b32", marginBottom:'10px'}}>
+    <Link to={`/digit-ui/employee`}>{t("BACK")}</Link></div> 
           <DesktopInbox
             data={complaints}
             isLoading={isLoading}

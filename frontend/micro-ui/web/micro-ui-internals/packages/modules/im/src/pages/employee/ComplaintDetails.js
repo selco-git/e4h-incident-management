@@ -30,6 +30,7 @@ import {
   Modal,
   SectionalDropdown,
 } from "@egovernments/digit-ui-react-components";
+import { Link } from "react-router-dom";
 
 import { Close } from "../../Icons";
 import { useTranslation } from "react-i18next";
@@ -428,6 +429,8 @@ console.log("wfoo", workflowDetails)
 console.log("cdet", complaintDetails)
 return (
   <React.Fragment>
+     <div style={{color:"#9e1b32", marginBottom:'10px'}}>
+    <Link to={`/digit-ui/employee/im/inbox`}>{t("BACK")}</Link></div> 
     <Card>
       <CardSubHeader>{t(`CS_HEADER_INCIDENT_SUMMARY`)}</CardSubHeader>
 

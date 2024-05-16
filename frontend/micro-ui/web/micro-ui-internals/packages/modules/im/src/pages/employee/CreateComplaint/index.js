@@ -43,7 +43,7 @@ let  sortedMenu=[];
    sortedMenu=menu.sort((a,b)=>a.name.localeCompare(b.name))
   }
   const state = Digit.ULBService.getStateId();
-  const [selectTenant, setSelectTenant] =useState(Digit.SessionStorage.get("Employee.tenantId")|| "")
+  const [selectTenant, setSelectTenant] =useState(Digit.SessionStorage.get("Employee.tenantId") || null)
 const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
 let blockNew =mdmsData?.Incident?.Block
@@ -81,7 +81,8 @@ setSelectTenant(tenants)
 },[])
 
 useEffect(async () => {
-  if (selectTenant) {
+
+  if (selectTenant && selectTenant !== "pg") {
     let tenant = Digit.SessionStorage.get("IM_TENANTS")
     const selectedTenantData = tenant.find(item => item.code === selectTenant);
     const selectedDistrict = {
@@ -185,7 +186,7 @@ useEffect(async () => {
     //sessionStorage.setItem("block",JSON.stringify(value))
     setHealthCareType({})
     setHealthCentre({})
-    if(selectTenant)
+    if (selectTenant && selectTenant !== "pg")
     {
       const block  = blockNew?.find(item => item?.name.toUpperCase() === selectedBlock?.key.toUpperCase())
       const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
@@ -260,7 +261,7 @@ useEffect(async () => {
           type: "dropdown",
           isMandatory:true,
           populators:  (
-            <Dropdown option={districtMenu} optionKey="key" id="name" selected={district} select={handleDistrictChange}/>),
+            <Dropdown option={districtMenu} optionKey="key" id="name" selected={district} select={handleDistrictChange} disable={selectTenant && selectTenant !== "pg"?true:false}/>),
            
          },
         
@@ -271,7 +272,7 @@ useEffect(async () => {
           menu: { ...blockMenu },
              populators: (
              
-              <Dropdown option={blockMenu} optionKey="key" id="name" selected={block} select={handleBlockChange} 
+              <Dropdown option={blockMenu} optionKey="key" id="name" selected={block} select={handleBlockChange} disable={selectTenant && selectTenant !== "pg"?true:false}
              />
              
              )
@@ -281,7 +282,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} />
+            <Dropdown option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} disable={selectTenant && selectTenant !== "pg"?true:false} />
             
           ),
            
@@ -291,7 +292,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcSubTypeMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
+            <Dropdown option={phcSubTypeMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} disable={selectTenant && selectTenant !== "pg"?true:false} />
              
           ),
            

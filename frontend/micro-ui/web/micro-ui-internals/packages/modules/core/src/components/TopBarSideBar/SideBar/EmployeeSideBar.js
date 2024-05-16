@@ -1,16 +1,42 @@
 import React, { useRef, useEffect, useState } from "react";
 import SubMenu from "./SubMenu";
 import { Loader, SearchIcon } from "@egovernments/digit-ui-react-components";
+import {
+  ArrowForward,
+  ArrowVectorDown,
+  ArrowDirection,
+  HomeIcon,
+  ComplaintIcon,
+  BPAHomeIcon,
+  PropertyHouse,
+  CaseIcon,
+  ReceiptIcon,
+  PersonIcon,
+  DocumentIconSolid,
+  DropIcon,
+  CollectionsBookmarIcons,
+  FinanceChartIcon,
+  CollectionIcon,
+} from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import NavItem from "./NavItem";
+import LogoutDialog from "../../Dialog/LogoutDialog";
 import _, { findIndex } from "lodash";
-
+const IconsObject = {
+  home: <HomeIcon />,
+  announcement: <ComplaintIcon />,
+  
+  "business-center": <PersonIcon />,
+  
+};
 const EmployeeSideBar = () => {
   const sidebarRef = useRef(null);
   const { isLoading, data } = Digit.Hooks.useAccessControl();
  // console.log("data", data)
   const [search, setSearch] = useState("");
   const { t } = useTranslation();
+  const [showDialog, setShowDialog] = useState(false);
+  const leftIcon = IconsObject.announcement;
   useEffect(() => {
     if (isLoading) {
       return <Loader />;
@@ -18,7 +44,14 @@ const EmployeeSideBar = () => {
     sidebarRef.current.style.cursor = "pointer";
     collapseNav();
   }, [isLoading]);
+  const handleOnSubmit = () => {
+    Digit.UserService.logout();
+    setShowDialog(false);
+  }
 
+  const handleOnCancel = () => {
+    setShowDialog(false);
+  }
   const expandNav = () => {
     sidebarRef.current.style.width = "260px";
     sidebarRef.current.style.overflow = "auto";
@@ -87,6 +120,13 @@ let configEmployeeSideBar1 = {};
     }
 
     return result
+  }
+
+   const handleLogout =()=>{
+   
+     
+    //  return <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>
+    
   }
   const splitKeyValue = () => {
     const keys = Object.keys(configEmployeeSideBar);
@@ -302,6 +342,31 @@ let configEmployeeSideBar1 = {};
     <div className="sidebar" ref={sidebarRef} onMouseOver={expandNav} onMouseLeave={collapseNav}>
       {renderSearch()}
       {splitKeyValue()}
+            <div className="submenu-container">
+          <div onClick={""} className={`sidebar-link`}>
+            <div className="actions">
+              {leftIcon}
+              <div data-tip="React-tooltip" data-for={`jk-side-$}`} style={{display:"flex",flexDirection:"column"}}>
+                <span>{t("CS_COMMON_HELPLINE")} </span>
+                <span>{"6362222593"} </span>
+              </div>
+            </div>
+            {/* <div> {item.links && subnav ? <ArrowVectorDown /> : item.links ? <ArrowForward /> : null} </div> */}
+          </div>
+        </div>
+        <div className="submenu-container">
+          <div onClick={""} className={`sidebar-link`}>
+            <div className="actions">
+              {leftIcon}
+              <div data-tip="React-tooltip" data-for={`jk-side-$}`} onClick={(e)=> {handleLogout()}}style={{display:"flex",flexDirection:"column"}}>
+                <span>{t("CS_COMMON_LOGOUT")} </span>
+               
+              </div>
+            </div>
+            {/* <div> {item.links && subnav ? <ArrowVectorDown /> : item.links ? <ArrowForward /> : null} </div> */}
+          </div>
+        </div>
+       
     </div>
   );
 };

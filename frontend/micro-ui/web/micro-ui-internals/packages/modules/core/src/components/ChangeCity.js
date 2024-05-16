@@ -20,20 +20,23 @@ const ChangeCity = (prop) => {
   let selectedCities = [];
 
   const handleChangeCity = (city) => {
+    console.log("STEP 1",city)
     const loggedInData = Digit.SessionStorage.get("citizen.userRequestObject");
     const filteredRoles = Digit.SessionStorage.get("citizen.userRequestObject")?.info?.roles?.filter(role => role.tenantId === city.value);
-    if (filteredRoles?.length > 0) {
+    console.log("STEP 2",loggedInData,filteredRoles)
+     if (filteredRoles?.length > 0) {
       loggedInData.info.roles = filteredRoles;
       loggedInData.info.tenantId = city?.value;
     }
     Digit.SessionStorage.set("Employee.tenantId", city?.value);
     Digit.UserService.setUser(loggedInData);
     setDropDownData(city);
-    if (window.location.href.includes("/digit-ui/employee/")) {
+    
+    if (window.location.href.includes("/digit-ui/employee")) {
       const redirectPath = location.state?.from || "/digit-ui/employee";
       history.replace(redirectPath);
     }
-    window.location.reload();
+    //window.location.reload();
   };
 
   useEffect(() => {
@@ -41,6 +44,7 @@ const ChangeCity = (prop) => {
     let teantsArray = [], filteredArray = [];
     userloggedValues?.info?.roles?.forEach(role => teantsArray.push(role.tenantId));
     let unique = teantsArray.filter((item, i, ar) => ar.indexOf(item) === i);
+    console.log("")
     unique?.forEach(uniCode => {
       filteredArray.push({
         label: prop?.t(`TENANT_TENANTS_${stringReplaceAll(uniCode, ".", "_")?.toUpperCase()}`),

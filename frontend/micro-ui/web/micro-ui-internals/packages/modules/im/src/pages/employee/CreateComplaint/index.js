@@ -6,6 +6,8 @@ import { useRouteMatch, useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
+import { Loader, Header } from "@egovernments/digit-ui-react-components";
+import { Link } from "react-router-dom";
 export const CreateComplaint = ({ parentUrl }) => {
   const { t } = useTranslation();
   const [healthCareType, setHealthCareType]=useState();
@@ -35,7 +37,6 @@ export const CreateComplaint = ({ parentUrl }) => {
     let sortedphcSubMenu=[]
    if(phcSubTypeMenu!==null){
     sortedphcSubMenu=phcSubTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
-    console.log("sortedphcSubMenu",sortedphcSubMenu,phcSubTypeMenu)
    }
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
 let  sortedMenu=[];
@@ -49,12 +50,12 @@ const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]
 let blockNew =mdmsData?.Incident?.Block
 useEffect(()=>{
   const fetchDistrictMenu=async()=>{
-    const response=phcMenu?.Incident?.Block;
+    const response=phcMenu?.Incident?.District;
     if(response){
       const uniqueDistricts={};
       const districts=response.filter(def=>{
-        if(!uniqueDistricts[def.districtCode]){
-          uniqueDistricts[def.districtCode]=true;
+        if(!uniqueDistricts[def.code]){
+          uniqueDistricts[def.code]=true;
           return true;
         }
         return false;
@@ -63,8 +64,8 @@ useEffect(()=>{
           setDistrictMenu(
             districts.map(def=>({
            
-           key:def.districtCode, 
-            name:t(def.districtCode.toUpperCase()) 
+           key:def.code, 
+            name:t(def.name) 
          }))
           );
       }
@@ -178,7 +179,6 @@ useEffect(async () => {
   }
   async function selectedHealthCentre(value){
     setHealthCentre(value);
-    console.log("valuevaluevalue",value)
     setPhcSubTypeMenu([value])
     setHealthCareType(value);
   }
@@ -261,7 +261,7 @@ useEffect(async () => {
           type: "dropdown",
           isMandatory:true,
           populators:  (
-            <Dropdown option={districtMenu} optionKey="key" id="name" selected={district} select={handleDistrictChange} disable={selectTenant && selectTenant !== "pg"?true:false}/>),
+            <Dropdown option={districtMenu} optionKey="name" id="name" selected={district} select={handleDistrictChange}/>),
            
          },
         
@@ -272,7 +272,7 @@ useEffect(async () => {
           menu: { ...blockMenu },
              populators: (
              
-              <Dropdown option={blockMenu} optionKey="key" id="name" selected={block} select={handleBlockChange} disable={selectTenant && selectTenant !== "pg"?true:false}
+              <Dropdown option={blockMenu} optionKey="key" id="name" selected={block} select={handleBlockChange} 
              />
              
              )
@@ -282,7 +282,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} disable={selectTenant && selectTenant !== "pg"?true:false} />
+            <Dropdown option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} />
             
           ),
            
@@ -292,7 +292,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcSubTypeMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} disable={selectTenant && selectTenant !== "pg"?true:false} />
+            <Dropdown option={sortedphcSubMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
              
           ),
            
@@ -345,12 +345,16 @@ useEffect(async () => {
     
   ];
   return (
+    <div>
+       <div style={{color:"#9e1b32", marginBottom:'10px'}}>
+    <Link to={`/digit-ui/employee`}>{t("BACK")}</Link></div> 
     <FormComposer
       heading={t("")}
       config={config}
       onSubmit={wrapperSubmit}
       isDisabled={!canSubmit && !submitted}
       label={t("FILE_INCIDENT")}
-    />
+    />     
+    </div>  
   );
 };

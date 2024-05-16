@@ -11,12 +11,9 @@ const createComplaint = ({
  block,
  uploadImages,
  uploadedFile,
-  mobileNumber,
-  name,
+  tenantId
 }) => async (dispatch, getState) => {
   const response = await Digit.Complaint.create({
-    
-    
     comments,
     complaintType,
     block,
@@ -25,7 +22,8 @@ const createComplaint = ({
     healthcentre,
     uploadImages,
     district,
-    reporterName
+    reporterName,
+    tenantId
 
     
   });

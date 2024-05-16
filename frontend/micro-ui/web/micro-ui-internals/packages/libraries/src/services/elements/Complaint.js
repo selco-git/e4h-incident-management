@@ -10,15 +10,17 @@ export const Complaint = {
     uploadImages,
     healthcentre,
     healthCareType,
+    tenantId
   }) => {
-    const tenantId = Digit.ULBService.getCurrentTenantId();
+    console.log("tenantId",tenantId)
+    const tenantIdNew = tenantId;
     let mobileNumber = JSON.parse(sessionStorage.getItem("Digit.User"))?.value?.info?.mobileNumber;
-    var serviceDefs = await Digit.MDMSService.getServiceDefs(tenantId, "Incident");
+    var serviceDefs = await Digit.MDMSService.getServiceDefs(tenantIdNew, "Incident");
     const incidentType = serviceDefs.filter((def) => def.serviceCode === complaintType)[0].menuPath.toUpperCase();
     const defaultData = {
       incident: {
         district: district?.name,
-        tenantId:tenantId,
+        tenantId:tenantIdNew,
         incidentType:incidentType,
        incidentSubtype:complaintType,
        phcType:healthcentre?.name,
@@ -57,7 +59,7 @@ export const Complaint = {
             tenantId: tenantId,
           },
         ],
-        tenantId: tenantId,
+        tenantId: tenantIdNew,
       };
     }
     const response = await Digit.PGRService.create(defaultData, cityCode);

@@ -123,9 +123,9 @@ let configEmployeeSideBar1 = {};
   }
 
    const handleLogout =()=>{
-   
-     
-    //  return <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>
+   console.log("heeee")
+     setShowDialog(true)
+      //return <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>
     
   }
   const splitKeyValue = () => {
@@ -342,6 +342,7 @@ let configEmployeeSideBar1 = {};
     <div className="sidebar" ref={sidebarRef} onMouseOver={expandNav} onMouseLeave={collapseNav}>
       {renderSearch()}
       {splitKeyValue()}
+      
             <div className="submenu-container">
           <div onClick={""} className={`sidebar-link`}>
             <div className="actions">
@@ -365,6 +366,9 @@ let configEmployeeSideBar1 = {};
             </div>
             {/* <div> {item.links && subnav ? <ArrowVectorDown /> : item.links ? <ArrowForward /> : null} </div> */}
           </div>
+          {showDialog && (
+        <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>
+      )}
         </div>
        
     </div>

@@ -232,6 +232,7 @@ useEffect(async () => {
     !submitted && onSubmit(data);
   };
   const onSubmit = async (data) => {
+    console.log("datadata",healthcentre?.code)
     if (!canSubmit) return;
     const { key } = subType;
     const complaintType = key;
@@ -244,7 +245,7 @@ useEffect(async () => {
       additionalDetails: {},
     }));
   }
-    const formData = { ...data,complaintType, district, block, healthCareType, healthcentre, reporterName, uploadedFile,uploadImages};
+    const formData = { ...data,complaintType, district, block, healthCareType, healthcentre, reporterName, uploadedFile,uploadImages, tenantId:healthcentre?.code};
     await dispatch(createComplaint(formData));
     await client.refetchQueries(["fetchInboxData"]);
     history.push(parentUrl + "/incident/response");

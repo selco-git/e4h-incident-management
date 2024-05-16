@@ -17,7 +17,6 @@ import {
 import { useTranslation } from "react-i18next";
 
 export const FormComposer = (props) => {
-  console.log("props", props)
   const { register, handleSubmit, errors } = useForm();
   const { t } = useTranslation();
 

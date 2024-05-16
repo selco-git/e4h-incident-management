@@ -4,23 +4,14 @@ export const Complaint = {
     comments,
     district,
     uploadedFile,
-   block,
-   reporterName,
-   complaintType,
-   healthcentre,
-   healthCareType,
+    block,
+    reporterName,
+    complaintType,
+    uploadImages,
+    healthcentre,
+    healthCareType,
   }) => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
-    console.log("uploadedFile", uploadedFile)
-    let uploadedImages=null
-    if(uploadedFile!==null){
-      uploadedImages=[{
-        documentType: "PHOTO",
-        fileStoreId: uploadedFile||"",
-        documentUid: "",
-        additionalDetails: {},
-      }]
-    }
     let mobileNumber = JSON.parse(sessionStorage.getItem("Digit.User"))?.value?.info?.mobileNumber;
     var serviceDefs = await Digit.MDMSService.getServiceDefs(tenantId, "Incident");
     const incidentType = serviceDefs.filter((def) => def.serviceCode === complaintType)[0].menuPath.toUpperCase();
@@ -30,11 +21,12 @@ export const Complaint = {
         tenantId:tenantId,
         incidentType:incidentType,
        incidentSubtype:complaintType,
-       phcType:healthcentre?.key,
-       phcSubType:healthCareType?.key,
+       phcType:healthcentre?.name,
+       phcSubType:healthCareType?.centreType,
        comments:comments,
        block:block?.key,
         additionalDetail: {
+          fileStoreId: uploadedFile,
         },
         source: Digit.Utils.browser.isWebview() ? "mobile" : "web",
        
@@ -44,17 +36,11 @@ export const Complaint = {
         //: uploadedImages
       },
     };
-    if(uploadedImages!==null){
+    if(uploadImages!==null){
       defaultData.workflow={
         ...defaultData.workflow,
-        verificationDocuments: [
-        {
-          documentType: "PHOTO",
-          fileStoreId: uploadedFile,
-          documentUid: "",
-          additionalDetails: {},
-        },
-      ]};
+        verificationDocuments:uploadImages
+      };
     }
 
     if (Digit.SessionStorage.get("user_type") === "employee") {
@@ -74,9 +60,7 @@ export const Complaint = {
         tenantId: tenantId,
       };
     }
-    console.log("def", defaultData)
     const response = await Digit.PGRService.create(defaultData, cityCode);
-    console.log("res", response)
     return response;
   },
 

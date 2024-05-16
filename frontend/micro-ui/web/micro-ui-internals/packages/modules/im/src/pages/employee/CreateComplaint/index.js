@@ -15,6 +15,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [districtMenu, setDistrictMenu]=useState([]);
   const [file, setFile]=useState(null);
   const [uploadedFile, setUploadedFile]=useState(null);
+  const [uploadedImages, setUploadedImagesIds] = useState(null)
   const [district, setDistrict]=useState(null);
   const [block, setBlock]=useState(null);
   const [error, setError] = useState(null);
@@ -27,7 +28,19 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [phcSubTypeMenu, setPhcSubTypeMenu]=useState([]);
   const [phcMenuNew, setPhcMenu] = useState([])
   const [subType, setSubType]=useState(JSON?.parse(sessionStorage.getItem("subType")) || {});
+  let sortedSubMenu=[];
+  if(subTypeMenu!==null){
+    sortedSubMenu=subTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
+   }
+   let sortedphcSubMenu=[]
+   if(phcSubTypeMenu!==null){
+    sortedphcSubMenu=phcSubTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
+   }
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
+let  sortedMenu=[];
+  if(menu!==null){
+   sortedMenu=menu.sort((a,b)=>a.name.localeCompare(b.name))
+  }
   const state = Digit.ULBService.getStateId();
   const [selectTenant, setSelectTenant] =useState(Digit.SessionStorage.get("Employee.tenantId")|| "")
 const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
@@ -45,6 +58,7 @@ useEffect(()=>{
         }
         return false;
       });
+      districts.sort((a,b)=>a.name.localeCompare(b.name))
           setDistrictMenu(
             districts.map(def=>({
            
@@ -98,9 +112,7 @@ useEffect(async () => {
             setError(t(`NOT_SUPPORTED_FILE_TYPE`))
           } else {
             try {
-              console.log("ttt", tenantId?.split(".")[0])
-              const response = await Digit.UploadServices.Filestorage("Incident", file, Digit.ULBService.getStateId() || tenantId?.split(".")[0]);
-              console.log("filesres", response)
+              const response = await Digit.UploadServices.Filestorage("Incident", file, tenantId);
               if (response?.data?.files?.length > 0) {
                 setUploadedFile(response?.data?.files[0]?.fileStoreId);
               } else {
@@ -127,8 +139,6 @@ useEffect(async () => {
     }
   },[complaintType, subType])
   async function selectedType(value) {
-    console.log("value", value)
-    console.log("comp", complaintType)
     if (value.key !== complaintType.key) {
       if (value.key === "Others") {
         setSubType({ name: "" });
@@ -138,7 +148,6 @@ useEffect(async () => {
       } else {
         setSubType({ name: "" });
         setComplaintType(value);
-        console.log("ccccttt", complaintType)
         sessionStorage.setItem("complaintType",JSON.stringify(value))
         setSubTypeMenu(await serviceDefinitions.getSubMenu(tenantId, value, t));
       }
@@ -147,13 +156,11 @@ useEffect(async () => {
   const handleDistrictChange = async (selectedDistrict) => {
     console.log("selectedDistrict", selectedDistrict);
     setDistrict(selectedDistrict);
-    const response = mdmsData?.Incident?.Block;
-    console.log("STEP 1", response);
-    if (response) {
-      const blocks = response.filter((def) => def?.districtCode === selectedDistrict?.key);
-
-      setBlockMenuNew(blocks);
-      blockNew = blocks
+    const response=mdmsData?.Incident?.Block;
+    if(response){
+      const blocks=response.filter((def)=>def.districtCode===selectedDistrict.key);
+      blocks.sort((a,b)=>a.name.localeCompare(b.name))
+      setBlockMenuNew(blocks)
       setBlockMenu(
         blocks.map((block) => ({
           key: block.name,
@@ -199,12 +206,9 @@ useEffect(async () => {
       setBlock(selectedBlock);
 
     }
-
-   
   }
   
   const handlePhcSubType=(value)=>{
-    console.log("value", value) 
     setHealthCareType(value);
   }
   // const selectedDistrict = (value) => {
@@ -214,6 +218,10 @@ useEffect(async () => {
   async function selectFile(e){
     setFile(e.target.files[0]);
   }
+  const handleUpload = (ids) => {
+    setUploadedImagesIds(ids);
+  };
+
 
    const wrapperSubmit = (data) => {
     if (!canSubmit) return;
@@ -221,12 +229,19 @@ useEffect(async () => {
     !submitted && onSubmit(data);
   };
   const onSubmit = async (data) => {
-    console.log("data2", data)
     if (!canSubmit) return;
     const { key } = subType;
     const complaintType = key;
-    const formData = { ...data,complaintType, district, block, healthCareType, healthcentre, reporterName, uploadedFile};
-    console.log("formdat", formData)
+    let uploadImages=[]
+    if(uploadedImages!==null){
+     uploadImages = uploadedImages?.map((url) => ({
+      documentType: "PHOTO",
+      fileStoreId: url,
+      documentUid: "",
+      additionalDetails: {},
+    }));
+  }
+    const formData = { ...data,complaintType, district, block, healthCareType, healthcentre, reporterName, uploadedFile,uploadImages};
     await dispatch(createComplaint(formData));
     await client.refetchQueries(["fetchInboxData"]);
     history.push(parentUrl + "/incident/response");
@@ -274,7 +289,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcSubTypeMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
+            <Dropdown option={sortedphcSubMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
              
           ),
            
@@ -290,7 +305,7 @@ useEffect(async () => {
           type: "dropdown",
           isMandatory:true,
          
-          populators: <Dropdown option={menu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
+          populators: <Dropdown option={sortedMenu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
            
          
            
@@ -300,7 +315,7 @@ useEffect(async () => {
           type: "dropdown",
           isMandatory:true,
           menu: { ...subTypeMenu },
-          populators: <Dropdown option={subTypeMenu} optionKey="name" id="complaintSubType" selected={subType} select={selectedSubType} />,
+          populators: <Dropdown option={sortedSubMenu} optionKey="name" id="complaintSubType" selected={subType} select={selectedSubType} />,
            
          }
         ]
@@ -320,13 +335,7 @@ useEffect(async () => {
         {
           label:t("INCIDENT_UPLOAD_FILE"),
           populators:
-          <UploadFile 
-              id={"doc"} 
-              accept=".jpeg" 
-              onUpload={selectFile} 
-              onDelete={()=>{setUploadedFile(null)}} 
-              message={uploadedFile? `1 ${t(`ACTION_FILEUPLOADED`)}` : t(`ACTION_NO_FILEUPLOADED`)}
-          />,   
+          <ImageUploadHandler tenantId={tenantId} uploadedImages={uploadedImages} onPhotoChange={handleUpload} />
          },
         ]
       }

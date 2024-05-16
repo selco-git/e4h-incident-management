@@ -262,7 +262,7 @@ useEffect(async () => {
           type: "dropdown",
           isMandatory:true,
           populators:  (
-            <Dropdown option={districtMenu} optionKey="name" id="name" selected={district} select={handleDistrictChange}/>),
+            <Dropdown option={districtMenu} optionKey="name" id="name" selected={district} select={handleDistrictChange} disable={selectTenant && selectTenant !== "pg"?true:false}/>),
            
          },
         
@@ -273,7 +273,7 @@ useEffect(async () => {
           menu: { ...blockMenu },
              populators: (
              
-              <Dropdown option={blockMenu} optionKey="key" id="name" selected={block} select={handleBlockChange} 
+              <Dropdown option={blockMenu} optionKey="key" id="name" selected={block} select={handleBlockChange} disable={selectTenant && selectTenant !== "pg"?true:false}
              />
              
              )
@@ -283,7 +283,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} />
+            <Dropdown option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} disable={selectTenant && selectTenant !== "pg"?true:false}/>
             
           ),
            
@@ -293,7 +293,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={sortedphcSubMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
+            <Dropdown option={sortedphcSubMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} disable={selectTenant && selectTenant !== "pg"?true:false}/>
              
           ),
            

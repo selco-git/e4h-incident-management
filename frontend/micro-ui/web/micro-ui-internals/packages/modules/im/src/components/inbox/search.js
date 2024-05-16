@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg, Dropdown } from "@egovernments/digit-ui-react-components";
@@ -50,14 +50,23 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
   function setComplaint(e) {
     setComplaintNo(e.target.value);
   }
-
+useEffect(()=>{
+console.log()
+if(Digit.SessionStorage.get("Tenants"))
+{
+  let empTenant = Digit.SessionStorage.get("Employee.tenantId")
+  let filtered = Digit.SessionStorage.get("Tenants").filter((abc)=> abc.code ==empTenant)
+  console.log("filtered",filtered)
+  setPhcTypeFunction(filtered?.[0])
+}
+},[])
   function setPhcTypeFunction(value) {
     setPhcType(value);
   }
   function setMobile(e) {
     setMobileNo(e.target.value);
   }
-
+console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("Tenants"),phcMenu?.tenant?.tenants)
   return (
     <form onSubmit={handleSubmit(onSubmitInput)} style={{ marginLeft: "24px" }}>
       <React.Fragment>
@@ -87,7 +96,7 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
               <span className="mobile-input">
                 <Label>{t("CS_COMMON_PHC_TYPE")}.</Label>
                 <Dropdown
-                option={phcMenu?.tenant?.tenants}
+                option={Digit.SessionStorage.get("Tenants")}
                   //name="mobileNumber"
                   optionKey="name"
                   id="healthCentre"
@@ -107,7 +116,7 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
                 />
               )}
             </div>
-            {type === "desktop" && <span className="clear-search">{clearAll()}</span>}
+            {type === "desktop" && <span className="clear-search" style={{color:"#7a2829"}}>{clearAll()}</span>}
           </div>
         </div>
         {type === "mobile" && (

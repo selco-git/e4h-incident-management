@@ -50,28 +50,11 @@ const Filter = (props) => {
   const state = Digit.ULBService.getStateId();
 //   const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 // const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
-const healthcareMenu=[
-  {
-    code: "Sub Centre",
-    name : "Sub Centre"
-  },
-  {
-    code :"Primary Health Centre",
-    name :"Primary Health Centre"
-  },
-  {
-    code :"Urban Primary Health Centre",
-    name :"Urban Primary Health Centre"
-  },
-  {
-    code :"Community Health Centre",
-    name :"Community Health Centre"
-  },
-  {
-    code :"Sub Divisional Hospital/TH",
-    name :"Sub Divisional Hospital/TH"
-  }
-]
+const convertedData = Digit.SessionStorage.get("Tenants").map(item => ({
+  name: item.label,
+  code: item.value
+}));
+const healthcareMenu= Digit.SessionStorage.get("Tenants")
 console.log("healthcare", healthcareMenu)
 
   const onRadioChange = (value) => {
@@ -213,7 +196,7 @@ console.log("pgrfilters", pgrfilters)
               {t("ES_COMMON_CLEAR_ALL")}
             </div>
             {props.type === "desktop" && (
-              <span className="clear-search" onClick={clearAll}>
+              <span className="clear-search" style={{color:"#7a2829"}} onClick={clearAll}>
                 {t("ES_COMMON_CLEAR_ALL")}
               </span>
             )}

@@ -60,11 +60,7 @@ const EmployeeApp = ({
           )}
           <div
             className={isUserProfile ? "grounded-container" : "loginContainer"}
-            style={
-              isUserProfile
-                ? { padding: 0, paddingTop: "80px", marginLeft: mobileView ? "" : "64px" }
-                : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
-            }
+            style={{backgroundColor:"#225670"}}
           >
             <Switch>
               <Route path={`${path}/user/login`}>

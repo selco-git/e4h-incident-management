@@ -56,7 +56,7 @@ const ComplaintsLink = ({ isMobile, data }) => {
         <div className="body">
           {links.map(({ link, text }, index) => (
             <span className="link" key={index}>
-              <Link to={link}>{t(text)}</Link>
+              <Link to={link} style={{color:"#7a2829"}}>{t(text)}</Link>
             </span>
           ))}
         </div>

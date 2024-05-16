@@ -48,6 +48,11 @@ const ChangeCity = (prop) => {
       })
     });
     selectedCities = filteredArray?.filter(select => select.value == Digit.SessionStorage.get("Employee.tenantId"));
+    const convertedData = filteredArray.map(item => ({
+      name: item.label,
+      code: item.value
+    }));
+    Digit.SessionStorage.set("Tenants",convertedData)
     setSelectCityData(filteredArray);
   }, [dropDownData]);
 

@@ -9,7 +9,7 @@ const IMCard = () => {
 
   const allLinks = [
     { text: t("ES_IM_INBOX"), link: "/digit-ui/employee/im/inbox" },
-    { text: t("ES_IM_NEW_COMPLAINT"), link: "/digit-ui/employee/im/incident/create", accessTo: ["COMPLAINT_ASSESSOR"] },
+    { text: t("ES_IM_NEW_COMPLAINT"), link: "/digit-ui/employee/im/incident/create", accessTo: ["COMPLAINT_ASSESSOR","COMPLAINT_CLOSER","COMPLAINT_RESOLVER"] },
   ];
 
   if (!Digit.Utils.pgrAccess()) {

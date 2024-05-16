@@ -29,8 +29,10 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [subType, setSubType]=useState(JSON?.parse(sessionStorage.getItem("subType")) || {});
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
   const state = Digit.ULBService.getStateId();
+  const [selectTenant, setSelectTenant] =useState(Digit.SessionStorage.get("Employee.tenantId")|| "")
 const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
+let blockNew =[]
 useEffect(()=>{
   const fetchDistrictMenu=async()=>{
     const response=phcMenu?.Incident?.Block;
@@ -56,6 +58,33 @@ useEffect(()=>{
   };
   fetchDistrictMenu();
 }, [state, mdmsData,t]);
+
+useEffect(()=>{
+let tenants =Digit.SessionStorage.get("Employee.tenantId")
+setSelectTenant(tenants)
+
+},[])
+
+useEffect(async () => {
+  if (selectTenant) {
+    let tenant = Digit.SessionStorage.get("IM_TENANTS")
+    const selectedTenantData = tenant.find(item => item.code === selectTenant);
+    const selectedDistrict = {
+      key: selectedTenantData.city.districtCode,
+      name: t(selectedTenantData.city.districtCode.toUpperCase())
+    };
+    const selectedBlock = {
+      key: selectedTenantData.city.blockCode.split(".")[1],
+      name: t(selectedTenantData.city.blockCode.split(".")[1].toUpperCase())
+    };
+      handleDistrictChange(selectedDistrict);
+      handleBlockChange(selectedBlock)
+     
+    
+     
+   // setBlock(selectedBlock);
+  }
+}, [selectTenant,mdmsData,state]);
 
 
   useEffect(() => {
@@ -115,21 +144,25 @@ useEffect(()=>{
       }
     }
   }
-  const handleDistrictChange =async(selectedDistrict) =>{
+  const handleDistrictChange = async (selectedDistrict) => {
+    console.log("selectedDistrict", selectedDistrict);
     setDistrict(selectedDistrict);
-    const response=mdmsData?.Incident?.Block;
-    if(response){
-      //setBlockMenuNew(response)
-      const blocks=response.filter((def)=>def.districtCode===selectedDistrict.key);
-      setBlockMenuNew(blocks)
+    const response = mdmsData?.Incident?.Block;
+    console.log("STEP 1", response);
+    if (response) {
+      const blocks = response.filter((def) => def?.districtCode === selectedDistrict?.key);
+
+      setBlockMenuNew(blocks);
+      blockNew = blocks
       setBlockMenu(
-        blocks.map(block=>({
-          key:block.name,
-          name:t(block.name.toUpperCase())
-      }))
+        blocks.map((block) => ({
+          key: block.name,
+          name: t(block.name.toUpperCase()),
+        }))
       );
     }
-  }
+  };
+  
   function selectedSubType(value) {
     sessionStorage.setItem("subType",JSON.stringify(value))
     setSubType(value);
@@ -143,11 +176,33 @@ useEffect(()=>{
     //sessionStorage.setItem("block",JSON.stringify(value))
     setHealthCareType({})
     setHealthCentre({})
-    const block  = blockMenuNew.find(item => item.name === selectedBlock.key)
-    const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre.city.blockCode === block.code)
-    setPhcMenu(phcMenuType)
-    setBlock(selectedBlock);
+    if(selectTenant)
+    {
+      
+      const block  = blockNew.find(item => item?.name.toUpperCase() === selectedBlock?.key.toUpperCase())
+      const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
+      setPhcMenu(phcMenuType)
+      setBlock(selectedBlock);
+      let tenant = Digit.SessionStorage.get("Employee.tenantId")
+      console.log("phcMenuType",phcMenuType,tenant)
+      const filtereddata = phcMenuType?.filter((code)=> code.code == tenant)
+      if(filtereddata)
+      {
+        selectedHealthCentre(filtereddata?.[0])
+      }
+     
+    }
+    else {
+      const block  = blockMenuNew.find(item => item?.name.toUpperCase() === selectedBlock?.key.toUpperCase())
+      const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
+      setPhcMenu(phcMenuType)
+      setBlock(selectedBlock);
+
+    }
+
+   
   }
+  
   const handlePhcSubType=(value)=>{
     console.log("value", value) 
     setHealthCareType(value);
@@ -160,7 +215,6 @@ useEffect(()=>{
     setFile(e.target.files[0]);
   }
 
-  console.log("file", file)
    const wrapperSubmit = (data) => {
     if (!canSubmit) return;
     setSubmitted(true);
@@ -177,9 +231,6 @@ useEffect(()=>{
     await client.refetchQueries(["fetchInboxData"]);
     history.push(parentUrl + "/incident/response");
   };
-
-  console.log("districttt", district)
-  console.log("complaintType", complaintType)
   const config = [
     
     {

@@ -32,9 +32,10 @@ export const CreateComplaint = ({ parentUrl }) => {
   if(subTypeMenu!==null){
     sortedSubMenu=subTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
    }
-   let sortedphcSubMenu=[]
+    let sortedphcSubMenu=[]
    if(phcSubTypeMenu!==null){
     sortedphcSubMenu=phcSubTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
+    console.log("sortedphcSubMenu",sortedphcSubMenu,phcSubTypeMenu)
    }
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
 let  sortedMenu=[];
@@ -45,7 +46,7 @@ let  sortedMenu=[];
   const [selectTenant, setSelectTenant] =useState(Digit.SessionStorage.get("Employee.tenantId")|| "")
 const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
-let blockNew =[]
+let blockNew =mdmsData?.Incident?.Block
 useEffect(()=>{
   const fetchDistrictMenu=async()=>{
     const response=phcMenu?.Incident?.Block;
@@ -176,6 +177,7 @@ useEffect(async () => {
   }
   async function selectedHealthCentre(value){
     setHealthCentre(value);
+    console.log("valuevaluevalue",value)
     setPhcSubTypeMenu([value])
     setHealthCareType(value);
   }
@@ -185,8 +187,7 @@ useEffect(async () => {
     setHealthCentre({})
     if(selectTenant)
     {
-      
-      const block  = blockNew.find(item => item?.name.toUpperCase() === selectedBlock?.key.toUpperCase())
+      const block  = blockNew?.find(item => item?.name.toUpperCase() === selectedBlock?.key.toUpperCase())
       const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
       setPhcMenu(phcMenuType)
       setBlock(selectedBlock);
@@ -203,6 +204,7 @@ useEffect(async () => {
       const block  = blockMenuNew.find(item => item?.name.toUpperCase() === selectedBlock?.key.toUpperCase())
       const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
       setPhcMenu(phcMenuType)
+      console.log("phcMenuTypephcMenuTypephcMenuType",phcMenuType)
       setBlock(selectedBlock);
 
     }
@@ -289,7 +291,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={sortedphcSubMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
+            <Dropdown option={phcSubTypeMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} />
              
           ),
            

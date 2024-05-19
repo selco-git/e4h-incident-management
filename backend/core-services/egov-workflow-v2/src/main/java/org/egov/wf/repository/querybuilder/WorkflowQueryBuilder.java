@@ -139,20 +139,31 @@ public class WorkflowQueryBuilder {
         StringBuilder with_query_builder = new StringBuilder(WITH_CLAUSE);
 
 
+        if(criteria.getTenantId()==null) {
         if (!criteria.getHistory()) {
             with_query_builder.append(" pi_outer.lastmodifiedTime = (" +
-                    "SELECT max(lastmodifiedTime) from eg_wf_processinstance_v2 as pi_inner where pi_inner.businessid = pi_outer.businessid and tenantid = ? " +
+                    "SELECT max(lastmodifiedTime) from eg_wf_processinstance_v2 as pi_inner where pi_inner.businessid = pi_outer.businessid " +
                     ") ");
-            preparedStmtList.add(criteria.getTenantId());
         }
 
-        if (criteria.getHistory())
-            with_query_builder.append(" pi_outer.tenantid=? ");
+        }
         else
-            with_query_builder.append(" AND pi_outer.tenantid=? ");
+        	
+        {
+        	  if (!criteria.getHistory()) {
+                  with_query_builder.append(" pi_outer.lastmodifiedTime = (" +
+                          "SELECT max(lastmodifiedTime) from eg_wf_processinstance_v2 as pi_inner where pi_inner.businessid = pi_outer.businessid and tenantid = ? " +
+                          ") ");
+                  preparedStmtList.add(criteria.getTenantId());
+              }
 
-        preparedStmtList.add(criteria.getTenantId());
+              if (criteria.getHistory())
+                  with_query_builder.append(" pi_outer.tenantid=? ");
+              else
+                  with_query_builder.append(" AND pi_outer.tenantid=? ");
 
+              preparedStmtList.add(criteria.getTenantId());
+        }
 
         List<String> ids = criteria.getIds();
         if (!CollectionUtils.isEmpty(ids)) {

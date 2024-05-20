@@ -145,6 +145,11 @@ public class WorkflowQueryBuilder {
                     "SELECT max(lastmodifiedTime) from eg_wf_processinstance_v2 as pi_inner where pi_inner.businessid = pi_outer.businessid " +
                     ") ");
         }
+        
+        if(criteria.getAssignee()!=null){
+            with_query_builder.append(" and id in (select processinstanceid from eg_wf_assignee_v2 asg_inner where asg_inner.assignee = ?) ");
+            preparedStmtList.add(criteria.getAssignee());
+        }
 
         }
         else
@@ -163,6 +168,12 @@ public class WorkflowQueryBuilder {
                   with_query_builder.append(" AND pi_outer.tenantid=? ");
 
               preparedStmtList.add(criteria.getTenantId());
+              
+              if(criteria.getAssignee()!=null){
+                  with_query_builder.append(" and id in (select processinstanceid from eg_wf_assignee_v2 asg_inner where asg_inner.assignee = ?) AND pi_outer.tenantid = ? ");
+                  preparedStmtList.add(criteria.getAssignee());
+                  preparedStmtList.add(criteria.getTenantId());
+              }
         }
 
         List<String> ids = criteria.getIds();
@@ -189,11 +200,7 @@ public class WorkflowQueryBuilder {
             addToPreparedStatement(preparedStmtList, status);
         }
 
-        if(criteria.getAssignee()!=null){
-            with_query_builder.append(" and id in (select processinstanceid from eg_wf_assignee_v2 asg_inner where asg_inner.assignee = ?) AND pi_outer.tenantid = ? ");
-            preparedStmtList.add(criteria.getAssignee());
-            preparedStmtList.add(criteria.getTenantId());
-        }
+      
 
         if(!StringUtils.isEmpty(criteria.getBusinessService())){
             with_query_builder.append(" AND pi_outer.businessservice =? ");

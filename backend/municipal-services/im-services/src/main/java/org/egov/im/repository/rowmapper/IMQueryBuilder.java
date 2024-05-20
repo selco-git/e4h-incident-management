@@ -9,8 +9,10 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -55,6 +57,15 @@ public class IMQueryBuilder {
                 addToPreparedStatement(preparedStmtList, tenantIds);
             }
           
+        }
+        else if (criteria.getTenantId()!=null && criteria.getTenantId().contains(","))
+        {
+            //String tenantId = criteria.getTenantId();
+            String[] tenantIdChunks = criteria.getTenantId().split(",");
+            Set<String> tenantIdList = new HashSet<>(Arrays.asList(tenantIdChunks));
+            addClauseIfRequired(preparedStmtList, builder);
+            builder.append(" ser.tenantid IN (").append(createQuery(tenantIdList)).append(")");
+            addToPreparedStatement(preparedStmtList, tenantIdList);
         }
         else {
             if (criteria.getTenantId() != null) {

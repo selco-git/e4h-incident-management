@@ -75,7 +75,7 @@ const TLCaption = ({ data, comments }) => {
   );
 };
 
-const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup, selectedAction, onAssign, tenantId, t }) => {
+const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup, selectedAction, onAssign, tenant, t }) => {
   console.log("empcom", complaintDetails)
   
   // RAIN-5692 PGR : GRO is assigning complaint, Selecting employee and assign. Its not getting assigned.
@@ -83,7 +83,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const stateArray = workflowDetails?.data?.initialActionState?.nextActions?.filter( ele => ele?.action == selectedAction );  
   console.log("statearray", stateArray)
   const useEmployeeData = Digit.Hooks.pgr.useEmployeeFilter(
-    tenantId, 
+    tenant, 
     stateArray?.[0]?.assigneeRoles?.length > 0 ? stateArray?.[0]?.assigneeRoles?.join(",") : "",
     complaintDetails
     );
@@ -219,15 +219,17 @@ console.log("employeeData", employeeData)
 
 export const ComplaintDetails = (props) => {
   let { id } = useParams();
+  console.log("idffffffffff",id.split("/")[0])
   const { t } = useTranslation();
   const [fullscreen, setFullscreen] = useState(false);
   const [imageZoom, setImageZoom] = useState(null);
   // const [actionCalled, setActionCalled] = useState(false);
   const [toast, setToast] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { isLoading, complaintDetails, revalidate: revalidateComplaintDetails } = Digit.Hooks.pgr.useComplaintDetails({ tenantId, id });
-  console.log("cd", complaintDetails)
-  const workflowDetails = Digit.Hooks.useWorkflowDetails({ tenantId, id, moduleCode: "Incident", role: "EMPLOYEE" });
+  const tenant =  Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
+  const { isLoading, complaintDetails, revalidate: revalidateComplaintDetails } = Digit.Hooks.pgr.useComplaintDetails({ tenant, id });
+  console.log("cd", id.split("/")[1])
+  const workflowDetails = Digit.Hooks.useWorkflowDetails({ tenant : id.split("/")[1], id :id.split("/")[0] , moduleCode: "Incident", role: "EMPLOYEE" });
   console.log("wff", workflowDetails)
   const [imagesToShowBelowComplaintDetails, setImagesToShowBelowComplaintDetails] = useState([])
   console.log("imagesToShowBelowComplaintDetails", imagesToShowBelowComplaintDetails)
@@ -244,6 +246,14 @@ export const ComplaintDetails = (props) => {
       const {data:{timeline: complaintTimelineData}={}} = workflowDetails
       if(complaintTimelineData){
         console.log("complaintTimelineData", complaintTimelineData)
+        const applyAction = complaintTimelineData.find(action => action.performedAction === "APPLY");
+        const initiate = complaintTimelineData.find(action => action.performedAction === "INITIATE");
+        if(!initiate)
+        {
+          const complaintTimelineDataNew = { ...applyAction, performedAction: "INITIATE", state: "PENDINGRESOLUTIONNEW", status: "PENDINGRESOLUTIONNEW" };
+            
+          complaintTimelineData.push(complaintTimelineDataNew)
+        }
         const actionByCitizenOnComplaintCreation = complaintTimelineData?.find( e => e?.performedAction === "APPLY")
         const { thumbnailsToShow } = actionByCitizenOnComplaintCreation
         console.log("thumbs666", thumbnailsToShow)
@@ -266,7 +276,8 @@ export const ComplaintDetails = (props) => {
 
   useEffect(() => {
     (async () => {
-      const assignWorkflow = await Digit?.WorkflowService?.getByBusinessId(tenantId, id);
+      console.log("complaintDetailscomplaintDetails",tenant)
+      const assignWorkflow = await Digit?.WorkflowService?.getByBusinessId(tenant, id);
     })();
   }, [complaintDetails]);
 
@@ -350,7 +361,7 @@ export const ComplaintDetails = (props) => {
 
   async function onAssign(selectedEmployee, comments, uploadedFile) {
     setPopup(false);
-    const response = await Digit.Complaint.assign(complaintDetails, selectedAction, selectedEmployee, comments, uploadedFile, tenantId);
+    const response = await Digit.Complaint.assign(complaintDetails, selectedAction, selectedEmployee, comments, uploadedFile, tenant);
     setAssignResponse(response);
     setToast(true);
     setLoader(true);
@@ -509,7 +520,7 @@ return (
         popup={popup}
         selectedAction={selectedAction}
         onAssign={onAssign}
-        tenantId={tenantId}
+        tenantId={tenant}
         t={t}
       />
     ) : null}

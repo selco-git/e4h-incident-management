@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-const useEmployeeFilter = (tenantId, roles, complaintDetails,isActive) => {
+const useEmployeeFilter = (tenantIdNew, roles, complaintDetails,isActive) => {
   const [employeeDetails, setEmployeeDetails] = useState(null);
   const { t } = useTranslation();
   useEffect(() => {
     (async () => {
       // const _roles = roles.join(",");
+      let tenantId =  window.location.href.split("/")[9]
       const searchResponse = await Digit.PGRService.employeeSearch(tenantId, roles,isActive );
       const serviceDefs = await Digit.MDMSService.getServiceDefs(tenantId, "Incident");
       const incidentSubType = complaintDetails.incident.incidentSubType;
@@ -25,7 +26,7 @@ const useEmployeeFilter = (tenantId, roles, complaintDetails,isActive) => {
         }
       ])
     })();
-  }, [tenantId, roles, t, complaintDetails]);
+  }, [tenantIdNew, roles, t, complaintDetails]);
 
 
   return employeeDetails;

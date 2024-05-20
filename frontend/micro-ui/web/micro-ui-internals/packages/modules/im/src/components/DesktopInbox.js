@@ -32,10 +32,11 @@ const DesktopInbox = ({
       {
         Header: t("CS_COMMON_TICKET_NO"),
         Cell: ({ row }) => {
+          console.log("rowrow",row)
           return (
             <div>
               <span className="link">
-                <Link to={"/digit-ui/employee/im/complaint/details/" + row.original["incidentId"]} style={{color:"#7a2829"}}>{row.original["incidentId"]}</Link>
+                <Link to={"/digit-ui/employee/im/complaint/details/" + row.original["incidentId"] + "/" + row.original["tenantId"]} style={{color:"#7a2829"}}>{row.original["incidentId"]}</Link>
               </span>
               {/* <a onClick={() => goTo(row.row.original["serviceRequestId"])}>{row.row.original["serviceRequestId"]}</a> */}
               <br />

@@ -94,7 +94,7 @@ export const WorkflowService = {
       url: Urls.WorkFlow,
       useCache: true,
       method: "POST",
-      params: { tenantId: stateCode, businessServices },
+      params: { tenantId: Digit.SessionStorage.get("Employee.tenantId"), businessServices },
       auth: true,
     });
   },
@@ -104,12 +104,16 @@ export const WorkflowService = {
       url: Urls.WorkFlowProcessSearch,
       useCache: false,
       method: "POST",
-      params: { tenantId: stateCode, businessIds: businessIds, ...params, history },
+      params: { tenantId: stateCode, isStateLevelCall: window.location.href.includes("complaint/details")?false :Digit.SessionStorage.get("Employee.tenantId") == "pg"?true :false,businessIds: businessIds, ...params, history },
       auth: true,
     });
   },
 
-  getDetailsById: async ({ tenantId, id, moduleCode, role, getTripData }) => {
+  getDetailsById: async ({ tenant, idm, moduleCode, role, getTripData }) => {
+ 
+    let tenantId = window.location.href.split("/")[9]
+    let id = window.location.href.split("/")[8]
+    console.log("getDetailsById",tenantId,id)
     const workflow = await Digit.WorkflowService.getByBusinessId(tenantId, id); 
     const applicationProcessInstance = cloneDeep(workflow?.ProcessInstances);
     const getLocationDetails = window.location.href.includes("/obps/") || window.location.href.includes("noc/inbox");
@@ -196,6 +200,7 @@ export const WorkflowService = {
               let waitingForDisposedAction = []
               let disposedAction = []
               for (const data of tripSearchResp.vehicleTrip) {
+                console.log("getByBusinessIdgetByBusinessId")
                 const resp = await Digit.WorkflowService.getByBusinessId(tenantId, data.applicationNo)
                 resp?.ProcessInstances?.map((instance, ind) => {
                   if (instance.state.applicationStatus === "WAITING_FOR_DISPOSAL") {

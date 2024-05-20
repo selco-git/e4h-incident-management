@@ -361,7 +361,7 @@ const HamburgerIcon = ({ className, styles, color = "#fdfdfd" }) => (
 
 export const HomeIcon = ({ className, styles }) => (
   <svg className={className} viewBox="0 0 24 24" style={{ ...styles }}>
-    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" style={{fill :"#7a2829"}}></path>
   </svg>
 );
 

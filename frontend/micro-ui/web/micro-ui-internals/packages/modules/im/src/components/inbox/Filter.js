@@ -46,6 +46,7 @@ const Filter = (props) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   // let localities = Digit.Hooks.pgr.useLocalities({ city: tenantId });
   const { data: localities } = Digit.Hooks.useBoundaryLocalities(tenantId, "admin", {}, t);
+  console.log("tenantIdtenantIdtenantIdtenantId",tenantId)
   let serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "Incident");
   const state = Digit.ULBService.getStateId();
 //   const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);

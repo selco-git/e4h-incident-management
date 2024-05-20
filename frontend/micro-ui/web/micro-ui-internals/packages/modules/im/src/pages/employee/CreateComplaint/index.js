@@ -347,6 +347,15 @@ useEffect(async () => {
   ];
   return (
     <div>
+       <style>
+        {`
+          .employee-select-wrap .select:hover {
+            --border-opacity: 1;
+            border: 1px solid #f47738;
+            border-color: #7a2829;
+          }
+        `}
+      </style>
        <div style={{color:"#9e1b32", marginBottom:'10px'}}>
     <Link to={`/digit-ui/employee`}>{t("BACK")}</Link></div> 
     <FormComposer

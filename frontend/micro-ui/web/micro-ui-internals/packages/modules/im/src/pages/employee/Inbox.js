@@ -54,7 +54,7 @@ const Inbox = () => {
     tenant = searchParams?.search?.phcType
   }
   console.log("tenant",tenant)
-  let { data: complaints, isLoading } = Digit.Hooks.pgr.useInboxData({ tenant,...searchParams,offset: pageOffset, limit: pageSize }) ;
+  let { data: complaints, isLoading } = Digit.Hooks.pgr.useInboxData({ ...searchParams,offset: pageOffset, limit: pageSize }) ;
   console.log("complai", complaints)
 
   let isMobile = Digit.Utils.browser.isMobile();

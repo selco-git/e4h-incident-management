@@ -5,23 +5,16 @@ const useInboxData = (searchParams,tenantIdNew) => {
  console.log("searchParams",searchParams)
   const fetchInboxData = async () => {
     let tenantId = Digit.ULBService.getCurrentTenantId();
-if(searchParams && searchParams?.filters &&  searchParams?.filters.pgrQuery&& searchParams?.filters?.pgrQuery?.phcType && searchParams?.filters.pgrQuery?.phcType !==""  )
-{
-  console.log("searchParams.filters.pgrQuery.phcSubType",searchParams.filters.pgrQuery.phcType)
-  tenantId = searchParams.filters.pgrQuery.phcSubType
-}
-    else if(searchParams?.search && searchParams?.search?.phcType && searchParams?.search?.phcType !== "" )
-    {
-      
-      tenantId = searchParams?.search?.phcType == "pg" ? Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :searchParams?.search?.phcType
-      console.log("fetchInboxDatafetchInboxDatasearchParams",tenantId,searchParams,searchParams?.search?.phcType)
+    const tenants = Digit.SessionStorage.get("Tenants").map(item => item.code).join(',');
+    const sessionTenantId = Digit.SessionStorage.get("Employee.tenantId");
+    if (searchParams?.filters?.pgrQuery?.phcType) {
+      tenantId = searchParams.filters.pgrQuery.phcType;
+    } else if (searchParams?.search?.phcType) {
+      tenantId = searchParams.search.phcType === "pg" ? tenants : searchParams.search.phcType;
+    } else {
+      tenantId = sessionTenantId === "pg" ? tenants : sessionTenantId;
     }
-    else {
-      
-      tenantId= Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
-      console.log("fetchInboxDatafetchInboxtenantId")
-    }
-  console.log("fetchInboxDatafetchInboxData",tenantId)
+
     //const tenant =  Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
     let serviceIds = [];
     let commonFilters = { start: 1, end: 10 };
@@ -31,6 +24,7 @@ if(searchParams && searchParams?.filters &&  searchParams?.filters.pgrQuery&& se
     let complaintDetailsResponse = null;
     let combinedRes = [];
     complaintDetailsResponse = await Digit.PGRService.search(tenantId, appFilters);
+    console.log("STEP 5",tenantId, appFilters,complaintDetailsResponse)
     complaintDetailsResponse.IncidentWrappers.forEach((incident) => serviceIds.push(incident.incident.incidentId));
     const serviceIdParams = serviceIds.join();
     const workflowInstances = await Digit.WorkflowService.getByBusinessId(tenantId, serviceIdParams, wfFilters, false);

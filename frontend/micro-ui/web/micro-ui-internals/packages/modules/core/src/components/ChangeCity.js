@@ -20,23 +20,21 @@ const ChangeCity = (prop) => {
   let selectedCities = [];
 
   const handleChangeCity = (city) => {
-    console.log("STEP 1",city)
     const loggedInData = Digit.SessionStorage.get("citizen.userRequestObject");
-    const filteredRoles = Digit.SessionStorage.get("citizen.userRequestObject")?.info?.roles?.filter(role => role.tenantId === city.value);
-    console.log("STEP 2",loggedInData,filteredRoles)
+    const filteredRoles = Digit.SessionStorage.get("citizen.userRequestObject")?.info?.roles?.filter(role => role.tenantId === city.value);  
      if (filteredRoles?.length > 0) {
       loggedInData.info.roles = filteredRoles;
       loggedInData.info.tenantId = city?.value;
     }
     Digit.SessionStorage.set("Employee.tenantId", city?.value);
+    localStorage.setItem("Employee.tenant-id", city?.value);
     Digit.UserService.setUser(loggedInData);
     setDropDownData(city);
-    
-    if (window.location.href.includes("/digit-ui/employee")) {
+    if (window.location.href.includes("/digit-ui/employee/")) {
       const redirectPath = location.state?.from || "/digit-ui/employee";
       history.replace(redirectPath);
     }
-    //window.location.reload();
+    window.location.reload();
   };
 
   useEffect(() => {

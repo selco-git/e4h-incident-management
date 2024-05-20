@@ -1420,7 +1420,10 @@ export const MdmsService = {
     PersistantStorage.set(key, responseValue, cacheSetting.cacheTimeInSecs);
     return responseValue;
   },
-  getServiceDefs: (tenantId, moduleCode) => {
+  getServiceDefs: (tenantIdNew, moduleCode) => {
+    console.log("STEP 1getServiceDefsgetServiceDefs",  window.location.href)
+    let tenantId = window.location.href.split("/")[9]
+
     return MdmsService.getDataByCriteria(tenantId, getModuleServiceDefsCriteria(tenantId, moduleCode), moduleCode);
   },
   getSanitationType: (tenantId, moduleCode) => {

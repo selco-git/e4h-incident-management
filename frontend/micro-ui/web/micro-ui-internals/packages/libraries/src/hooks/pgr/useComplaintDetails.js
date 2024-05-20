@@ -48,11 +48,15 @@ const transformDetails = ({ id, service, workflow, thumbnails, complaintType }) 
   };
 };
 
-const fetchComplaintDetails = async (tenantId, id) => {
+const fetchComplaintDetails = async (tenantIdNew, id) => {
   
+  let tenantId = window.location.href.split("/")[9]
+  console.log("servkkkk", tenantId,id)
   var serviceDefs = await Digit.MDMSService.getServiceDefs(tenantId, "Incident");
-  console.log("servkkkk", serviceDefs)
-  const service = (await Digit.PGRService.search(tenantId, {incidentId: id })).IncidentWrappers[0];
+  
+  
+  const service = (await Digit.PGRService.search(tenantId, {incidentId: window.location.href.split("/")[8] })).IncidentWrappers[0];
+  console.log("service", service)
   const workflow=service
  //const workflow=await Digit.PGRService.search(tenantId, {incidentId: id }).IncidentWrappers[0];
   console.log("ser, work", service)

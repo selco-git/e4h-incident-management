@@ -41,7 +41,7 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
 
   const clearAll = () => {
     return (
-      <LinkLabel className="clear-search-label" onClick={clearSearch}>
+      <LinkLabel className="clear-search-label" style={{color:"#7a2829"}}onClick={clearSearch}>
         {t("ES_COMMON_CLEAR_SEARCH")}
       </LinkLabel>
     );

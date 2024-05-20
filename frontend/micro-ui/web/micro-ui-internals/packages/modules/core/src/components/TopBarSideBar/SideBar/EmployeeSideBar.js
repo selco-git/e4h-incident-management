@@ -321,6 +321,26 @@ let configEmployeeSideBar1 = {};
   const renderSearch = () => {
     return (
       <div className="submenu-container">
+          <style>
+      
+         {`
+          .citizen .sidebar .sidebar-link:hover,
+          .employee .sidebar .sidebar-link:hover {
+            color: #7a2829 !important;
+            background-color: #486480;
+            cursor: pointer;
+          }
+          .citizen .sidebar .sidebar-link:hover svg,
+          .employee .sidebar .sidebar-link:hover svg {
+            fill: #7a2829 !important;
+          }
+          .citizen .sidebar .sidebar-link.active, 
+        .employee .sidebar .sidebar-link.active {
+            color: #7a2829 !important;
+            border-right: 4px solid #7a2829;
+        }
+        `}
+      </style>
         <div className="sidebar-link">
           <div className="actions search-icon-wrapper">
             <SearchIcon className="search-icon" />

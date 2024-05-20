@@ -103,7 +103,7 @@ import useCancelBill from "./bills/useCancelBill";
 import useTenantsBills from "./bills/useTenants";
 
 
-
+//import useRouteSubscription from "./fsm/useRouteSubscription";
 import useHRMSSearch from "./hrms/useHRMSsearch";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
 import useHRMSCreate from "./hrms/useHRMScreate";
@@ -136,14 +136,6 @@ const pgr = {
   useComplaintStatusCount,
   useMDMS: usePGRMDMS,
 };
-
-
-
-
-
-
-
-
 const hrms = {
   useHRMSSearch,
   useHrmsMDMS,
@@ -157,9 +149,6 @@ const receipts = {
   useReceiptsSearch,
   useReceiptsUpdate,
 };
-
-
-
 const events = {
   useInbox: useEventInbox,
   useCreateEvent,
@@ -217,25 +206,13 @@ const Hooks = {
   useTenantsBills,
   usePrivacyContext,
   pgr,
-  
-  
-
-  
-  
- 
   receipts,
-  
   events,
- 
   survey,
-  
-  
   useCustomMDMS,
   useCustomAPIHook,
- 
   useGetHowItWorksJSON,
   useGetFAQsJSON,
-  
   useStaticData,
   useDynamicData,
   useBulkPdfDetails,

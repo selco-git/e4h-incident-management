@@ -4,6 +4,7 @@ const useInboxData = (searchParams) => {
   const client = useQueryClient();
   const fetchInboxData = async () => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
+    const tenant =  Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
     let serviceIds = [];
     let commonFilters = { start: 1, end: 10 };
     const { limit, offset } = searchParams;
@@ -11,10 +12,10 @@ const useInboxData = (searchParams) => {
     let wfFilters = { ...commonFilters, ...searchParams.filters.wfQuery };
     let complaintDetailsResponse = null;
     let combinedRes = [];
-    complaintDetailsResponse = await Digit.PGRService.search(tenantId, appFilters);
+    complaintDetailsResponse = await Digit.PGRService.search(tenant, appFilters);
     complaintDetailsResponse.IncidentWrappers.forEach((incident) => serviceIds.push(incident.incident.incidentId));
     const serviceIdParams = serviceIds.join();
-    const workflowInstances = await Digit.WorkflowService.getByBusinessId(tenantId, serviceIdParams, wfFilters, false);
+    const workflowInstances = await Digit.WorkflowService.getByBusinessId(tenant, serviceIdParams, wfFilters, false);
     if (workflowInstances.ProcessInstances.length>0) {
       combinedRes = combineResponses(complaintDetailsResponse, workflowInstances).map((data) => ({
         ...data,

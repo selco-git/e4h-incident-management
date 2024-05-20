@@ -139,7 +139,7 @@ public class WorkflowQueryBuilder {
         StringBuilder with_query_builder = new StringBuilder(WITH_CLAUSE);
 
 
-        if(criteria.getTenantId()==null) {
+        if(criteria.getIsStateLevelCall()) {
         if (!criteria.getHistory()) {
             with_query_builder.append(" pi_outer.lastmodifiedTime = (" +
                     "SELECT max(lastmodifiedTime) from eg_wf_processinstance_v2 as pi_inner where pi_inner.businessid = pi_outer.businessid " +

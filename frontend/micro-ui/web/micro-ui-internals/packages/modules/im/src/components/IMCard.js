@@ -9,7 +9,7 @@ const IMCard = () => {
 
   const allLinks = [
     { text: t("ES_IM_INBOX"), link: "/digit-ui/employee/im/inbox" },
-    { text: t("ES_IM_NEW_COMPLAINT"), link: "/digit-ui/employee/im/incident/create", accessTo: ["COMPLAINT_ASSESSOR","COMPLAINT_CLOSER","COMPLAINT_RESOLVER"] },
+    { text: t("ES_IM_NEW_COMPLAINT"), link: "/digit-ui/employee/im/incident/create", accessTo: ["COMPLAINANT"] },
   ];
 
   if (!Digit.Utils.pgrAccess()) {
@@ -39,12 +39,12 @@ const IMCard = () => {
     {
       label: t("ES_IM_NEW_INCIDENT"),
       link: `/digit-ui/employee/im/incident/create`,
-      role: "COMPLAINT_ASSESSOR" || "EMPLOYEE"
+      role: "COMPLAINANT" || "EMPLOYEE"
     }
   ]
 
   propsForCSR = propsForCSR.filter(link => link.role && Digit.Utils.didEmployeeHasRole(link.role) );
-
+console.log("propsForCSR",propsForCSR,Digit.Utils.didEmployeeHasRole("COMPLAINT"))
   const propsForModuleCard = {
     Icon: <Icon />,
     moduleName: t("ES_IM_INCIDENTS"),

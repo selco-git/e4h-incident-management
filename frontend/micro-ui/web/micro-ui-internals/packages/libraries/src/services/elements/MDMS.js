@@ -1421,8 +1421,15 @@ export const MdmsService = {
     return responseValue;
   },
   getServiceDefs: (tenantIdNew, moduleCode) => {
-    console.log("STEP 1getServiceDefsgetServiceDefs",  window.location.href)
-    let tenantId = window.location.href.split("/")[9]
+    console.log("STEP 1getServiceDefsgetServiceDefs",  window.location.href,tenantIdNew)
+    var tenantId
+    if(window.location.href.includes("details"))
+    {
+       tenantId = window.location.href.split("/")[9]
+    }
+   else {
+    tenantId = tenantIdNew
+   }
 
     return MdmsService.getDataByCriteria(tenantId, getModuleServiceDefsCriteria(tenantId, moduleCode), moduleCode);
   },

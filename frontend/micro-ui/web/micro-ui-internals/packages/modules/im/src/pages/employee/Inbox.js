@@ -42,11 +42,19 @@ const Inbox = () => {
   };
 
   const onSearch = (params = "") => {
+    console.log("paramsparams",params,searchParams)
     setSearchParams({ ...searchParams, search: params });
   };
 
   // let complaints = Digit.Hooks.pgr.useInboxData(searchParams) || [];
-  let { data: complaints, isLoading } = Digit.Hooks.pgr.useInboxData({ ...searchParams, offset: pageOffset, limit: pageSize }) ;
+  console.log("searchParamssearchParams",searchParams)
+  let tenant=""
+  if(searchParams?.search?.phcType)
+  {
+    tenant = searchParams?.search?.phcType
+  }
+  console.log("tenant",tenant)
+  let { data: complaints, isLoading } = Digit.Hooks.pgr.useInboxData({ tenant,...searchParams,offset: pageOffset, limit: pageSize }) ;
   console.log("complai", complaints)
 
   let isMobile = Digit.Utils.browser.isMobile();

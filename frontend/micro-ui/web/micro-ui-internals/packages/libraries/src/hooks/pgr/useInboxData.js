@@ -1,10 +1,28 @@
 import { useQuery, useQueryClient } from "react-query";
 
-const useInboxData = (searchParams) => {
+const useInboxData = (searchParams,tenantIdNew) => {
   const client = useQueryClient();
+ console.log("searchParams",searchParams)
   const fetchInboxData = async () => {
-    const tenantId = Digit.ULBService.getCurrentTenantId();
-    const tenant =  Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
+    let tenantId = Digit.ULBService.getCurrentTenantId();
+if(searchParams && searchParams?.filters &&  searchParams?.filters.pgrQuery&& searchParams?.filters?.pgrQuery?.phcType && searchParams?.filters.pgrQuery?.phcType !==""  )
+{
+  console.log("searchParams.filters.pgrQuery.phcSubType",searchParams.filters.pgrQuery.phcType)
+  tenantId = searchParams.filters.pgrQuery.phcSubType
+}
+    else if(searchParams?.search && searchParams?.search?.phcType && searchParams?.search?.phcType !== "" )
+    {
+      
+      tenantId = searchParams?.search?.phcType == "pg" ? Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :searchParams?.search?.phcType
+      console.log("fetchInboxDatafetchInboxDatasearchParams",tenantId,searchParams,searchParams?.search?.phcType)
+    }
+    else {
+      
+      tenantId= Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
+      console.log("fetchInboxDatafetchInboxtenantId")
+    }
+  console.log("fetchInboxDatafetchInboxData",tenantId)
+    //const tenant =  Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
     let serviceIds = [];
     let commonFilters = { start: 1, end: 10 };
     const { limit, offset } = searchParams;
@@ -12,10 +30,10 @@ const useInboxData = (searchParams) => {
     let wfFilters = { ...commonFilters, ...searchParams.filters.wfQuery };
     let complaintDetailsResponse = null;
     let combinedRes = [];
-    complaintDetailsResponse = await Digit.PGRService.search(tenant, appFilters);
+    complaintDetailsResponse = await Digit.PGRService.search(tenantId, appFilters);
     complaintDetailsResponse.IncidentWrappers.forEach((incident) => serviceIds.push(incident.incident.incidentId));
     const serviceIdParams = serviceIds.join();
-    const workflowInstances = await Digit.WorkflowService.getByBusinessId(tenant, serviceIdParams, wfFilters, false);
+    const workflowInstances = await Digit.WorkflowService.getByBusinessId(tenantId, serviceIdParams, wfFilters, false);
     if (workflowInstances.ProcessInstances.length>0) {
       combinedRes = combineResponses(complaintDetailsResponse, workflowInstances).map((data) => ({
         ...data,

@@ -76,7 +76,7 @@ export const AppModules = ({ stateCode, userType, modules, appTenants }) => {
   
 ]
 //console.log("path,modules", path,mod)
-  const appRoutes = mod.map(({ code, tenants }, index) => {
+  const appRoutes = modules.map(({ code, tenants }, index) => {
     const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
    // console.log("Module,Module", Module)
     return Module ? (

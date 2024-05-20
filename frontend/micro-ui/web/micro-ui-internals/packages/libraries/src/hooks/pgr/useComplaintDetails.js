@@ -53,8 +53,6 @@ const fetchComplaintDetails = async (tenantIdNew, id) => {
   let tenantId = window.location.href.split("/")[9]
   console.log("servkkkk", tenantId,id)
   var serviceDefs = await Digit.MDMSService.getServiceDefs(tenantId, "Incident");
-  
-  
   const service = (await Digit.PGRService.search(tenantId, {incidentId: window.location.href.split("/")[8] })).IncidentWrappers[0];
   console.log("service", service)
   const workflow=service

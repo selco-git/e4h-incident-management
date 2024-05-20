@@ -128,60 +128,12 @@ const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => 
 };
 
 const EmployeeHome = ({ modules }) => {
-  let mod=[
-
-    {
-        "module": "HRMS",
-        "code": "HRMS",
-        "active": true,
-        "order": 2,
-        "tenants": [
-          {
-            "code": "pg.aidbhavisubcentre"
-        },
-        {
-            "code": "pg.alkodsubcentre"
-        },
-        {
-            "code": "pg.amdihalsubcentre"
-        },
-        {
-            "code": "pg.ambamathsubcentre"
-        },
-        {
-            "code": "pg"
-        }
-        ]
-    },
-    {
-        "module": "IM",
-        "code": "IM",
-        "bannerImage": "https://egov-uat-assets.s3.amazonaws.com/PGR.png",
-        "active": true,
-        "order": 2,
-        "tenants": [
-            {
-                "code": "pg.aidbhavisubcentre"
-            },
-            {
-                "code": "pg.alkodsubcentre"
-            },
-            {
-                "code": "pg.amdihalsubcentre"
-            },
-            {
-                "code": "pg.ambamathsubcentre"
-            },
-            {
-                "code": "pg"
-            }
-        ]
-    }
-]
+console.log("modules",modules)
+const modulesNew =modules.filter(module => module.module !== "Bills");
   return (
     <div className="employee-app-container">
       <div className="ground-container moduleCardWrapper gridModuleWrapper">
-        {mod.map(({ code }, index) => {
+        {modulesNew.map(({ code }, index) => {
           const Card = Digit.ComponentRegistryService.getComponent(`${code}Card`) || (() => <React.Fragment />);
           return <Card key={index} />;
         })}

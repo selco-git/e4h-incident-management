@@ -219,7 +219,6 @@ console.log("employeeData", employeeData)
 
 export const ComplaintDetails = (props) => {
   let { id } = useParams();
-  console.log("idffffffffff",id.split("/")[0])
   const { t } = useTranslation();
   const [fullscreen, setFullscreen] = useState(false);
   const [imageZoom, setImageZoom] = useState(null);
@@ -227,20 +226,26 @@ export const ComplaintDetails = (props) => {
   const [toast, setToast] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const tenant =  Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
+  console.log("")
   const { isLoading, complaintDetails, revalidate: revalidateComplaintDetails } = Digit.Hooks.pgr.useComplaintDetails({ tenant, id });
-  console.log("cd", id.split("/")[1])
+  console.log("cd", complaintDetails)
   const workflowDetails = Digit.Hooks.useWorkflowDetails({ tenant : id.split("/")[1], id :id.split("/")[0] , moduleCode: "Incident", role: "EMPLOYEE" });
   console.log("wff", workflowDetails)
   const [imagesToShowBelowComplaintDetails, setImagesToShowBelowComplaintDetails] = useState([])
   console.log("imagesToShowBelowComplaintDetails", imagesToShowBelowComplaintDetails)
-  
+  console.log("workflowDetailsworkflowDetails",workflowDetails,complaintDetails)
   // RAIN-5692 PGR : GRO is assigning complaint, Selecting employee and assign. Its not getting assigned.
   // Fix for next action  assignee dropdown issue
   if (workflowDetails && workflowDetails?.data){
     workflowDetails.data.initialActionState=workflowDetails?.data?.initialActionState || {...workflowDetails?.data?.actionState } || {} ;
       workflowDetails.data.actionState = { ...workflowDetails.data };
     }
-
+    if( complaintDetails)
+    {
+      complaintDetails.details.CS_COMPLAINT_DETAILS_TICKET_NO =  complaintDetails?.details?.CS_COMPLAINT_DETAILS_TICKET_NO.split("/")[0]
+      console.log("workflowDetailsworkflowDetails",workflowDetails,complaintDetails)
+    }
+   
   useEffect(()=>{
     if(workflowDetails){
       const {data:{timeline: complaintTimelineData}={}} = workflowDetails
@@ -461,6 +466,7 @@ return (
                 }
                 last={arr.length - 1 === i}
               />
+              
             ))}
 
           {1 === 1 ? null : (

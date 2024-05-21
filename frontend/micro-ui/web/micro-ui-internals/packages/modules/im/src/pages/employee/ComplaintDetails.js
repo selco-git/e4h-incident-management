@@ -99,6 +99,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const [selectedReopenReason, setSelectedReopenReason] = useState(null);
+  console.log("selectedReopenReason", selectedReopenReason)
 
   useEffect(() => {
     (async () => {
@@ -151,7 +152,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
     if(error){
       const timeOut=setTimeout(()=>{
         clearError();
-      }, 500);
+      }, 1000);
       return ()=>clearTimeout(timeOut);
     }
 
@@ -163,9 +164,9 @@ console.log("employeeData", employeeData)
         <Heading
           label={
             selectedAction === "ASSIGN" || selectedAction === "REASSIGN" 
-              ? t("CS_ACTION_ASSIGN")
+              ? t("CS_ACTION_ASSIGN_TICKET")
               : selectedAction === "REJECT"
-                ? t("CS_ACTION_REJECT")
+                ? t("CS_ACTION_REJECT_TICKET")
                 : selectedAction === "REOPEN"
                   ? t("CS_COMMON_REOPEN")
                   :selectedAction==="RESOLVE"? t("CS_COMMON_RESOLVE"): selectedAction==="CLOSE" ? t("CS_COMMON_CLOSE") : t("CS_COMMON_SENDBACK")
@@ -182,12 +183,15 @@ console.log("employeeData", employeeData)
             ? t("CS_COMMON_REJECT")
             : selectedAction === "REOPEN"
               ? t("CS_COMMON_REOPEN")
-              :selectedAction==="RESOLVE"? t("CS_COMMON_RESOLVE"): selectedAction==="CLOSE" ? t("CS_COMMON_CLOSE") : t("CS_COMMON_SENDbACK")
+              :selectedAction==="RESOLVE"? t("CS_COMMON_RESOLVE_BUTTON"): selectedAction==="CLOSE" ? t("CS_COMMON_CLOSE") : t("CS_COMMON_SENDbACK")
       }
       
       actionSaveOnSubmit={() => {
         if((selectedAction === "REJECT"||selectedAction==="SENDBACK") && !comments){
             setError(t("CS_MANDATORY_COMMENTS"));
+        }
+        else if(selectedAction==="REOPEN" && selectedReopenReason===null){
+          setError(t("CS_REOPEN_REASON_MANDATORY"))
         }
         else if(selectedAction==="ASSIGN" && selectedEmployee===null){
            setError(t("CS_ASSIGNEE_MANDATORY"))
@@ -203,19 +207,23 @@ console.log("employeeData", employeeData)
       setError={setError}
     >
       <Card>
-        {selectedAction === "REJECT" || selectedAction === "RESOLVE" || selectedAction === "REOPEN" ? null : (
+        {selectedAction === "REJECT" || selectedAction === "RESOLVE" || selectedAction === "REOPEN" || selectedAction==="SENDBACK" ? null : (
           <React.Fragment>
+            
             <CardLabel>{t("CS_COMMON_EMPLOYEE_NAME")}</CardLabel>
+            
             {employeeData && <SectionalDropdown selected={selectedEmployee} menuData={employeeData} displayKey="name" select={onSelectEmployee} />}
           </React.Fragment>
         )}
         {selectedAction === "REOPEN" ? (
           <React.Fragment>
-            <CardLabel>{t("CS_REOPEN_COMPLAINT")}</CardLabel>
+            <CardLabel>{t("CS_REOPEN_COMPLAINT")}*</CardLabel>
             <Dropdown selected={selectedReopenReason} option={reopenReasonMenu} select={onSelectReopenReason} />
           </React.Fragment>
         ) : null}
-        <CardLabel>{t("CS_COMMON_EMPLOYEE_COMMENTS")}</CardLabel>
+        {selectedAction !== "ASSIGN" ? (
+        <CardLabel>{t("CS_COMMON_EMPLOYEE_COMMENTS")}*</CardLabel>
+        ):<CardLabel>{t("CS_COMMON_EMPLOYEE_COMMENTS")}</CardLabel>}
         <TextArea name="comment" onChange={addComment} value={comments} />
         <CardLabel>{t("CS_ACTION_SUPPORTING_DOCUMENTS")}</CardLabel>
         <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}</CardLabelDesc>

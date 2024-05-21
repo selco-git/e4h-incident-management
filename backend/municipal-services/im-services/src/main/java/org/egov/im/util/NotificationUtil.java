@@ -89,7 +89,7 @@ public class NotificationUtil {
     public String getCustomizedMsg(String action, String applicationStatus, String roles, String localizationMessage) {
         StringBuilder notificationCode = new StringBuilder();
 
-        notificationCode.append("PGR_").append(roles.toUpperCase()).append("_").append(action.toUpperCase()).append("_").append(applicationStatus.toUpperCase()).append("_SMS_MESSAGE");
+        notificationCode.append("IM_").append(roles.toUpperCase()).append("_").append(action.toUpperCase()).append("_").append(applicationStatus.toUpperCase()).append("_SMS_MESSAGE");
 
         String path = "$..messages[?(@.code==\"{}\")].message";
         path = path.replace("{}", notificationCode);
@@ -105,6 +105,8 @@ public class NotificationUtil {
 
         return message;
     }
+    
+    
 
     /**
      *
@@ -144,7 +146,7 @@ public class NotificationUtil {
             }
             for (SMSRequest smsRequest : smsRequestList) {
                 producer.push(tenantId,config.getSmsNotifTopic(), smsRequest);
-                log.info("Messages: " + smsRequest.getMessage());
+                log.info("Messages: " + smsRequest.getText());
             }
         }
     }

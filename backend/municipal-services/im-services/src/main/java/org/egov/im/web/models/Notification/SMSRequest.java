@@ -9,6 +9,10 @@ import lombok.*;
 @Builder
 @ToString
 public class SMSRequest {
-    private String mobileNumber;
-    private String message;
+    private String Number;
+    private String Text;
+    private String SenderId="SELCOF";
+    private String DRNotifyUrl="https://www.domainname.com/notifyurl";
+    private String DRNotifyHttpMethod="POST";
+    private String Tool="API";
 }

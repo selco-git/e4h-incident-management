@@ -16,13 +16,17 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
   const { t } = useTranslation();
 
   const onSubmitInput = (data) => {
-    console.log("subdatra", data)
+    console.log("subdatra", data,phcType)
     if (!Object.keys(errors).filter((i) => errors[i]).length) {
-      if (data.serviceRequestId !== "") {
-        onSearch({ incidentId: data.serviceRequestId });
-      } else if (data.phcType !== "") {
-        onSearch({ phcType: data.phcType });
-      } else {
+      if (data.serviceRequestId !== "" && phcType?.code !=="") {
+        onSearch({ incidentId: data.serviceRequestId,phcType: phcType?.code });
+      } else if (data.code !== "") {
+        onSearch({ phcType: phcType?.code });
+      } 
+      else if(data.serviceRequestId !== "" ){
+        onSearch({ incidentId: data.serviceRequestId})
+      }
+        else {
         onSearch({});
       }
 
@@ -82,7 +86,7 @@ console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("Tenants"),phcM
             )}
             <div className="complaint-input-container" style={{display:"grid"}}>
               <span className="complaint-input">
-                <Label>{t("CS_COMMON_TICKET_NO")}.</Label>
+                <Label>{t("CS_COMMON_TICKET_NO")}</Label>
                 <TextInput
                   name="serviceRequestId"
                   value={complaintNo}
@@ -94,7 +98,7 @@ console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("Tenants"),phcM
                 ></TextInput>
               </span>
               <span className="mobile-input">
-                <Label>{t("CS_COMMON_PHC_TYPE")}.</Label>
+                <Label>{t("CS_COMMON_PHC_TYPE")}</Label>
                 <Dropdown
                 option={Digit.SessionStorage.get("Tenants")}
                   //name="mobileNumber"
@@ -102,6 +106,7 @@ console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("Tenants"),phcM
                   id="healthCentre"
                   selected={phcType}
                   select={setPhcTypeFunction}
+                  // disable={true}
                   inputRef={register({
                     pattern: /^[6-9]\d{9}$/,
                   })}

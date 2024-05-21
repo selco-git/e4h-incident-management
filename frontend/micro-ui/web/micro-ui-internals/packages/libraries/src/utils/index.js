@@ -120,7 +120,7 @@ const didEmployeeHasRole = (role) => {
 const pgrAccess = () => {
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
-  const pgrRoles = ["COMPLAINT_RESOLVER", "COMPLAINT_ASSESSOR", "SUPERUSER","COMPLAINANT","COMPLAINT_CLOSER"];
+  const pgrRoles = ["COMPLAINT_RESOLVER", "COMPLAINT_ASSESSOR", "SUPERUSER","COMPLAINANT","COMPLAINT_CLOSER","COMPLAINT"];
 
   const PGR_ACCESS = userRoles?.filter((role) => pgrRoles.includes(role));
   console.log("pgraccess", PGR_ACCESS)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useParams } from "react-router-dom";
 import {
   BreakLine,
@@ -68,7 +68,7 @@ const TLCaption = ({ data, comments }) => {
       {comments?.map( e => 
         <div className="TLComments">
           <h3>{t("WF_COMMON_COMMENTS")}</h3>
-          <p>{e}</p>
+          <p style={{overflowX:"scroll"}}>{e}</p>
         </div>
       )}
     </div>
@@ -81,13 +81,11 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   // RAIN-5692 PGR : GRO is assigning complaint, Selecting employee and assign. Its not getting assigned.
   // Fix for next action  assignee dropdown issue
   const stateArray = workflowDetails?.data?.initialActionState?.nextActions?.filter( ele => ele?.action == selectedAction );  
-  console.log("statearray", stateArray)
   const useEmployeeData = Digit.Hooks.pgr.useEmployeeFilter(
     tenant, 
     stateArray?.[0]?.assigneeRoles?.length > 0 ? stateArray?.[0]?.assigneeRoles?.join(",") : "",
     complaintDetails
     );
-    console.log("useemp", useEmployeeData)
   const employeeData = useEmployeeData
     ? useEmployeeData.map((departmentData) => {
       return { heading: departmentData.department, options: departmentData.employees };
@@ -101,6 +99,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const [selectedReopenReason, setSelectedReopenReason] = useState(null);
+  console.log("selectedReopenReason", selectedReopenReason)
 
   useEffect(() => {
     (async () => {
@@ -110,10 +109,8 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
           setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
         } else {
           try {
-            console.log("ttt", tenantId?.split(".")[0])
             // TODO: change module in file storage
             const response = await Digit.UploadServices.Filestorage("property-upload", file, cityDetails.code);
-            console.log("filesss", response)
             if (response?.data?.files?.length > 0) {
               setUploadedFile(response?.data?.files[0]?.fileStoreId);
             } else {
@@ -148,6 +145,18 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   function onSelectReopenReason(reason) {
     setSelectedReopenReason(reason);
   }
+  const clearError=useCallback(()=>{
+    setError("");
+  },[])
+  useEffect(()=>{
+    if(error){
+      const timeOut=setTimeout(()=>{
+        clearError();
+      }, 1000);
+      return ()=>clearTimeout(timeOut);
+    }
+
+  }, [error, clearError]);
 console.log("employeeData", employeeData)
   return (
     <Modal
@@ -155,9 +164,9 @@ console.log("employeeData", employeeData)
         <Heading
           label={
             selectedAction === "ASSIGN" || selectedAction === "REASSIGN" 
-              ? t("CS_ACTION_ASSIGN")
+              ? t("CS_ACTION_ASSIGN_TICKET")
               : selectedAction === "REJECT"
-                ? t("CS_ACTION_REJECT")
+                ? t("CS_ACTION_REJECT_TICKET")
                 : selectedAction === "REOPEN"
                   ? t("CS_COMMON_REOPEN")
                   :selectedAction==="RESOLVE"? t("CS_COMMON_RESOLVE"): selectedAction==="CLOSE" ? t("CS_COMMON_CLOSE") : t("CS_COMMON_SENDBACK")
@@ -174,31 +183,47 @@ console.log("employeeData", employeeData)
             ? t("CS_COMMON_REJECT")
             : selectedAction === "REOPEN"
               ? t("CS_COMMON_REOPEN")
-              :selectedAction==="RESOLVE"? t("CS_COMMON_RESOLVE"): selectedAction==="CLOSE" ? t("CS_COMMON_CLOSE") : t("CS_COMMON_SENDbACK")
+              :selectedAction==="RESOLVE"? t("CS_COMMON_RESOLVE_BUTTON"): selectedAction==="CLOSE" ? t("CS_COMMON_CLOSE") : t("CS_COMMON_SENDbACK")
       }
+      
       actionSaveOnSubmit={() => {
-        if(selectedAction === "REJECT" && !comments)
-        setError(t("CS_MANDATORY_COMMENTS"));
-        else
+        if((selectedAction === "REJECT"||selectedAction==="SENDBACK") && !comments){
+            setError(t("CS_MANDATORY_COMMENTS"));
+        }
+        else if(selectedAction==="REOPEN" && selectedReopenReason===null){
+          setError(t("CS_REOPEN_REASON_MANDATORY"))
+        }
+        else if(selectedAction==="ASSIGN" && selectedEmployee===null){
+           setError(t("CS_ASSIGNEE_MANDATORY"))
+        }
+        else if(selectedAction==="RESOLVE" && (!comments || uploadedFile===null) ){
+          setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
+        }
+        else{
         onAssign(selectedEmployee, comments, uploadedFile);
+        }
       }}
       error={error}
       setError={setError}
     >
       <Card>
-        {selectedAction === "REJECT" || selectedAction === "RESOLVE" || selectedAction === "REOPEN" ? null : (
+        {selectedAction === "REJECT" || selectedAction === "RESOLVE" || selectedAction === "REOPEN" || selectedAction==="SENDBACK" ? null : (
           <React.Fragment>
-            <CardLabel>{t("CS_COMMON_EMPLOYEE_NAME")}</CardLabel>
+            
+            <CardLabel>{t("CS_COMMON_EMPLOYEE_NAME")}*</CardLabel>
+            
             {employeeData && <SectionalDropdown selected={selectedEmployee} menuData={employeeData} displayKey="name" select={onSelectEmployee} />}
           </React.Fragment>
         )}
         {selectedAction === "REOPEN" ? (
           <React.Fragment>
-            <CardLabel>{t("CS_REOPEN_COMPLAINT")}</CardLabel>
+            <CardLabel>{t("CS_REOPEN_COMPLAINT")}*</CardLabel>
             <Dropdown selected={selectedReopenReason} option={reopenReasonMenu} select={onSelectReopenReason} />
           </React.Fragment>
         ) : null}
-        <CardLabel>{t("CS_COMMON_EMPLOYEE_COMMENTS")}</CardLabel>
+        {selectedAction !== "ASSIGN" ? (
+        <CardLabel>{t("CS_COMMON_EMPLOYEE_COMMENTS")}*</CardLabel>
+        ):<CardLabel>{t("CS_COMMON_EMPLOYEE_COMMENTS")}</CardLabel>}
         <TextArea name="comment" onChange={addComment} value={comments} />
         <CardLabel>{t("CS_ACTION_SUPPORTING_DOCUMENTS")}</CardLabel>
         <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}</CardLabelDesc>
@@ -211,7 +236,7 @@ console.log("employeeData", employeeData)
           }}
           message={uploadedFile ? `1 ${t(`CS_ACTION_FILEUPLOADED`)}` : t(`CS_ACTION_NO_FILEUPLOADED`)}
         />
-        {selectedAction === "REOPEN" ?  <div> {t("REOPEN_RESOLUTION_REPORT")}</div> : ""}
+        {selectedAction === "RESOLVE" ? <div style={{marginTop:"6px"}}> {t("RESOLVE_RESOLUTION_REPORT")}</div> : <div style={{marginTop:"6px"}}> {t("CS_FILE_LIMIT")}</div>}
       </Card>
     </Modal>
   );
@@ -219,7 +244,6 @@ console.log("employeeData", employeeData)
 
 export const ComplaintDetails = (props) => {
   let { id } = useParams();
-  console.log("idffffffffff",id.split("/")[0])
   const { t } = useTranslation();
   const [fullscreen, setFullscreen] = useState(false);
   const [imageZoom, setImageZoom] = useState(null);
@@ -227,20 +251,26 @@ export const ComplaintDetails = (props) => {
   const [toast, setToast] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const tenant =  Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
+  console.log("")
   const { isLoading, complaintDetails, revalidate: revalidateComplaintDetails } = Digit.Hooks.pgr.useComplaintDetails({ tenant, id });
-  console.log("cd", id.split("/")[1])
+  console.log("cd", complaintDetails)
   const workflowDetails = Digit.Hooks.useWorkflowDetails({ tenant : id.split("/")[1], id :id.split("/")[0] , moduleCode: "Incident", role: "EMPLOYEE" });
   console.log("wff", workflowDetails)
   const [imagesToShowBelowComplaintDetails, setImagesToShowBelowComplaintDetails] = useState([])
   console.log("imagesToShowBelowComplaintDetails", imagesToShowBelowComplaintDetails)
-  
+  console.log("workflowDetailsworkflowDetails",workflowDetails,complaintDetails)
   // RAIN-5692 PGR : GRO is assigning complaint, Selecting employee and assign. Its not getting assigned.
   // Fix for next action  assignee dropdown issue
   if (workflowDetails && workflowDetails?.data){
     workflowDetails.data.initialActionState=workflowDetails?.data?.initialActionState || {...workflowDetails?.data?.actionState } || {} ;
       workflowDetails.data.actionState = { ...workflowDetails.data };
     }
-
+    if( complaintDetails)
+    {
+      complaintDetails.details.CS_COMPLAINT_DETAILS_TICKET_NO =  complaintDetails?.details?.CS_COMPLAINT_DETAILS_TICKET_NO.split("/")[0]
+      console.log("workflowDetailsworkflowDetails",workflowDetails,complaintDetails)
+    }
+   
   useEffect(()=>{
     if(workflowDetails){
       const {data:{timeline: complaintTimelineData}={}} = workflowDetails
@@ -426,10 +456,10 @@ console.log("wfoo", workflowDetails)
       {comment ? <div>{comment?.map( e => 
         <div className="TLComments">
           <h3>{t("WF_COMMON_COMMENTS")}</h3>
-          <p>{e}</p>
+          <p style={{overflowX:"scroll"}}>{e}</p>
         </div>
       )}</div> : null}
-      {checkpoint.status !== "COMPLAINT_FILED" && thumbnailsToShow?.thumbs?.length > 0 ? <div className="TLComments">
+      {checkpoint.status !== "COMPLAINT_FILED" && checkpoint?.performedAction!=="INITIATE" && thumbnailsToShow?.thumbs?.length > 0 ? <div className="TLComments">
         <h3>{t("CS_COMMON_ATTACHMENTS")}</h3>
         <DisplayPhotos srcs={thumbnailsToShow.thumbs} onClick={(src, index) => zoomImageTimeLineWrapper(src, index,thumbnailsToShow)} />
       </div> : null}
@@ -461,6 +491,7 @@ return (
                 }
                 last={arr.length - 1 === i}
               />
+              
             ))}
 
           {1 === 1 ? null : (
@@ -471,7 +502,10 @@ return (
         </StatusTable>
       )}
       {imagesToShowBelowComplaintDetails?.thumbs ? (
+        <div>
+        <CardLabel style={{marginTop:'18px', fontWeight:'bolder'}}>{t("CS_TICKET_ADDITIONAL_DETAILS")}</CardLabel>
         <DisplayPhotos srcs={imagesToShowBelowComplaintDetails?.thumbs} onClick={(source, index) => zoomImageWrapper(source, index)} />
+        </div>
       ) : null}
       <BreakLine />
       {workflowDetails?.isLoading && <Loader />}

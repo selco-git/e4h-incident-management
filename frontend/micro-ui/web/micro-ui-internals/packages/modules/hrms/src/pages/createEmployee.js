@@ -141,10 +141,10 @@ const mdmsData ={}
 
 
   const onSubmit = (data) => {
-    if (data.Jurisdictions.filter(juris => juris.tenantId == tenantId).length == 0) {
-      setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
-      return;
-    }
+    // if (data.Jurisdictions.filter(juris => juris.tenantId == tenantId).length == 0) {
+    //   setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
+    //   return;
+    // }
     if (!Object.values(data.Jurisdictions.reduce((acc, sum) => {
       if (sum && sum?.tenantId) {
         acc[sum.tenantId] = acc[sum.tenantId] ? acc[sum.tenantId] + 1 : 1;

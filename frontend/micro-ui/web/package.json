@@ -9,7 +9,8 @@
     "micro-ui-internals/packages/modules/common",
     "micro-ui-internals/packages/modules/core",
     "micro-ui-internals/packages/modules/im",
-    "micro-ui-internals/packages/modules/hrms" 
+    "micro-ui-internals/packages/modules/hrms",
+    "micro-ui-internals/packages/modules/bills"
   ],
   "engines": {
     "node": ">=14"

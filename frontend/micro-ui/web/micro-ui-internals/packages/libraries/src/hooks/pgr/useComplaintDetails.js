@@ -38,10 +38,7 @@ const transformDetails = ({ id, incident, workflow, thumbnails, complaintType })
     workflow: workflow,
     incident:incident,
     audit: {
-      citizen: incident.citizen,
       details: incident.auditDetails,
-      source: incident.source,
-      rating: incident.rating,
       incidentType: incident.incidentSubType,
     },
    // service: service,

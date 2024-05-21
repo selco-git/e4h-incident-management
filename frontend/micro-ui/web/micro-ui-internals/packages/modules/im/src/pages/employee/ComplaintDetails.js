@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useParams } from "react-router-dom";
 import {
   BreakLine,
@@ -68,7 +68,7 @@ const TLCaption = ({ data, comments }) => {
       {comments?.map( e => 
         <div className="TLComments">
           <h3>{t("WF_COMMON_COMMENTS")}</h3>
-          <p>{e}</p>
+          <p style={{overflowX:"scroll"}}>{e}</p>
         </div>
       )}
     </div>
@@ -81,13 +81,11 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   // RAIN-5692 PGR : GRO is assigning complaint, Selecting employee and assign. Its not getting assigned.
   // Fix for next action  assignee dropdown issue
   const stateArray = workflowDetails?.data?.initialActionState?.nextActions?.filter( ele => ele?.action == selectedAction );  
-  console.log("statearray", stateArray)
   const useEmployeeData = Digit.Hooks.pgr.useEmployeeFilter(
     tenant, 
     stateArray?.[0]?.assigneeRoles?.length > 0 ? stateArray?.[0]?.assigneeRoles?.join(",") : "",
     complaintDetails
     );
-    console.log("useemp", useEmployeeData)
   const employeeData = useEmployeeData
     ? useEmployeeData.map((departmentData) => {
       return { heading: departmentData.department, options: departmentData.employees };
@@ -110,10 +108,8 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
           setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
         } else {
           try {
-            console.log("ttt", tenantId?.split(".")[0])
             // TODO: change module in file storage
             const response = await Digit.UploadServices.Filestorage("property-upload", file, cityDetails.code);
-            console.log("filesss", response)
             if (response?.data?.files?.length > 0) {
               setUploadedFile(response?.data?.files[0]?.fileStoreId);
             } else {
@@ -148,6 +144,18 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   function onSelectReopenReason(reason) {
     setSelectedReopenReason(reason);
   }
+  const clearError=useCallback(()=>{
+    setError("");
+  },[])
+  useEffect(()=>{
+    if(error){
+      const timeOut=setTimeout(()=>{
+        clearError();
+      }, 500);
+      return ()=>clearTimeout(timeOut);
+    }
+
+  }, [error, clearError]);
 console.log("employeeData", employeeData)
   return (
     <Modal
@@ -176,11 +184,20 @@ console.log("employeeData", employeeData)
               ? t("CS_COMMON_REOPEN")
               :selectedAction==="RESOLVE"? t("CS_COMMON_RESOLVE"): selectedAction==="CLOSE" ? t("CS_COMMON_CLOSE") : t("CS_COMMON_SENDbACK")
       }
+      
       actionSaveOnSubmit={() => {
-        if(selectedAction === "REJECT" && !comments)
-        setError(t("CS_MANDATORY_COMMENTS"));
-        else
+        if((selectedAction === "REJECT"||selectedAction==="SENDBACK") && !comments){
+            setError(t("CS_MANDATORY_COMMENTS"));
+        }
+        else if(selectedAction==="ASSIGN" && selectedEmployee===null){
+           setError(t("CS_ASSIGNEE_MANDATORY"))
+        }
+        else if(selectedAction==="RESOLVE" && (!comments || uploadedFile===null) ){
+          setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
+        }
+        else{
         onAssign(selectedEmployee, comments, uploadedFile);
+        }
       }}
       error={error}
       setError={setError}
@@ -211,7 +228,7 @@ console.log("employeeData", employeeData)
           }}
           message={uploadedFile ? `1 ${t(`CS_ACTION_FILEUPLOADED`)}` : t(`CS_ACTION_NO_FILEUPLOADED`)}
         />
-        {selectedAction === "REOPEN" ?  <div> {t("REOPEN_RESOLUTION_REPORT")}</div> : ""}
+        {selectedAction === "RESOLVE" ? <div> {t("RESOLVE_RESOLUTION_REPORT")}</div> : <div> {t("CS_FILE_LIMIT")}</div>}
       </Card>
     </Modal>
   );
@@ -431,7 +448,7 @@ console.log("wfoo", workflowDetails)
       {comment ? <div>{comment?.map( e => 
         <div className="TLComments">
           <h3>{t("WF_COMMON_COMMENTS")}</h3>
-          <p>{e}</p>
+          <p style={{overflowX:"scroll"}}>{e}</p>
         </div>
       )}</div> : null}
       {checkpoint.status !== "COMPLAINT_FILED" && thumbnailsToShow?.thumbs?.length > 0 ? <div className="TLComments">

@@ -38,23 +38,33 @@ const DesktopInbox = ({
               <span className="link">
                 <Link to={"/digit-ui/employee/im/complaint/details/" + row.original["incidentId"] + "/" + row.original["tenantId"]} style={{color:"#7a2829"}}>{row.original["incidentId"]}</Link>
               </span>
-              {/* <a onClick={() => goTo(row.row.original["serviceRequestId"])}>{row.row.original["serviceRequestId"]}</a> */}
-              <br />
-              <span className="complain-no-cell-text" style={{color:"7a2829"}}s>{t(`SERVICEDEFS.${row.original["incidentSubType"].toUpperCase()}`)}</span>
+             
             </div>
           );
         },
       },
       {
-        Header: t("CS_COMPLAINT_PHC_TYPE"),
+        Header: t("CS_TICKET_TYPE"),
         Cell: ({ row }) => {
-          return GetCell(t(row.original["phcType"]));
+          return GetCell(t(`SERVICEDEFS.${row.original["incidentType"].toUpperCase()}`));
+        },
+      },
+      {
+        Header: t("CS_TICKET_SUB_TYPE"),
+        Cell: ({ row }) => {
+          return GetCell(t(`SERVICEDEFS.${row.original["incidentSubType"].toUpperCase()}`));
         },
       },
       {
         Header: t("CS_TICKET_DETAILS_CURRENT_STATUS"),
         Cell: ({ row }) => {
           return GetCell(t(`CS_COMMON_${row.original["status"]}`));
+        },
+      },
+      {
+        Header: t("CS_COMPLAINT_PHC_TYPE"),
+        Cell: ({ row }) => {
+          return GetCell(t(row.original["phcType"]));
         },
       },
       {

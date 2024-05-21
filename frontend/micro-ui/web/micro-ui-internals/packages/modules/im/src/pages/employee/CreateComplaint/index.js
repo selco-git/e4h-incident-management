@@ -88,11 +88,11 @@ useEffect(async () => {
     const selectedTenantData = tenant.find(item => item.code === selectTenant);
     const selectedDistrict = {
       key: selectedTenantData.city.districtCode,
-      name: t(selectedTenantData.city.districtCode.toUpperCase())
+      name: t(selectedTenantData.city.districtCode.charAt(0).toUpperCase() + selectedTenantData.city.districtCode.slice(1).toLowerCase()),
     };
     const selectedBlock = {
-      key: selectedTenantData.city.blockCode.split(".")[1],
-      name: t(selectedTenantData.city.blockCode.split(".")[1].toUpperCase())
+      key: selectedTenantData.city.blockCode.split(".")[1].toUpperCase(),
+      name: t(selectedTenantData.city.blockCode.split(".").pop().charAt(0).toUpperCase() + selectedTenantData.city.blockCode.split(".").pop().slice(1))
     };
       handleDistrictChange(selectedDistrict);
       handleBlockChange(selectedBlock)
@@ -166,7 +166,7 @@ useEffect(async () => {
       setBlockMenuNew(blocks)
       setBlockMenu(
         blocks.map((block) => ({
-          key: block.name,
+          key: block.name.toUpperCase(),
           name: t(block.name.toUpperCase()),
         }))
       );
@@ -232,7 +232,6 @@ useEffect(async () => {
     !submitted && onSubmit(data);
   };
   const onSubmit = async (data) => {
-    console.log("datadata",healthcentre?.code)
     if (!canSubmit) return;
     const { key } = subType;
     const complaintType = key;
@@ -273,7 +272,7 @@ useEffect(async () => {
           menu: { ...blockMenu },
              populators: (
              
-              <Dropdown option={blockMenu} optionKey="key" id="name" selected={block} select={handleBlockChange} disable={selectTenant && selectTenant !== "pg"?true:false}
+              <Dropdown option={blockMenu} optionKey="name" id="name" selected={block} select={handleBlockChange} disable={selectTenant && selectTenant !== "pg"?true:false}
              />
              
              )
@@ -330,7 +329,7 @@ useEffect(async () => {
         {
           label: t("INCIDENT_COMMENTS"),
           type: "text",
-          isMandatory:true,
+          isMandatory:false,
           populators: {
             name: "comments",
             

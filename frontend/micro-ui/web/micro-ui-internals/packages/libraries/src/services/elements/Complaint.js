@@ -19,7 +19,7 @@ export const Complaint = {
     const incidentType = serviceDefs.filter((def) => def.serviceCode === complaintType)[0].menuPath.toUpperCase();
     const defaultData = {
       incident: {
-        district: district?.name,
+        district: district?.key,
         tenantId:tenantIdNew,
         incidentType:incidentType,
        incidentSubtype:complaintType,

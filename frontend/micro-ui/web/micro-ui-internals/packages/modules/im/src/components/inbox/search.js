@@ -86,7 +86,7 @@ console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("Tenants"),phcM
             )}
             <div className="complaint-input-container" style={{display:"grid"}}>
               <span className="complaint-input">
-                <Label>{t("CS_COMMON_TICKET_NO")}.</Label>
+                <Label>{t("CS_COMMON_TICKET_NO")}</Label>
                 <TextInput
                   name="serviceRequestId"
                   value={complaintNo}
@@ -98,7 +98,7 @@ console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("Tenants"),phcM
                 ></TextInput>
               </span>
               <span className="mobile-input">
-                <Label>{t("CS_COMMON_PHC_TYPE")}.</Label>
+                <Label>{t("CS_COMMON_PHC_TYPE")}</Label>
                 <Dropdown
                 option={Digit.SessionStorage.get("Tenants")}
                   //name="mobileNumber"

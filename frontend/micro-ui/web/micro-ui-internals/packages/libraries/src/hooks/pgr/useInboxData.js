@@ -64,6 +64,7 @@ const combineResponses = (complaintDetailsResponse, workflowInstances) => {
     if (wfMap?.[complaint.incident.incidentId]) {
       data.push({
         incidentId: complaint.incident.incidentId,
+        incidentType:complaint.incident.incidentType,
         incidentSubType: complaint.incident.incidentSubType,
         phcType:complaint.incident.phcType,
         //priorityLevel : complaint.service.priority,

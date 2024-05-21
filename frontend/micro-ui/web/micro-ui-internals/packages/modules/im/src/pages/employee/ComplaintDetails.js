@@ -210,7 +210,7 @@ console.log("employeeData", employeeData)
         {selectedAction === "REJECT" || selectedAction === "RESOLVE" || selectedAction === "REOPEN" || selectedAction==="SENDBACK" ? null : (
           <React.Fragment>
             
-            <CardLabel>{t("CS_COMMON_EMPLOYEE_NAME")}</CardLabel>
+            <CardLabel>{t("CS_COMMON_EMPLOYEE_NAME")}*</CardLabel>
             
             {employeeData && <SectionalDropdown selected={selectedEmployee} menuData={employeeData} displayKey="name" select={onSelectEmployee} />}
           </React.Fragment>
@@ -236,7 +236,7 @@ console.log("employeeData", employeeData)
           }}
           message={uploadedFile ? `1 ${t(`CS_ACTION_FILEUPLOADED`)}` : t(`CS_ACTION_NO_FILEUPLOADED`)}
         />
-        {selectedAction === "RESOLVE" ? <div> {t("RESOLVE_RESOLUTION_REPORT")}</div> : <div> {t("CS_FILE_LIMIT")}</div>}
+        {selectedAction === "RESOLVE" ? <div style={{marginTop:"6px"}}> {t("RESOLVE_RESOLUTION_REPORT")}</div> : <div style={{marginTop:"6px"}}> {t("CS_FILE_LIMIT")}</div>}
       </Card>
     </Modal>
   );
@@ -459,7 +459,7 @@ console.log("wfoo", workflowDetails)
           <p style={{overflowX:"scroll"}}>{e}</p>
         </div>
       )}</div> : null}
-      {checkpoint.status !== "COMPLAINT_FILED" && thumbnailsToShow?.thumbs?.length > 0 ? <div className="TLComments">
+      {checkpoint.status !== "COMPLAINT_FILED" && checkpoint?.performedAction!=="INITIATE" && thumbnailsToShow?.thumbs?.length > 0 ? <div className="TLComments">
         <h3>{t("CS_COMMON_ATTACHMENTS")}</h3>
         <DisplayPhotos srcs={thumbnailsToShow.thumbs} onClick={(src, index) => zoomImageTimeLineWrapper(src, index,thumbnailsToShow)} />
       </div> : null}
@@ -502,7 +502,10 @@ return (
         </StatusTable>
       )}
       {imagesToShowBelowComplaintDetails?.thumbs ? (
+        <div>
+        <CardLabel style={{marginTop:'18px', fontWeight:'bolder'}}>{t("CS_TICKET_ADDITIONAL_DETAILS")}</CardLabel>
         <DisplayPhotos srcs={imagesToShowBelowComplaintDetails?.thumbs} onClick={(source, index) => zoomImageWrapper(source, index)} />
+        </div>
       ) : null}
       <BreakLine />
       {workflowDetails?.isLoading && <Loader />}

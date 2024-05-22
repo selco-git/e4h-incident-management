@@ -141,7 +141,7 @@ export const WorkflowService = {
           let _nextActions = state.actions?.map?.((ac) => {
             let actionResultantState = getStateForUUID(ac.nextState);
             let assignees = actionResultantState?.actions?.reduce?.((acc, act) => {
-              return [...acc, ...act.roles];
+              return [ ...act.roles];
             }, []);
             return { ...actionResultantState, assigneeRoles: assignees, action: ac.action, roles: ac.roles };
           });

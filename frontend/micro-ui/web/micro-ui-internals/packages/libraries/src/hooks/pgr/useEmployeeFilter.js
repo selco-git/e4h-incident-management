@@ -20,9 +20,9 @@ const useEmployeeFilter = (tenantIdNew, roles, complaintDetails,isActive) => {
       //emplpoyess data sholld only conatin name uuid dept
       setEmployeeDetails([
         {
-          department: t(`COMMON_MASTERS_DEPARTMENT_${department}`),
+         
           employees: employees.map((employee) => {
-          return { uuid: employee.user.uuid, name: employee.user.name}})
+          return { uuid: employee.user.uuid, name: employee.user.userName}})
         }
       ])
     })();

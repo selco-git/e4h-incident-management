@@ -12,6 +12,8 @@ import {
   CaseIcon,
   ReceiptIcon,
   PersonIcon,
+  Phone,
+  LogoutIcon,
   DocumentIconSolid,
   DropIcon,
   CollectionsBookmarIcons,
@@ -339,6 +341,14 @@ let configEmployeeSideBar1 = {};
             color: #7a2829 !important;
             border-right: 4px solid #7a2829;
         }
+        .citizen .sidebar .dropdown-link.active, .employee .sidebar .dropdown-link.active {
+          color: #7a2829 !important;
+          border-right: 4px solid #7a2829;
+        }
+        .citizen .sidebar .dropdown-link:hover, .employee .sidebar .dropdown-link:hover {
+          color: #7a2829 !important;
+          cursor: pointer;
+        }
         `}
       </style>
         <div className="sidebar-link">
@@ -366,7 +376,7 @@ let configEmployeeSideBar1 = {};
             <div className="submenu-container">
           <div onClick={""} className={`sidebar-link`}>
             <div className="actions">
-              {leftIcon}
+            <Phone />
               <div data-tip="React-tooltip" data-for={`jk-side-$}`} style={{display:"flex",flexDirection:"column"}}>
                 <span>{t("CS_COMMON_HELPLINE")} </span>
                 <span>{"6362222593"} </span>
@@ -378,7 +388,7 @@ let configEmployeeSideBar1 = {};
         <div className="submenu-container">
           <div onClick={""} className={`sidebar-link`}>
             <div className="actions">
-              {leftIcon}
+            <LogoutIcon></LogoutIcon>
               <div data-tip="React-tooltip" data-for={`jk-side-$}`} onClick={(e)=> {handleLogout()}}style={{display:"flex",flexDirection:"column"}}>
                 <span>{t("CS_COMMON_LOGOUT")} </span>
                

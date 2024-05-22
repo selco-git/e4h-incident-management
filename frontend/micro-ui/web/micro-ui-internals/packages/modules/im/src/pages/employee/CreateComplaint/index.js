@@ -30,18 +30,37 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [phcSubTypeMenu, setPhcSubTypeMenu]=useState([]);
   const [phcMenuNew, setPhcMenu] = useState([])
   const [subType, setSubType]=useState(JSON?.parse(sessionStorage.getItem("subType")) || {});
+  const [sortedTicketmenu, setSortedTicketMenu]=useState([]);
   let sortedSubMenu=[];
   if(subTypeMenu!==null){
     sortedSubMenu=subTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
    }
+ 
     let sortedphcSubMenu=[]
    if(phcSubTypeMenu!==null){
     sortedphcSubMenu=phcSubTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
    }
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
-let  sortedMenu=[];
-  if(menu!==null){
-   sortedMenu=menu.sort((a,b)=>a.name.localeCompare(b.name))
+  useEffect(()=>{
+  if (menu !== null) {    
+      const otherOption=menu.filter(item=>item.name.includes('Other'));
+      const remainingOptions=menu.filter(item=> !item.name.includes('Other'));
+      remainingOptions.sort((a,b)=>a.name.localeCompare(b.name))
+      otherOption.sort((a,b)=>a.name.localeCompare(b.name))
+      const sortedMenu=[...remainingOptions, ...otherOption];
+      setSortedTicketMenu(sortedMenu);
+     }
+     
+  }, [menu]);
+
+  if (subTypeMenu !== null) {
+    let othersItem = subTypeMenu.find(item => item.key === 'Other');
+    let otherItems = subTypeMenu.filter(item => item.key !== 'Other');
+    otherItems.sort((a, b) => a.name.localeCompare(b.name));
+    if (othersItem) {
+      otherItems.push(othersItem);
+    }
+    sortedSubMenu = otherItems
   }
   const state = Digit.ULBService.getStateId();
   const [selectTenant, setSelectTenant] =useState(Digit.SessionStorage.get("Employee.tenantId") || null)
@@ -308,7 +327,7 @@ useEffect(async () => {
           type: "dropdown",
           isMandatory:true,
          
-          populators: <Dropdown option={sortedMenu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
+          populators: <Dropdown option={sortedTicketmenu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
            
          
            

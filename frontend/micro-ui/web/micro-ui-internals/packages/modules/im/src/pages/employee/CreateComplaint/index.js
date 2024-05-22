@@ -30,6 +30,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [phcSubTypeMenu, setPhcSubTypeMenu]=useState([]);
   const [phcMenuNew, setPhcMenu] = useState([])
   const [subType, setSubType]=useState(JSON?.parse(sessionStorage.getItem("subType")) || {});
+  const [sortedTicketmenu, setSortedTicketMenu]=useState([]);
   let sortedSubMenu=[];
   if(subTypeMenu!==null){
     sortedSubMenu=subTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
@@ -40,16 +41,17 @@ export const CreateComplaint = ({ parentUrl }) => {
     sortedphcSubMenu=phcSubTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
    }
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
-let  sortedMenu=[];
-  if (menu !== null) {
-    let othersItem = menu.find(item => item.key === 'Others');
-    let otherItems = menu.filter(item => item.key !== 'Others');
-    otherItems.sort((a, b) => a.name.localeCompare(b.name));
-    if (othersItem) {
-      otherItems.push(othersItem);
-    }
-    sortedMenu = otherItems
-  }
+  useEffect(()=>{
+  if (menu !== null) {    
+      const otherOption=menu.filter(item=>item.name.includes('Other'));
+      const remainingOptions=menu.filter(item=> !item.name.includes('Other'));
+      remainingOptions.sort((a,b)=>a.name.localeCompare(b.name))
+      otherOption.sort((a,b)=>a.name.localeCompare(b.name))
+      const sortedMenu=[...remainingOptions, ...otherOption];
+      setSortedTicketMenu(sortedMenu);
+     }
+     
+  }, [menu]);
 
   if (subTypeMenu !== null) {
     let othersItem = subTypeMenu.find(item => item.key === 'Other');
@@ -325,7 +327,7 @@ useEffect(async () => {
           type: "dropdown",
           isMandatory:true,
          
-          populators: <Dropdown option={sortedMenu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
+          populators: <Dropdown option={sortedTicketmenu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
            
          
            

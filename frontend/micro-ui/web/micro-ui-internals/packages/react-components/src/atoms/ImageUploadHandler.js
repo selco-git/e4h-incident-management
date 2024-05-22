@@ -133,7 +133,6 @@ export const ImageUploadHandler = (props) => {
     <React.Fragment>
       {error && <Toast error={true} label={error} onClose={() => setError(null)} />}
       <UploadImages onUpload={getImage} onDelete={deleteImage} thumbnails={uploadedImagesThumbs ? uploadedImagesThumbs.map((o) => o.image) : []} />
-      <div style={{marginLeft:'20px', marginTop:"10px", fontSize:'12px'}}>{t("CS_IMAGE_BASED_FILES")}</div>
     </React.Fragment>
   );
 };

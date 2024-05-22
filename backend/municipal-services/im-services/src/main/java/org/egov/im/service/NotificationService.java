@@ -698,7 +698,7 @@ public class NotificationService {
 
     private List<SMSRequest> enrichSmsRequest(String mobileNumber, String finalMessage) {
         List<SMSRequest> smsRequest = new ArrayList<>();
-        SMSRequest req = SMSRequest.builder().Number(mobileNumber).Text(finalMessage).build();
+        SMSRequest req = SMSRequest.builder().mobileNumber(mobileNumber).message(finalMessage).build();
         smsRequest.add(req);
         return smsRequest;
     }

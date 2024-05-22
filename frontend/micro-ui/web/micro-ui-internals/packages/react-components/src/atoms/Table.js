@@ -93,7 +93,7 @@ const Table = ({
     <div ref={tref} style={tref.current && tref.current.offsetWidth < tref.current.scrollWidth ? {...inboxStyles}: {}}>
     <span className={customTableWrapperClassName}>
     {tableTopComponent ? tableTopComponent:null}
-      <table className={className} {...getTableProps()} style={styles} ref={tableRef}>
+      <table className={className} {...getTableProps()} style={{ ...styles,overflowX: 'auto'}} ref={tableRef} >
          
         <thead>
           {headerGroups.map((headerGroup) => (

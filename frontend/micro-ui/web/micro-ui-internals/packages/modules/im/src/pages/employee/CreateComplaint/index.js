@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo,useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
+import { Controller, useForm } from "react-hook-form";
 import { DatePicker, Dropdown, ImageUploadHandler, TextArea, TextInput, UploadFile, CardLabel } from "@egovernments/digit-ui-react-components";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
@@ -8,6 +9,7 @@ import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
 import { Loader, Header } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
+
 export const CreateComplaint = ({ parentUrl }) => {
   const { t } = useTranslation();
   const [healthCareType, setHealthCareType]=useState();
@@ -29,12 +31,14 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [phcSubTypeMenu, setPhcSubTypeMenu]=useState([]);
   const [phcMenuNew, setPhcMenu] = useState([])
+  const dropdownRefs = useRef([]); // Create refs array for dropdowns
+  const [errors, setErrors] = useState(Array(6).fill(""));
   const [subType, setSubType]=useState(JSON?.parse(sessionStorage.getItem("subType")) || {});
   let sortedSubMenu=[];
   if(subTypeMenu!==null){
     sortedSubMenu=subTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
    }
- 
+
     let sortedphcSubMenu=[]
    if(phcSubTypeMenu!==null){
     sortedphcSubMenu=phcSubTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
@@ -120,7 +124,6 @@ useEffect(async () => {
   }
 }, [selectTenant,mdmsData,state]);
 
-
   useEffect(() => {
       (async () => {
         setError(null);
@@ -152,12 +155,12 @@ useEffect(async () => {
   const client = useQueryClient();
  
   useEffect(()=>{
-    if(complaintType?.key&& subType?.key){
+    if(complaintType?.key&& subType?.key && healthCareType?.code && healthcentre?.code && district?.key && block.key ){
       setSubmitValve(true);
     }else{
       setSubmitValve(false)
     }
-  },[complaintType, subType])
+  },[complaintType, subType,healthcentre,healthCareType,district,block])
   async function selectedType(value) {
     if (value.key !== complaintType.key) {
       if (value.key === "Others") {
@@ -198,6 +201,9 @@ useEffect(async () => {
     setHealthCentre(value);
     setPhcSubTypeMenu([value])
     setHealthCareType(value);
+    centerTypeRef.current.clearError()
+  
+   
   }
   const handleBlockChange= (selectedBlock)=>{
     //sessionStorage.setItem("block",JSON.stringify(value))
@@ -226,10 +232,12 @@ useEffect(async () => {
       setBlock(selectedBlock);
 
     }
+
   }
   
-  const handlePhcSubType=(value)=>{
+  const handlePhcSubType=async (value)=>{
     setHealthCareType(value);
+    
   }
   // const selectedDistrict = (value) => {
   //   setDistrict(value);
@@ -244,9 +252,11 @@ useEffect(async () => {
 
 
    const wrapperSubmit = (data) => {
+    const abc = handleButtonClick()
+    console.log("vvvv",abc,!canSubmit)
     if (!canSubmit) return;
     setSubmitted(true);
-    !submitted && onSubmit(data);
+    !submitted && !abc && onSubmit(data);
   };
   const onSubmit = async (data) => {
     if (!canSubmit) return;
@@ -266,6 +276,39 @@ useEffect(async () => {
     await client.refetchQueries(["fetchInboxData"]);
     history.push(parentUrl + "/incident/response");
   };
+  const districtRef = useRef(null);
+  const blockRef = useRef(null);
+  const healthCareRef = useRef(null);
+  const centerTypeRef = useRef(null);
+  const ticketTypeRef = useRef(null);
+  const ticketSubTypeRef = useRef(null);
+  const fieldsToValidate = [
+    { field: district, ref: districtRef },
+    { field: block, ref: blockRef },
+    { field: healthcentre, ref: healthCareRef },
+    { field: healthCareType, ref: centerTypeRef },
+    { field: complaintType, ref: ticketTypeRef },
+    { field: subType, ref: ticketSubTypeRef }
+  ];
+  const handleButtonClick = () => {
+    const hasEmptyFields = fieldsToValidate.some(({ field }) => field === null || Object.keys(field).length === 0);
+    console.log("hasEmptyFields",hasEmptyFields)
+    if (hasEmptyFields) {
+      fieldsToValidate.forEach(({ field, ref }) => {
+        console.log("field",field)
+        if (field === null || field === undefined || Object.keys(field).length === 0) {
+          
+          ref.current.validate();
+        }
+      });
+      
+      return true; // At least one field is empty
+    } else {
+      return false; // None of the fields are empty
+    }
+   
+  };
+
   const config = [
     
     {
@@ -278,7 +321,7 @@ useEffect(async () => {
           type: "dropdown",
           isMandatory:true,
           populators:  (
-            <Dropdown option={districtMenu} optionKey="name" id="name" selected={district} select={handleDistrictChange} disable={selectTenant && selectTenant !== "pg"?true:false}/>),
+            <Dropdown  ref={districtRef} option={districtMenu} optionKey="name" id="name" selected={district} select={handleDistrictChange} disable={selectTenant && selectTenant !== "pg"?true:false}  required={true}/>),
            
          },
         
@@ -289,7 +332,7 @@ useEffect(async () => {
           menu: { ...blockMenu },
              populators: (
              
-              <Dropdown option={blockMenu} optionKey="name" id="name" selected={block} select={handleBlockChange} disable={selectTenant && selectTenant !== "pg"?true:false}
+              <Dropdown ref={blockRef} option={blockMenu} optionKey="name" id="name" selected={block} select={handleBlockChange} disable={selectTenant && selectTenant !== "pg"?true:false}  required={true}
              />
              
              )
@@ -299,7 +342,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} disable={selectTenant && selectTenant !== "pg"?true:false}/>
+            <Dropdown ref={healthCareRef} option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} disable={selectTenant && selectTenant !== "pg"?true:false}  required={true}/>
             
           ),
            
@@ -309,7 +352,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown option={sortedphcSubMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} disable={selectTenant && selectTenant !== "pg"?true:false}/>
+            <Dropdown ref={centerTypeRef} option={sortedphcSubMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} disable={selectTenant && selectTenant !== "pg"?true:false}  required={true}/>
              
           ),
            
@@ -324,8 +367,7 @@ useEffect(async () => {
           label :t("TICKET_TYPE"),
           type: "dropdown",
           isMandatory:true,
-         
-          populators: <Dropdown option={sortedMenu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
+          populators: (<Dropdown ref={ticketTypeRef} option={sortedMenu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType}  required={true}/>),
            
          
            
@@ -335,7 +377,7 @@ useEffect(async () => {
           type: "dropdown",
           isMandatory:true,
           menu: { ...subTypeMenu },
-          populators: <Dropdown option={sortedSubMenu} optionKey="name" id="complaintSubType" selected={subType} select={selectedSubType} />,
+          populators: <Dropdown ref={ticketSubTypeRef} option={sortedSubMenu} optionKey="name" id="complaintSubType" selected={subType} select={selectedSubType} required={true}/>,
            
          }
         ]
@@ -380,7 +422,11 @@ useEffect(async () => {
       onSubmit={wrapperSubmit}
       isDisabled={!canSubmit && !submitted}
       label={t("FILE_INCIDENT")}
-    />     
+    />   
+     {/* <button onClick={(!selectedOption || Object.keys(selectedOption).length == 0)}>Check Errors</button>  
+      {errors.map((error, index) => (
+        <div key={index}>{error}</div>
+      ))} */}
     </div>  
   );
 };

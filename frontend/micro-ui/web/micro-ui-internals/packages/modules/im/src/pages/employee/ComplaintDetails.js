@@ -29,6 +29,7 @@ import {
   LinkButton,
   Modal,
   SectionalDropdown,
+  ImageUploadHandler
 } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
 
@@ -95,7 +96,10 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [comments, setComments] = useState("");
   const [file, setFile] = useState(null);
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [uploadedFile, setUploadedFile]=useState(null);
+  const [uploadedImages, setUploadedImagesIds] = useState(null)
+  //const [uploadedFile, setUploadedFile] = useState(null);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const [selectedReopenReason, setSelectedReopenReason] = useState(null);
@@ -157,6 +161,15 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
     }
 
   }, [error, clearError]);
+  const handleUpload = (ids) => {
+    console.log("idsss", ids)
+    setUploadedFile(ids?.map((ids) => ({
+      documentType: "PHOTO",
+      fileStoreId: ids,
+      documentUid: "",
+      additionalDetails: {},
+    })));
+  };
 console.log("employeeData", employeeData)
   return (
     <Modal
@@ -226,15 +239,14 @@ console.log("employeeData", employeeData)
         ):<CardLabel>{t("CS_COMMON_EMPLOYEE_COMMENTS")}</CardLabel>}
         <TextArea name="comment" onChange={addComment} value={comments} />
         <CardLabel>{t("CS_ACTION_SUPPORTING_DOCUMENTS")}</CardLabel>
-        <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}</CardLabelDesc>
-        <UploadFile
-          id={"pgr-doc"}
-          accept=".jpg"
-          onUpload={selectfile}
-          onDelete={() => {
-            setUploadedFile(null);
-          }}
-          message={uploadedFile ? `1 ${t(`CS_ACTION_FILEUPLOADED`)}` : t(`CS_ACTION_NO_FILEUPLOADED`)}
+        {selectedAction==="RESOLVE" ? (
+          <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}*</CardLabelDesc>
+        ) : <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}</CardLabelDesc>}
+        
+        <ImageUploadHandler
+          tenantId={tenantId}
+          uploadedImages={uploadedFile}
+          onPhotoChange={handleUpload}
         />
         {selectedAction === "RESOLVE" ? <div style={{marginTop:"6px"}}> {t("RESOLVE_RESOLUTION_REPORT")}</div> : <div style={{marginTop:"6px"}}> {t("CS_FILE_LIMIT")}</div>}
       </Card>

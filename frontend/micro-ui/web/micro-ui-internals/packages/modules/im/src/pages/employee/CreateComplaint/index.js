@@ -34,14 +34,31 @@ export const CreateComplaint = ({ parentUrl }) => {
   if(subTypeMenu!==null){
     sortedSubMenu=subTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
    }
+ 
     let sortedphcSubMenu=[]
    if(phcSubTypeMenu!==null){
     sortedphcSubMenu=phcSubTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
    }
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
 let  sortedMenu=[];
-  if(menu!==null){
-   sortedMenu=menu.sort((a,b)=>a.name.localeCompare(b.name))
+  if (menu !== null) {
+    let othersItem = menu.find(item => item.key === 'Others');
+    let otherItems = menu.filter(item => item.key !== 'Others');
+    otherItems.sort((a, b) => a.name.localeCompare(b.name));
+    if (othersItem) {
+      otherItems.push(othersItem);
+    }
+    sortedMenu = otherItems
+  }
+
+  if (subTypeMenu !== null) {
+    let othersItem = subTypeMenu.find(item => item.key === 'Other');
+    let otherItems = subTypeMenu.filter(item => item.key !== 'Other');
+    otherItems.sort((a, b) => a.name.localeCompare(b.name));
+    if (othersItem) {
+      otherItems.push(othersItem);
+    }
+    sortedSubMenu = otherItems
   }
   const state = Digit.ULBService.getStateId();
   const [selectTenant, setSelectTenant] =useState(Digit.SessionStorage.get("Employee.tenantId") || null)

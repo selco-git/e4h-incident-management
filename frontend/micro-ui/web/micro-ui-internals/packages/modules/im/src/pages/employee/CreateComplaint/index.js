@@ -397,7 +397,10 @@ useEffect(async () => {
         {
           label:t("INCIDENT_UPLOAD_FILE"),
           populators:
+          <div>
           <ImageUploadHandler tenantId={tenantId} uploadedImages={uploadedImages} onPhotoChange={handleUpload} />
+          <div style={{marginLeft:'20px', marginTop:"10px", fontSize:'12px'}}>{t("CS_IMAGE_BASED_FILES")}</div>
+          </div>
          },
         ]
       }

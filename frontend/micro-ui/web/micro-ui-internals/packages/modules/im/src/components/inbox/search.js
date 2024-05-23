@@ -113,15 +113,18 @@ console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("Tenants"),phcM
                 ></Dropdown>
               </span>
               {type === "desktop" && (
+                <div style={{display:'flex', alignItems:'center',marginTop: 6}}>
                 <SubmitBar
-                  style={{ marginTop: 32, marginLeft: "16px", width: "calc( 100% - 16px )" }}
+                  style={{ marginLeft: "10px" }}
                   label={t("ES_COMMON_SEARCH")}
                   submit={true}
                   disabled={Object.keys(errors).filter((i) => errors[i]).length}
                 />
+                <span className="clear-search" style={{color:"#7a2829", marginLeft:"15px", marginTop:"10px"}}>{clearAll()}</span>
+                </div>
               )}
-            </div>
-            {type === "desktop" && <span className="clear-search" style={{color:"#7a2829"}}>{clearAll()}</span>}
+             </div>
+            
           </div>
         </div>
         {type === "mobile" && (

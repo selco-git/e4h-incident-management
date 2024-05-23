@@ -29,7 +29,8 @@ import {
   LinkButton,
   Modal,
   SectionalDropdown,
-  ImageUploadHandler
+  ImageUploadHandler,
+  MultiUploadWrapper
 } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
 
@@ -98,6 +99,9 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const [file, setFile] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile]=useState(null);
+  console.log("uploadedgg", uploadedFile)
+  const allowedFileTypes = /(.*?)(jpg|jpeg|png|image|pdf)$/i;
+  const stateId = Digit.ULBService.getStateId();
   const [uploadedImages, setUploadedImagesIds] = useState(null)
   //const [uploadedFile, setUploadedFile] = useState(null);
   const [error, setError] = useState(null);
@@ -234,7 +238,7 @@ console.log("employeeData", employeeData)
             <Dropdown selected={selectedReopenReason} option={reopenReasonMenu} select={onSelectReopenReason} />
           </React.Fragment>
         ) : null}
-        {selectedAction !== "ASSIGN" ? (
+        {selectedAction !== "ASSIGN"  && selectedAction!=="REOPEN" ? (
         <CardLabel>{t("CS_COMMON_EMPLOYEE_COMMENTS")}*</CardLabel>
         ):<CardLabel>{t("CS_COMMON_EMPLOYEE_COMMENTS")}</CardLabel>}
         <TextArea name="comment" onChange={addComment} value={comments} />
@@ -248,7 +252,7 @@ console.log("employeeData", employeeData)
           uploadedImages={uploadedFile}
           onPhotoChange={handleUpload}
         />
-        {selectedAction === "RESOLVE" ? <div style={{marginTop:"6px"}}> {t("RESOLVE_RESOLUTION_REPORT")}</div> : <div style={{marginTop:"6px"}}> {t("CS_FILE_LIMIT")}</div>}
+        {selectedAction === "RESOLVE" ? <div style={{marginTop:"6px", fontSize:"13px", color:"#36454F"}}>{t("RESOLVE_RESOLUTION_REPORT")}</div> : <CardLabelDesc style={{marginTop:"8px", fontSize:"13px"}}> {t("CS_FILE_LIMIT")}</CardLabelDesc>}
       </Card>
     </Modal>
   );
@@ -482,7 +486,7 @@ console.log("wfoo", workflowDetails)
 console.log("cdet", complaintDetails)
 return (
   <React.Fragment>
-     <div style={{color:"#9e1b32", marginBottom:'10px'}}>
+     <div style={{color:"#9e1b32", marginBottom:'10px', textAlign:"right", marginRight:"30px"}}>
     <Link to={`/digit-ui/employee/im/inbox`}>{t("BACK")}</Link></div> 
     <Card>
       <CardSubHeader>{t(`CS_HEADER_INCIDENT_SUMMARY`)}</CardSubHeader>

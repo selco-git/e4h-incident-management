@@ -51,6 +51,9 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const [email, setEmail] = useState(userInfo?.emailId ? userInfo.emailId : "");
   const [gender, setGender] = useState(userDetails?.gender);
   const [city, setCity] = useState(userInfo?.permanentCity ? userInfo.permanentCity : cityDetails.name);
+  if(city==="State"){
+    setCity("All")
+  }
   const [mobileNumber, setMobileNo] = useState(userInfo?.mobileNumber ? userInfo.mobileNumber : "");
   const [profilePic, setProfilePic] = useState(null);
   const [profileImg, setProfileImg] = useState("");

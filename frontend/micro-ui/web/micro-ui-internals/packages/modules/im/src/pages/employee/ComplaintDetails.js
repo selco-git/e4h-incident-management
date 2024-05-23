@@ -98,7 +98,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const [comments, setComments] = useState("");
   const [file, setFile] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [uploadedFile, setUploadedFile]=useState(null);
+  const [uploadedFile, setUploadedFile] = useState(Array);
   console.log("uploadedgg", uploadedFile)
   const allowedFileTypes = /(.*?)(jpg|jpeg|png|image|pdf)$/i;
   const stateId = Digit.ULBService.getStateId();
@@ -108,30 +108,15 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const [selectedReopenReason, setSelectedReopenReason] = useState(null);
   console.log("selectedReopenReason", selectedReopenReason)
-
-  useEffect(() => {
-    (async () => {
-      setError(null);
-      if (file) {
-        if (file.size >= 5242880) {
-          setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
-        } else {
-          try {
-            // TODO: change module in file storage
-            const response = await Digit.UploadServices.Filestorage("property-upload", file, cityDetails.code);
-            if (response?.data?.files?.length > 0) {
-              setUploadedFile(response?.data?.files[0]?.fileStoreId);
-            } else {
-              setError(t("CS_FILE_UPLOAD_ERROR"));
-            }
-          } catch (err) {
-            setError(t("CS_FILE_UPLOAD_ERROR"));
-          }
-        }
-      }
-    })();
-  }, [file]);
-
+  useEffect(()=>{
+    if(comments.length>15){
+      setError("CS_COMMENT_LIMIT_EXCEED")
+    }
+    else{
+      setError("")
+    }
+  })
+  
   const reopenReasonMenu = [t(`CS_REOPEN_OPTION_ONE`), t(`CS_REOPEN_OPTION_TWO`), t(`CS_REOPEN_OPTION_THREE`), t(`CS_REOPEN_OPTION_FOUR`)];
   // const uploadFile = useCallback( () => {
 
@@ -141,13 +126,14 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
     setSelectedEmployee(employee);
   }
 
-  function addComment(e) {
-    setError(null);
-    setComments(e.target.value);
-  }
-
-  function selectfile(e) {
-    setFile(e.target.files[0]);
+  function addComment(e) { 
+    if(e.target.value.length>256){
+      setError("LIMIT_EXCEED")
+    }
+    else{
+      setError(null);
+      setComments(e.target.value);
+    } 
   }
 
   function onSelectReopenReason(reason) {
@@ -165,15 +151,26 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
     }
 
   }, [error, clearError]);
-  const handleUpload = (ids) => {
-    console.log("idsss", ids)
-    setUploadedFile(ids?.map((ids) => ({
+  function selectfile(e) {
+    if (e) {
+      const newFile={
       documentType: "PHOTO",
-      fileStoreId: ids,
+      fileStoreId: e?.fileStoreId?.fileStoreId,
       documentUid: "",
       additionalDetails: {},
-    })));
+      };
+      let temp = [...uploadedFile, newFile];
+      setUploadedFile(temp);
+      e && setFile(e.file);
+    }
+  }
+
+  const getData = (state) => {
+    let data = Object.fromEntries(state);
+    let newArr = Object.values(data);
+    selectfile(newArr[newArr.length - 1]);
   };
+  console.log("commmmmentsss", comments, comments.length)
 console.log("employeeData", employeeData)
   return (
     <Modal
@@ -202,6 +199,7 @@ console.log("employeeData", employeeData)
               ? t("CS_COMMON_REOPEN")
               :selectedAction==="RESOLVE"? t("CS_COMMON_RESOLVE_BUTTON"): selectedAction==="CLOSE" ? t("CS_COMMON_CLOSE") : t("CS_COMMON_SENDbACK")
       }
+      
       
       actionSaveOnSubmit={() => {
         if((selectedAction === "REJECT"||selectedAction==="SENDBACK") && !comments){
@@ -247,11 +245,14 @@ console.log("employeeData", employeeData)
           <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}*</CardLabelDesc>
         ) : <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}</CardLabelDesc>}
         
-        <ImageUploadHandler
-          tenantId={tenantId}
-          uploadedImages={uploadedFile}
-          onPhotoChange={handleUpload}
-        />
+        <MultiUploadWrapper 
+          t={t} 
+          module="Incident" 
+          tenantId={tenantId} 
+          
+          getFormState={(e) => getData(e)}
+          acceptFiles= ".pdf, .jpg" 
+          />
         {selectedAction === "RESOLVE" ? <div style={{marginTop:"6px", fontSize:"13px", color:"#36454F"}}>{t("RESOLVE_RESOLUTION_REPORT")}</div> : <CardLabelDesc style={{marginTop:"8px", fontSize:"13px"}}> {t("CS_FILE_LIMIT")}</CardLabelDesc>}
       </Card>
     </Modal>

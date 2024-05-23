@@ -24,6 +24,16 @@ const setEmployeeDetail = (userObject, token) => {
 
 const Login = ({ config: propsConfig, t, isDisabled }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
+  let  sortedCities=[];
+  if (cities !== null&& cities!==undefined) {
+    let othersItem = cities.find(item => item. i18nKey=== 'TENANT_TENANTS_PG');
+    let otherItems =cities.filter(item => item.i18nKey !== 'TENANT_TENANTS_PG');
+    otherItems.sort((a, b) => a.i18nKey.localeCompare(b.i18nKey));
+    if (othersItem) {
+      otherItems.push(othersItem);
+    }
+    sortedCities = otherItems
+  }
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
  // console.log("storeData", storeData)
   const { stateInfo } = storeData || {};
@@ -123,7 +133,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
             customProps: {},
             component: (props, customProps) => (
               <Dropdown
-                option={cities}
+                option={sortedCities}
                 className="login-city-dd"
                 optionKey="i18nKey"
                 select={(d) => {

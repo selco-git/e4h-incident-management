@@ -99,6 +99,14 @@ useEffect(()=>{
 useEffect(()=>{
 let tenants =Digit.SessionStorage.get("Employee.tenantId")
 setSelectTenant(tenants)
+if(selectTenant !== "pg")
+{
+  ticketTypeRef.current.validate()
+  ticketSubTypeRef.current.validate()
+}
+else {
+  handleButtonClick()
+}
 
 },[])
 

@@ -58,7 +58,7 @@ const ModuleCardFullWidth = ({ moduleName,  links = [], isCitizen = false, class
           <span className="text removeHeight" >{moduleName}</span>
           <span className="link">
             <a href={subHeaderLink}>
-              <span className={"inbox-total"} style={{ display: "flex", alignItems: "center", color: "#F47738", fontWeight: "bold" }}>
+              <span className={"inbox-total"} style={{ display: "flex", alignItems: "center", color: "#7a2829", fontWeight: "bold" }}>
                 {subHeader || "-"}
                 <span style={{ marginLeft: "10px" }}>
                   {" "}

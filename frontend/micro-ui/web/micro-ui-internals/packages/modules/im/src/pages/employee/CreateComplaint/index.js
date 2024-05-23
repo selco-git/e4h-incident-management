@@ -423,7 +423,7 @@ useEffect(async () => {
         {`
           .employee-select-wrap .select:hover {
             --border-opacity: 1;
-            border: 1px solid #f47738;
+            border: 1px solid #7a2829;
             border-color: #7a2829;
           }
         `}

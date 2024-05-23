@@ -340,9 +340,9 @@ const createBodyContentBillAmend = (table,t) => {
       },
       fillColor:function(rowIndex,node,columnIndex){
         if(rowIndex === (table?.tableRows?.length)) {
-          return "#F47738"
+          return "#7a2829"
         }
-        return (rowIndex % 2 === 0) ? "#F47738" : null; 
+        return (rowIndex % 2 === 0) ? "#7a2829" : null; 
       },
       fillOpacity:function(rowIndex,node,columnIndex) {
         if (rowIndex === (table?.tableRows?.length)) {
@@ -432,7 +432,7 @@ const createHeaderBillAmend = (headerDetails, logo, tenantId,t) => {
             fontSize: 16,
             alignment: "right",
             margin: [-40, 10, 2, 0],
-            color: "#F47738"
+            color: "#7a2829"
           }
         ],
         [
@@ -452,7 +452,7 @@ const createHeaderBillAmend = (headerDetails, logo, tenantId,t) => {
             fontSize: 16,
             margin: [0, -45, 10, 0],
             alignment: "right",
-            color: "#F47738"
+            color: "#7a2829"
           }
         ],
         [
@@ -623,7 +623,7 @@ const createBodyContent = (details) => {
           table?.title?.map(t=>{ 
             return {
             text:t,
-            color: "#F47738",
+            color: "#7a2829",
             style: "header",
             fontSize: 14,
             bold: true,
@@ -669,7 +669,7 @@ function createContentDetails(details) {
             [
               {
                 text: detail?.title,
-                color: "#F47738",
+                color: "#7a2829",
                 style: "header",
                 fontSize: 14,
                 bold: true
@@ -750,7 +750,7 @@ function createHeader(headerDetails,logo,tenantId) {
             fontSize: 16,
             alignment: "right",
             margin: [-40, 10, 2, 0],
-            color: "#F47738"
+            color: "#7a2829"
           }
         ],
         [
@@ -770,7 +770,7 @@ function createHeader(headerDetails,logo,tenantId) {
             fontSize: 16,
             margin: [0, -50, 10, 0],
             alignment: "right",
-            color: "#F47738"
+            color: "#7a2829"
           }
         ],
         [

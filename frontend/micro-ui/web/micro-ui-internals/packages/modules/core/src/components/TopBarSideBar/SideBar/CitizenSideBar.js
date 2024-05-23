@@ -253,6 +253,9 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
             color: #7a2829;
             cursor: pointer;
           }
+          .drawer-list .sidebar-list.active {
+            border-left: 5px solid #7a2829;
+        }
         `}
       </style>
     

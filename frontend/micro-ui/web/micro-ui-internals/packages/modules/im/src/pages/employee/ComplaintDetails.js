@@ -121,7 +121,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
 
   function addComment(e) { 
     if(e.target.value.length>256){
-      setError("LIMIT_EXCEED")
+      setError(t("CS_COMMENT_LENGTH_LIMIT_EXCEED"))
     }
     else{
       setError(null);

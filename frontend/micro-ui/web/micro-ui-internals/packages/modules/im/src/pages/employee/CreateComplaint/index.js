@@ -99,7 +99,14 @@ useEffect(()=>{
 useEffect(()=>{
 let tenants =Digit.SessionStorage.get("Employee.tenantId")
 setSelectTenant(tenants)
-
+if(selectTenant !== "pg")
+{
+  ticketTypeRef.current.validate()
+  ticketSubTypeRef.current.validate()
+}
+else {
+  handleButtonClick()
+}
 },[])
 
 useEffect(async () => {
@@ -117,10 +124,6 @@ useEffect(async () => {
     };
       handleDistrictChange(selectedDistrict);
       handleBlockChange(selectedBlock)
-     
-    
-     
-   // setBlock(selectedBlock);
   }
 }, [selectTenant,mdmsData,state]);
 
@@ -219,7 +222,6 @@ useEffect(async () => {
       setPhcMenu(phcMenuType)
       setBlock(selectedBlock);
       let tenant = Digit.SessionStorage.get("Employee.tenantId")
-      console.log("phcMenuType",phcMenuType,tenant)
       const filtereddata = phcMenuType?.filter((code)=> code.code == tenant)
       if(filtereddata)
       {
@@ -252,7 +254,6 @@ useEffect(async () => {
   const handleUpload = (ids) => {
     setUploadedImagesIds(ids);
   };
-
 
    const wrapperSubmit = (data) => {
     const abc = handleButtonClick()
@@ -300,11 +301,9 @@ useEffect(async () => {
       fieldsToValidate.forEach(({ field, ref }) => {
         console.log("field",field)
         if (field === null || field === undefined || Object.keys(field).length === 0) {
-          
           ref.current.validate();
         }
       });
-      
       return true; // At least one field is empty
     } else {
       return false; // None of the fields are empty
@@ -317,8 +316,6 @@ useEffect(async () => {
     {
       head: t("TICKET_LOCATION"),
       body: [
-        
-        
         {
           label :t("INCIDENT_DISTRICT"),
           type: "dropdown",

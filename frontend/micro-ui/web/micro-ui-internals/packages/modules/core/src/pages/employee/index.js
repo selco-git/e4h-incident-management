@@ -105,7 +105,7 @@ const EmployeeApp = ({
             modules={modules}
           />
           <div className={`main ${DSO ? "m-auto" : ""}`}>
-            <div className="employee-app-wrapper">
+            <div className="employee-app-wrapper" style={{overflowX:"scroll"}}>
               <ErrorBoundary initData={initData}>
                 <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
               </ErrorBoundary>

@@ -21,24 +21,26 @@ const DetailsCard = ({ data, serviceRequestIdKey, linkPrefix, handleSelect, sele
           return (
             <Link
               key={itemIndex}
-              to={isTwoDynamicPrefix 
-                ?
+              to={window.location.href.includes("im/inbox") ? "/digit-ui/employee/im/complaint/details/" + object["Ticket No."] + "/" + object["TenantID"]
+                : isTwoDynamicPrefix
+                  ?
                   `${linkPrefix}${typeof serviceRequestIdKey === "function"
                     ?
                     serviceRequestIdKey(object)
-                      :
-                    `${getRedirectionLink(object["Application Type"]==="BPA_STAKEHOLDER_REGISTRATION"?"BPAREG":"BPA")}/${object[object["Application Type"]==="BPA_STAKEHOLDER_REGISTRATION"?"applicationNo":"Application Number"]}`}`
-                :
+                    :
+                    `${getRedirectionLink(object["Application Type"] === "BPA_STAKEHOLDER_REGISTRATION" ? "BPAREG" : "BPA")}/${object[object["Application Type"] === "BPA_STAKEHOLDER_REGISTRATION" ? "applicationNo" : "Application Number"]}`}`
+                  :
                   `${linkPrefix}${typeof serviceRequestIdKey === "function"
                     ?
                     serviceRequestIdKey(object)
-                      :
+                    :
                     object[serviceRequestIdKey]}`
-                }
+              }
             >
               <div className="details-container">
                 {Object.keys(object).map((name, index) => {
-                  if (name === "applicationNo" || name === "Vehicle Log") return null;
+                 console.log("object",object,name)
+                  if (name === "applicationNo" || name === "Vehicle Log" || name == "TenantID" ) return null;
                   return <Details label={name} name={object[name]} key={index} />;
                 })}
               </div>
@@ -48,6 +50,7 @@ const DetailsCard = ({ data, serviceRequestIdKey, linkPrefix, handleSelect, sele
       </div>
     );
   }
+
 
   return (
     <div>

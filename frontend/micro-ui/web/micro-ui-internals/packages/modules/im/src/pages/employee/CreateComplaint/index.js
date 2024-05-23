@@ -168,11 +168,14 @@ useEffect(async () => {
         setComplaintType(value);
         sessionStorage.setItem("complaintType",JSON.stringify(value))
         setSubTypeMenu([{ key: "Others", name: t("SERVICEDEFS.OTHERS") }]);
+        ticketSubTypeRef.current.validate()
+
       } else {
         setSubType({ name: "" });
         setComplaintType(value);
         sessionStorage.setItem("complaintType",JSON.stringify(value))
         setSubTypeMenu(await serviceDefinitions.getSubMenu(tenantId, value, t));
+        ticketSubTypeRef.current.validate()
       }
     }
   }

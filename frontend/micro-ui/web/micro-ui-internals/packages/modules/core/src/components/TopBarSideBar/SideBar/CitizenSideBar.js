@@ -176,7 +176,7 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
       });
   } else {
     data?.actions
-      .filter((e) => e.url === "url" && e.displayName !== "Home")
+      .filter((e) => e.url == "url" && e.name !== "Home" && e.serviceCode==="PGR")
       .forEach((item) => {
         if (search == "" && item.path !== "") {
           let index = item.path.split(".")[0];
@@ -236,13 +236,26 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
      home?.[0] && menuItems.splice(0,0,home[0]);
      menuItems =  part?.length > 0 ? menuItems.concat(part) : menuItems;
   }
-
   /*  URL with openlink wont have sidebar and actions    */
   if (history.location.pathname.includes("/openlink")) {
     profileItem = <span></span>;
     menuItems = menuItems.filter((ele) => ele.element === "LANGUAGE");
   }
   return isMobile ? (
+    <div>
+        <style>
+        {`
+          .drawer-list .sidebar-list.active .menu-label {
+            color: #7a2829;
+          }
+          .link {
+            --text-opacity: 1;
+            color: #7a2829;
+            cursor: pointer;
+          }
+        `}
+      </style>
+    
     <NavBar
       open={isOpen}
       toggleSidebar={toggleSidebar}
@@ -255,6 +268,7 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
       search={search}
       setSearch={setSearch}
     />
+    </div>
   ) : (
     <StaticCitizenSideBar logout={onLogout} />
   );

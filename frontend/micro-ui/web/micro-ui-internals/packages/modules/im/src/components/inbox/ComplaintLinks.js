@@ -52,6 +52,19 @@ const ComplaintsLink = ({ isMobile, data }) => {
   return (
     <Card className="employeeCard filter inboxLinks">
       <div className="complaint-links-container">
+      <style>
+        {`
+        .complaint-links-container .header .logo {
+            width: 56px;
+            height: 56px;
+            --bg-opacity: 1;
+            background-color: #7a2829;
+            
+            padding: 12px;
+            border-radius: 4px;
+        }`
+      }
+    </style>
         {GetLogo()}
         <div className="body">
           {links.map(({ link, text }, index) => (

@@ -597,7 +597,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
               <LabelFieldPair>
                 <div>
-                  <a style={{ color: "orange", cursor: "default", marginBottom: "5", cursor: "pointer" }} onClick={TogleforPassword}>
+                  <a style={{ color: "#7a2829", cursor: "default", marginBottom: "5", cursor: "pointer" }} onClick={TogleforPassword}>
                     {t("CORE_COMMON_CHANGE_PASSWORD")}
                   </a>
                   {changepassword ? (
@@ -674,7 +674,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
             onClick={updateProfile}
             style={{
               marginTop: "24px",
-              backgroundColor: "#F47738",
+              backgroundColor: "#7a2829",
               width: windowWidth < 768 ? "100%" : "248px",
               height: "40px",
               float: "right",

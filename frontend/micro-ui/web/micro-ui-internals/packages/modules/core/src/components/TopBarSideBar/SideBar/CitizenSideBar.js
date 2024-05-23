@@ -176,7 +176,7 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
       });
   } else {
     data?.actions
-      .filter((e) => e.url == "url" && e.name !== "Home" && e.serviceCode==="PGR")
+      .filter((e) => e.url == "url" && e.name !== "Home" )
       .forEach((item) => {
         if (search == "" && item.path !== "") {
           let index = item.path.split(".")[0];

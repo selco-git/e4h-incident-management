@@ -39,7 +39,7 @@ const EmployeeApp = ({
   useEffect(() => {
     Digit.UserService.setType("employee");
   }, []);
-
+  const isMobile = window.Digit.Utils.browser.isMobile();
   return (
     <div className="employee">
       <Switch>
@@ -60,7 +60,7 @@ const EmployeeApp = ({
           )}
           <div
             className={isUserProfile ? "grounded-container" : "loginContainer"}
-            style={{backgroundColor:"#225670"}}
+            style={isUserProfile ? !isMobile ?{backgroundColor:"#225670", "marginLeft":"40px",paddingTop:"100px"}: {backgroundColor:"#225670",paddingTop:"100px"}:{backgroundColor:"#225670"}}
           >
             <Switch>
               <Route path={`${path}/user/login`}>

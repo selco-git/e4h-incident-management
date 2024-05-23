@@ -24,7 +24,7 @@ const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, pag
             disabled={disable}
             checked={checked}
           />
-          <p className={userType === "employee" ? "custom-checkbox-emp" : "custom-checkbox"} style={disable ? { opacity: 0.5 } : {left: "90%"}}>
+          <p className={userType === "employee" ? "custom-checkbox-emp" : "custom-checkbox"} style={disable ? { opacity: 0.5 , color:"#7a2829",borderColor:"#7a2829 !important"} : {left: "90%",color:"#7a2829",borderColor:"#7a2829 !important"}}>
             <CheckSvg />
           </p>
         </div>
@@ -46,7 +46,7 @@ const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, pag
             // {(checked ? (checked = { checked }) : null)}
             checked={checked}
           />
-          <p className={userType === "employee" ? "custom-checkbox-emp" : "custom-checkbox"} style={disable ? { opacity: 0.5 } : (props?.checkboxWidth ? {...props?.checkboxWidth} : null)}>
+          <p className={userType === "employee" ? "custom-checkbox-emp" : "custom-checkbox"} style={disable ? { opacity: 0.5,color:"#7a2829",borderColor:"#7a2829" } : (props?.checkboxWidth ? {...props?.checkboxWidth, color:"#7a2829",borderColor:"#7a2829"} : null)}>
             {/* <img src={check} alt="" /> */}
             <CheckSvg />
           </p>

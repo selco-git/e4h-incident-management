@@ -186,8 +186,8 @@ useEffect(async () => {
       setBlockMenuNew(blocks)
       setBlockMenu(
         blocks.map((block) => ({
-          key: block.name.toUpperCase(),
-          name: t(block.name.toUpperCase()),
+          key: block.name,
+          name: t(block.name),
         }))
       );
     }

@@ -1,8 +1,53 @@
 package org.egov.im.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
-import lombok.extern.slf4j.Slf4j;
+import static org.egov.im.util.IMConstants.APPLY;
+import static org.egov.im.util.IMConstants.ASSIGN;
+import static org.egov.im.util.IMConstants.CITIZEN;
+import static org.egov.im.util.IMConstants.CLOSED_AFTER_REJECTION;
+import static org.egov.im.util.IMConstants.CLOSED_AFTER_RESOLUTION;
+import static org.egov.im.util.IMConstants.COMMON_MODULE;
+import static org.egov.im.util.IMConstants.DATE_PATTERN;
+import static org.egov.im.util.IMConstants.DEPARTMENT;
+import static org.egov.im.util.IMConstants.DESIGNATION;
+import static org.egov.im.util.IMConstants.EMPLOYEE;
+import static org.egov.im.util.IMConstants.HRMS_DEPARTMENT_JSONPATH;
+import static org.egov.im.util.IMConstants.HRMS_DESIGNATION_JSONPATH;
+import static org.egov.im.util.IMConstants.HRMS_EMP_NAME_JSONPATH;
+import static org.egov.im.util.IMConstants.MDMS_DEPARTMENT_SEARCH;
+import static org.egov.im.util.IMConstants.MDMS_SERVICEDEF_SEARCH;
+import static org.egov.im.util.IMConstants.NOTIFICATION_ENABLE_FOR_STATUS;
+import static org.egov.im.util.IMConstants.PENDINGATLME;
+import static org.egov.im.util.IMConstants.PENDINGFORASSIGNMENT;
+import static org.egov.im.util.IMConstants.PENDING_FOR_REASSIGNMENT;
+import static org.egov.im.util.IMConstants.PGR_MODULE;
+import static org.egov.im.util.IMConstants.PGR_WF_REOPEN;
+import static org.egov.im.util.IMConstants.PGR_WF_RESOLVE;
+import static org.egov.im.util.IMConstants.RATE;
+import static org.egov.im.util.IMConstants.REASSIGN;
+import static org.egov.im.util.IMConstants.REJECT;
+import static org.egov.im.util.IMConstants.REJECTED;
+import static org.egov.im.util.IMConstants.RESOLVED;
+import static org.egov.im.util.IMConstants.USREVENTS_EVENT_NAME;
+import static org.egov.im.util.IMConstants.USREVENTS_EVENT_POSTEDBY;
+import static org.egov.im.util.IMConstants.USREVENTS_EVENT_TYPE;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
@@ -12,10 +57,16 @@ import org.egov.im.repository.ServiceRequestRepository;
 import org.egov.im.util.HRMSUtil;
 import org.egov.im.util.MDMSUtils;
 import org.egov.im.util.NotificationUtil;
-import org.egov.im.web.models.Notification.*;
 import org.egov.im.web.models.IncidentRequest;
 import org.egov.im.web.models.IncidentWrapper;
 import org.egov.im.web.models.RequestInfoWrapper;
+import org.egov.im.web.models.Notification.Action;
+import org.egov.im.web.models.Notification.ActionItem;
+import org.egov.im.web.models.Notification.Event;
+import org.egov.im.web.models.Notification.EventRequest;
+import org.egov.im.web.models.Notification.Recepient;
+import org.egov.im.web.models.Notification.SMSRequest;
+import org.egov.im.web.models.Notification.Source;
 import org.egov.im.web.models.workflow.ProcessInstance;
 import org.egov.im.web.models.workflow.ProcessInstanceResponse;
 import org.egov.tracer.model.CustomException;
@@ -24,15 +75,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
-import static org.egov.im.util.IMConstants.*;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -698,7 +744,7 @@ public class NotificationService {
 
     private List<SMSRequest> enrichSmsRequest(String mobileNumber, String finalMessage) {
         List<SMSRequest> smsRequest = new ArrayList<>();
-        SMSRequest req = SMSRequest.builder().Number(mobileNumber).Text(finalMessage).build();
+        SMSRequest req = SMSRequest.builder().mobileNumber(mobileNumber).message(finalMessage).build();
         smsRequest.add(req);
         return smsRequest;
     }

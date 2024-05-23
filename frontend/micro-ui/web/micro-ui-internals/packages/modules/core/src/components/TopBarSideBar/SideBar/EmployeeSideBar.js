@@ -78,12 +78,12 @@ const EmployeeSideBar = () => {
 
   //creating the object structure from mdms value for easy iteration
 let configEmployeeSideBar1 = {};
-  data?.actions?.filter((e) => e.url === "url" && e.serviceCode==="PGR")?.forEach((item) => {
+  data?.actions?.filter((e) => e.url === "url" )?.forEach((item) => {
     _.set(configEmployeeSideBar1,item.path,{...item}) 
   })
 
   data?.actions
-    .filter((e) => e.url === "url"&& e.serviceCode==="PGR")
+    .filter((e) => e.url === "url")
     .forEach((item) => {
       let index = item.path.split(".")[0];
      // console.log("index", index)

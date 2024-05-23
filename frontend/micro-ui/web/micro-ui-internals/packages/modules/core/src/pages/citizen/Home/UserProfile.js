@@ -329,6 +329,18 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   return (
     <div className="user-profile">
+        <style>{
+          `
+        @media (min-width: 780px) {
+            .user-profile {
+                width: 100%;
+                margin-left: 16px;
+                margin-right: 16px;
+            }
+        }
+        `
+      }
+    </style>
       <section style={{ margin: userType === "citizen" ? "8px" : "24px" }}>
         {userType === "citizen" ? (
           <BackButton></BackButton>

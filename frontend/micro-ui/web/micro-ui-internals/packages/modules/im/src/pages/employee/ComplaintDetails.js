@@ -108,14 +108,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const [selectedReopenReason, setSelectedReopenReason] = useState(null);
   console.log("selectedReopenReason", selectedReopenReason)
-  useEffect(()=>{
-    if(comments.length>15){
-      setError("CS_COMMENT_LIMIT_EXCEED")
-    }
-    else{
-      setError("")
-    }
-  })
+  
   
   const reopenReasonMenu = [t(`CS_REOPEN_OPTION_ONE`), t(`CS_REOPEN_OPTION_TWO`), t(`CS_REOPEN_OPTION_THREE`), t(`CS_REOPEN_OPTION_FOUR`)];
   // const uploadFile = useCallback( () => {

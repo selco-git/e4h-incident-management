@@ -108,8 +108,8 @@ const DesktopInbox = ({
           return {
             style: {
               minWidth: cellInfo.column.Header === t("CS_COMMON_TICKET_NO") ? "240px" : "",
-              padding: "20px 18px",
-              fontSize: "16px",
+              padding: "10px 10px",
+              fontSize: "14px",
             },
           };
         }}
@@ -139,13 +139,13 @@ const DesktopInbox = ({
     <div className="inbox-container">
       <div className="filters-container">
         <ComplaintsLink />
-        <div>
+        <div style={{paddingTop:"12px"}}>
           <Filter complaints={data} onFilterChange={onFilterChange} type="desktop" searchParams={searchParams} />
         </div>
       </div>
       <div style={{ flex: 1 }}>
         <SearchComplaint onSearch={onSearch} type="desktop" />
-        <div style={{ marginTop: "24px", marginTop: "24px", marginLeft: "24px", flex: 1 }}>{result}</div>
+        <div style={{ marginTop: "27px", marginLeft:"24px", flex: 1 }}>{result}</div>
       </div>
     </div>
   );

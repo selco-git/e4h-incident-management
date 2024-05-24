@@ -11,6 +11,7 @@ const Status = ({ complaints, onAssignmentChange, pgrfilters }) => {
   return (
     <div className="status-container">
       <div className="filter-label">{t("ES_IM_FILTER_STATUS")}</div>
+      <div style={{paddingBottom:"2px"}}>
       {complaintsWithCount.length === 0 && <Loader />}
       {complaintsWithCount.map((option, index) => {
         return (
@@ -22,6 +23,7 @@ const Status = ({ complaints, onAssignmentChange, pgrfilters }) => {
           />
         );
       })}
+      </div>
     </div>
   );
 };

@@ -84,7 +84,7 @@ console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("Tenants"),phcM
                 </span>
               </div>
             )}
-            <div className="complaint-input-container" style={{display:"grid"}}>
+            <div className="complaint-input-container" style={{display:"grid", height:"83px"}}>
               <span className="complaint-input">
                 <Label>{t("CS_COMMON_TICKET_NO")}</Label>
                 <TextInput

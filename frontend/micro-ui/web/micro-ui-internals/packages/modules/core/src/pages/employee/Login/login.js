@@ -43,7 +43,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
 
   const history = useHistory();
   // const getUserType = () => "EMPLOYEE" || Digit.UserService.getType();
-
+  const isMobile = window.Digit.Utils.browser.isMobile();
   useEffect(() => {
     if (!user) {
       return;
@@ -157,7 +157,6 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       <div className="employeeBackbuttonAlign">
         <BackButton variant="white" style={{ borderBottom: "none" }} />
       </div>
-
       <FormComposer
         onSubmit={onLogin}
         isDisabled={isDisabled || disable}
@@ -170,7 +169,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         onSecondayActionClick={onForgotPassword}
         heading={propsConfig.texts.header}
         headingStyle={{ textAlign: "center" }}
-        cardStyle={{ margin: "auto", minWidth: "408px" }}
+        cardStyle={isMobile?{ margin: "auto",minWidth:"300px" } :{ margin: "auto",minWidth:"400px" }}
         className="loginFormStyleEmployee"
         buttonStyle={{ maxWidth: "100%", width: "100%", backgroundColor:"#7a2829" }}
       >

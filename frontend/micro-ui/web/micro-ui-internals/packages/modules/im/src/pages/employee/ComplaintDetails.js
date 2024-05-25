@@ -100,15 +100,14 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState(Array);
   console.log("uploadedgg", uploadedFile)
-  const allowedFileTypes = /(.*?)(jpg|jpeg|png|image|pdf)$/i;
+  const allowedFileTypes = /(docx|pdf|xlsx)$/i;
   const stateId = Digit.ULBService.getStateId();
   const [uploadedImages, setUploadedImagesIds] = useState(null)
   //const [uploadedFile, setUploadedFile] = useState(null);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const [selectedReopenReason, setSelectedReopenReason] = useState(null);
-  console.log("selectedReopenReason", selectedReopenReason)
-  
+
   
   const reopenReasonMenu = [t(`CS_REOPEN_OPTION_ONE`), t(`CS_REOPEN_OPTION_TWO`), t(`CS_REOPEN_OPTION_THREE`), t(`CS_REOPEN_OPTION_FOUR`)];
   // const uploadFile = useCallback( () => {
@@ -244,7 +243,9 @@ console.log("employeeData", employeeData)
           tenantId={tenantId} 
           
           getFormState={(e) => getData(e)}
-          acceptFiles= ".pdf, .jpg" 
+          allowedFileTypesRegex={allowedFileTypes}
+          allowedMaxSizeInMB={5}
+          acceptFiles=" .pdf, .xlsx, .docx"
           />
         {selectedAction === "RESOLVE" ? <div style={{marginTop:"6px", fontSize:"13px", color:"#36454F"}}>{t("RESOLVE_RESOLUTION_REPORT")}</div> : <CardLabelDesc style={{marginTop:"8px", fontSize:"13px"}}> {t("CS_FILE_LIMIT")}</CardLabelDesc>}
       </Card>

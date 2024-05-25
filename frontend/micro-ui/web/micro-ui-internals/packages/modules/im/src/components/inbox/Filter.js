@@ -48,6 +48,17 @@ const Filter = (props) => {
   const { data: localities } = Digit.Hooks.useBoundaryLocalities(tenantId, "admin", {}, t);
   console.log("tenantIdtenantIdtenantIdtenantId")
   let serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "Incident");
+  let sortedMenu=[];
+  if(serviceDefs.length>0){
+    let othersItem = serviceDefs.find(item => item.i18nKey==="Other");
+    let remainingOptions = serviceDefs.filter(item => item.i18nKey!=="Other");
+    remainingOptions.sort((a, b) => a.i18nKey.localeCompare(b.i18nKey));
+    if (othersItem) {
+      remainingOptions.push(othersItem);
+    }
+    sortedMenu = remainingOptions
+  }
+  console.log("sorted", sortedMenu)
   const state = Digit.ULBService.getStateId();
 //   const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 // const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
@@ -212,7 +223,7 @@ console.log("pgrfilters", pgrfilters)
             <div>
               {GetSelectOptions(
                 t("CS_COMPLAINT_DETAILS_TICKET_SUBTYPE"),
-                serviceDefs,
+                sortedMenu,
                 selectedComplaintType,
                 complaintType,
                 "i18nKey",

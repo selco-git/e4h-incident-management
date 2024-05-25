@@ -68,7 +68,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
 
   const onLogin = async (data) => {
     if (!data.city) {
-      alert("Please select Health Care Centre");
+      alert(t("ES_SELECT_HEALTH_CARE"));
       return;
     }
     setDisable(true);

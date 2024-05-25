@@ -483,7 +483,10 @@ return (
      <div style={{color:"#9e1b32", marginBottom:'10px', textAlign:"right", marginRight:"30px"}}>
     <Link to={`/digit-ui/employee/im/inbox`}>{t("BACK")}</Link></div> 
     <Card>
+      <div style={{display:"flex", flexDirection:"column", gap:"5px"}}>
       <CardSubHeader>{t(`CS_HEADER_INCIDENT_SUMMARY`)}</CardSubHeader>
+      <div style={{fontWeight:"bolder", fontSize:"21px", marginTop:-20, marginBottom:"22px"}}>{t("CS_HEADER_TICKET_DETAILS")}</div>
+      </div>
 
       {isLoading ? (
         <Loader />

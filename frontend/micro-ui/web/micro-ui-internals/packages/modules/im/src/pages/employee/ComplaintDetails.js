@@ -195,7 +195,7 @@ console.log("employeeData", employeeData)
       
       
       actionSaveOnSubmit={() => {
-        if((selectedAction === "REJECT"||selectedAction==="SENDBACK") && !comments){
+        if((selectedAction === "REJECT") && !comments){
             setError(t("CS_MANDATORY_COMMENTS"));
         }
         else if(selectedAction==="REOPEN" && selectedReopenReason===null){
@@ -204,7 +204,10 @@ console.log("employeeData", employeeData)
         else if(selectedAction==="ASSIGN" && selectedEmployee===null){
            setError(t("CS_ASSIGNEE_MANDATORY"))
         }
-        else if(selectedAction==="RESOLVE" && (!comments || uploadedFile===null) ){
+        else if(selectedAction==="SENDBACK" && (!comments || uploadedFile.length===0) ){
+          setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
+        }
+        else if(selectedAction==="RESOLVE" && (!comments || uploadedFile.length===0) ){
           setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
         }
         else{

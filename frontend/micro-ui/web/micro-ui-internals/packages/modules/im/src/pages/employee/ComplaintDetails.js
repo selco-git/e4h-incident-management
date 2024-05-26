@@ -195,7 +195,7 @@ console.log("employeeData", employeeData)
       
       
       actionSaveOnSubmit={() => {
-        if((selectedAction === "REJECT"||selectedAction==="SENDBACK") && !comments){
+        if((selectedAction === "REJECT") && !comments){
             setError(t("CS_MANDATORY_COMMENTS"));
         }
         else if(selectedAction==="REOPEN" && selectedReopenReason===null){
@@ -204,7 +204,10 @@ console.log("employeeData", employeeData)
         else if(selectedAction==="ASSIGN" && selectedEmployee===null){
            setError(t("CS_ASSIGNEE_MANDATORY"))
         }
-        else if(selectedAction==="RESOLVE" && (!comments || uploadedFile===null) ){
+        else if(selectedAction==="SENDBACK" && (!comments || uploadedFile.length===0) ){
+          setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
+        }
+        else if(selectedAction==="RESOLVE" && (!comments || uploadedFile.length===0) ){
           setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
         }
         else{
@@ -483,7 +486,10 @@ return (
      <div style={{color:"#9e1b32", marginBottom:'10px', textAlign:"right", marginRight:"30px"}}>
     <Link to={`/digit-ui/employee/im/inbox`}>{t("BACK")}</Link></div> 
     <Card>
+      <div style={{display:"flex", flexDirection:"column", gap:"5px"}}>
       <CardSubHeader>{t(`CS_HEADER_INCIDENT_SUMMARY`)}</CardSubHeader>
+      <div style={{fontWeight:"bolder", fontSize:"21px", marginTop:-20, marginBottom:"22px"}}>{t("CS_HEADER_TICKET_DETAILS")}</div>
+      </div>
 
       {isLoading ? (
         <Loader />

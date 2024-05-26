@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowDown } from "./svgindex";
+import { useTranslation } from "react-i18next";
 
 const TextField = (props) => {
   const [value, setValue] = useState(props.selectedVal ? props.selectedVal : "");
@@ -98,7 +99,7 @@ const Dropdown = React.forwardRef((props, ref) => {
   const [error, setError] = useState(""); // New state for error message
   const optionRef = useRef(null);
   const hasCustomSelector = props.customSelector ? true : false;
-  const t = props.t || translateDummy;
+  const {t} = useTranslation()
 
   useEffect(() => {
     setSelectedOption(props.selected);
@@ -278,7 +279,7 @@ return setError("")
                 <div className={`cp profile-dropdown--item display: flex `} key={"-1"} onClick={() => {
   
                 }}>
-                  {<span> {props.t ? props.t("CMN_NOOPTION") : "CMN_NOOPTION"}</span>}
+                  {<span> {props.t ? props.t("CMN_NOOPTION") : t("CMN_NOOPTION")}</span>}
                 </div>
               )}
             </div>

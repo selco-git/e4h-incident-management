@@ -31,7 +31,7 @@ const Filter = (props) => {
   console.log("selecCom", selectedComplaintType)
   const [pgrfilters, setPgrFilters] = useState(
     searchParams?.filters?.pgrfilters || {
-      incidentSubType: [],
+      incidentType: [],
       phcType: [],
       applicationStatus: [],
     }
@@ -48,11 +48,12 @@ const Filter = (props) => {
   const { data: localities } = Digit.Hooks.useBoundaryLocalities(tenantId, "admin", {}, t);
   console.log("tenantIdtenantIdtenantIdtenantId")
   let serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "Incident");
+  const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
   let sortedMenu=[];
-  if(serviceDefs.length>0){
-    let othersItem = serviceDefs.find(item => item.i18nKey==="Other");
-    let remainingOptions = serviceDefs.filter(item => item.i18nKey!=="Other");
-    remainingOptions.sort((a, b) => a.i18nKey.localeCompare(b.i18nKey));
+  if(menu!==null){
+    let othersItem = menu.find(item => item.name==="Other");
+    let remainingOptions = menu.filter(item => item.name!=="Other");
+    remainingOptions.sort((a, b) => a.name.localeCompare(b.name));
     if (othersItem) {
       remainingOptions.push(othersItem);
     }
@@ -119,9 +120,9 @@ console.log("healthcare", healthcareMenu)
   }
   function complaintType(_type) {
     console.log("typeeee", _type)
-    const type = { i18nKey: t("SERVICEDEFS." + _type.serviceCode.toUpperCase()), code: _type.serviceCode };
-    if (!ifExists(pgrfilters.incidentSubType, type)) {
-      setPgrFilters({ ...pgrfilters, incidentSubType: [...pgrfilters.incidentSubType, type] });
+    const type = { name: t("SERVICEDEFS." + _type.name.toUpperCase()), code: _type.name };
+    if (!ifExists(pgrfilters.incidentType, type)) {
+      setPgrFilters({ ...pgrfilters, incidentType: [...pgrfilters.incidentType, type] });
     }
   }
 
@@ -132,12 +133,12 @@ console.log("healthcare", healthcareMenu)
   }
 console.log("pgrfilters", pgrfilters)
   useEffect(() => {
-    if (pgrfilters.incidentSubType.length > 1) {
-      setSelectedComplaintType({ i18nKey: `${pgrfilters.incidentSubType.length} selected` });
+    if (pgrfilters.incidentType.length > 1) {
+      setSelectedComplaintType({ i18nKey: `${pgrfilters.incidentType.length} selected` });
     } else {
-      setSelectedComplaintType(pgrfilters.incidentSubType[0]);
+      setSelectedComplaintType(pgrfilters.incidentType[0]);
     }
-  }, [pgrfilters.incidentSubType]);
+  }, [pgrfilters.incidentType]);
 
   useEffect(() => {
     if (pgrfilters.phcType.length > 1) {
@@ -166,7 +167,7 @@ console.log("pgrfilters", pgrfilters)
   };
 
   function clearAll() {
-    let pgrReset = { incidentSubType: [], phcType: [], applicationStatus: [] };
+    let pgrReset = { incidentType: [], phcType: [], applicationStatus: [] };
     let wfRest = { assigned: [{ code: [] }] };
     setPgrFilters(pgrReset);
     setWfFilters(wfRest);
@@ -191,7 +192,7 @@ console.log("pgrfilters", pgrfilters)
         <div className="tag-container">
           {pgrfilters[key].length > 0 &&
             pgrfilters[key].map((value, index) => {
-              return <RemoveableTag key={index} text={`${value[optionKey].slice(0, 22)} ...`} onClick={() => onRemove(index, key)} />;
+              return <RemoveableTag key={index} text={`${value[optionKey]} ...`} onClick={() => onRemove(index, key)} />;
             })}
         </div>
       </div>
@@ -226,9 +227,9 @@ console.log("pgrfilters", pgrfilters)
                 sortedMenu,
                 selectedComplaintType,
                 complaintType,
-                "i18nKey",
+                "name",
                 onRemove,
-                "incidentSubType"
+                "incidentType"
               )}
             </div>
             <div>{GetSelectOptions(t("CS_HEALTH_CARE"), healthcareMenu, selectedHealthCare, onSelectHealthCare, "name", onRemove, "phcType")}</div>

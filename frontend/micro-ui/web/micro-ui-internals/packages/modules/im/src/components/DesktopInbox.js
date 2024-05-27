@@ -107,7 +107,7 @@ const DesktopInbox = ({
         getCellProps={(cellInfo) => {
           return {
             style: {
-              minWidth: cellInfo.column.Header === t("CS_COMMON_TICKET_NO") ? "240px" : "",
+              minWidth: cellInfo.column.Header === t("CS_COMMON_TICKET_NO") ? "100px" : "",
               padding: "10px 10px",
               fontSize: "14px",
             },
@@ -116,7 +116,7 @@ const DesktopInbox = ({
         onNextPage={onNextPage}
         onPrevPage={onPrevPage}
         totalRecords={totalRecords}
-        onPageSizeChagne={onPageSizeChange}
+        onPageSizeChange={onPageSizeChange}
         currentPage={currentPage}
         pageSizeLimit={pageSizeLimit}
       />

@@ -388,7 +388,7 @@ let configEmployeeSideBar1 = {};
         <div className="submenu-container">
           <div onClick={""} className={`sidebar-link`}>
             <div className="actions">
-            <LogoutIcon></LogoutIcon>
+            <LogoutIcon style={{fill:"white !important"}}></LogoutIcon>
               <div data-tip="React-tooltip" data-for={`jk-side-$}`} onClick={(e)=> {handleLogout()}}style={{display:"flex",flexDirection:"column"}}>
                 <span>{t("CS_COMMON_LOGOUT")} </span>
                

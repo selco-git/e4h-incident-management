@@ -49,6 +49,7 @@
 @screen dt {
   .ground-container {
     margin-bottom: 56px;
+    padding: 0px !important;
     @apply p-md;
   }
   .heading-m {

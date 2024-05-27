@@ -48,7 +48,9 @@ public class IMConstants {
 
     public static final String REJECT_REJECTED = "REJECT_REJECTED";
 
-    public static final String PENDINGATLME = "PENDINGATLME";
+    public static final String PENDINGATVENDOR = "PENDINGRESOLUTION";
+	
+    public static final String CLOSE = "CLOSE";
 
     public static final String REASSIGN = "REASSIGN";
 

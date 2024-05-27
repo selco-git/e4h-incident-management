@@ -6,13 +6,14 @@ import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 import { Link } from "react-router-dom";
 
-const Inbox = () => {
+const Inbox = ({initialStates = {}}) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { uuid } = Digit.UserService.getUser().info;
-  const [pageOffset, setPageOffset] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
+  const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
   const [totalRecords, setTotalRecords] = useState(0);
+  
   const [searchParams, setSearchParams] = useState({ filters: { wfFilters: { assignee: [{ code: uuid }] } }, search: "", sort: {} });
 
   useEffect(() => {
@@ -34,8 +35,13 @@ const Inbox = () => {
   };
 
   const handlePageSizeChange = (e) => {
+    console.log("e.target.valuee.target.value",e.target.value)
     setPageSize(Number(e.target.value));
   };
+  const handleSort = useCallback((args) => {
+    if (args.length === 0) return;
+    setSortParams(args);
+  }, []);
 
   const handleFilterChange = (filterParam) => {
     setSearchParams({ ...searchParams, filters: filterParam });
@@ -82,9 +88,11 @@ const Inbox = () => {
             onNextPage={fetchNextPage}
             onPrevPage={fetchPrevPage}
             onPageSizeChange={handlePageSizeChange}
+            onSort={handleSort}
             currentPage={Math.floor(pageOffset / pageSize)}
-            totalRecords={totalRecords}
             pageSizeLimit={pageSize}
+            disableSort={false}
+            totalRecords={totalRecords}
           />
         </div>
       );

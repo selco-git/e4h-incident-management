@@ -7,8 +7,9 @@ const EmployeeModuleCard = ({ Icon, moduleName, kpis = [], links = [], isCitizen
     <div className={className ? className : "employeeCard customEmployeeCard card-home home-action-cards"} style={styles ? styles : {}}>
       <div className="complaint-links-container">
         <div className="header" style={isCitizen ? { padding: "0px" } : longModuleName ? {alignItems:"flex-start"}:{}}>
-          <span className="text removeHeight">{moduleName}</span>
-          <span className="logo removeBorderRadiusLogo" style={{backgroundColor:"#7a2829"}}>{Icon}</span>
+        <span className="logo removeBorderRadiusLogo" style={{backgroundColor:"#7a2829"}}>{Icon}</span>
+          <span className="text removeHeight" style={{paddingRight:"20px"}}>{moduleName}</span>
+         
         </div>
         <div className="body" style={{ margin: "0px", padding: "0px" }}>
           {kpis.length !== 0 && (

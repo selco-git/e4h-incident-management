@@ -244,8 +244,8 @@ public class ServiceRequestValidator {
 
         List<String> allowedParams = Arrays.asList(allowedParamStr.split(","));
 
-        if(criteria.getServiceCode()!=null && !allowedParams.contains("serviceCode"))
-            throw new CustomException("INVALID SEARCH","Search on serviceCode is not allowed");
+        if(criteria.getIncidentType()!=null && !allowedParams.contains("incidentType"))
+            throw new CustomException("INVALID SEARCH","Search on incidentType is not allowed");
 
         if(criteria.getIncidentId()!=null && !allowedParams.contains("incidentId"))
             throw new CustomException("INVALID SEARCH","Search on incidentid is not allowed");
@@ -253,7 +253,7 @@ public class ServiceRequestValidator {
         if(criteria.getApplicationStatus()!=null && !allowedParams.contains("applicationStatus"))
             throw new CustomException("INVALID SEARCH","Search on applicationStatus is not allowed");
 
-        if(criteria.getMobileNumber()!=null && !allowedParams.contains("mobileNumber"))
+        if(criteria.getPhcType()!=null && !allowedParams.contains("phcType"))
             throw new CustomException("INVALID SEARCH","Search on mobileNumber is not allowed");
 
         if(criteria.getIds()!=null && !allowedParams.contains("ids"))

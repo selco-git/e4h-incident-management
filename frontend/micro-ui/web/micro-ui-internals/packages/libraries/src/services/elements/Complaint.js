@@ -7,6 +7,7 @@ export const Complaint = {
     block,
     reporterName,
     complaintType,
+    subType,
     uploadImages,
     healthcentre,
     healthCareType,
@@ -16,15 +17,18 @@ export const Complaint = {
     const tenantIdNew = tenantId;
     let mobileNumber = JSON.parse(sessionStorage.getItem("Digit.User"))?.value?.info?.mobileNumber;
     var serviceDefs = await Digit.MDMSService.getServiceDefs(tenantIdNew, "Incident");
-    const incidentType = serviceDefs.filter((def) => def.serviceCode === complaintType)[0].menuPath.toUpperCase();
+    let phcSubType=[];
+    if(healthCareType?.centreType!==null){
+      phcSubType=healthCareType?.centreType.replace(/\s+/g,'').toUpperCase();
+    }
     const defaultData = {
       incident: {
         district: district?.key,
         tenantId:tenantIdNew,
-        incidentType:incidentType,
-       incidentSubtype:complaintType,
+        incidentType:complaintType?.key,
+       incidentSubtype:subType?.key,
        phcType:healthcentre?.name,
-       phcSubType:healthCareType?.centreType,
+       phcSubType:phcSubType,
        comments:comments,
        block:block?.key,
         additionalDetail: {

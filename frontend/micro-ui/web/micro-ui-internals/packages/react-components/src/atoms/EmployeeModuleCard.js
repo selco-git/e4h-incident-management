@@ -7,21 +7,21 @@ const EmployeeModuleCard = ({ Icon, moduleName, kpis = [], links = [], isCitizen
     <div className={className ? className : "employeeCard customEmployeeCard card-home home-action-cards"} style={styles ? styles : {}}>
       <div className="complaint-links-container">
         <div className="header" style={isCitizen ? { padding: "0px" } : longModuleName ? {alignItems:"flex-start"}:{}}>
-        <span className="logo removeBorderRadiusLogo" style={{backgroundColor:"#7a2829"}}>{Icon}</span>
+        <span className="logo removeBorderRadiusLogo" style={{backgroundColor:"#7a2829", marginLeft:"15px"}}>{Icon}</span>
           <span className="text removeHeight" style={{paddingRight:"20px"}}>{moduleName}</span>
          
         </div>
         <div className="body" style={{ margin: "0px", padding: "0px" }}>
           {kpis.length !== 0 && (
-            <div className="flex-fit" style={isCitizen ? { paddingLeft: "17px" } : {}}>
+            <div className="flex-fit" style={isCitizen ? { paddingLeft: "20px" } : {}}>
               {kpis.map(({ count, label, link }, index) => (
                 <div className="card-count" key={index}>
                   <div>
-                    <span>{count ? count : count == 0 ? 0 : "-"}</span>
+                    <span style={{marginLeft:"6px"}}>{count ? count : count == 0 ? 0 : "-"}</span>
                   </div>
                   <div>
                     {link ? (
-                      <Link to={link} className="employeeTotalLink" style={{color:"#7a2829"}}>
+                      <Link to={link} className="employeeTotalLink" style={{color:"#7a2829", marginLeft:"6px"}}>
                         {label}
                       </Link>
                     ) : null}

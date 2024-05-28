@@ -210,7 +210,7 @@ public class ServiceRequestValidator {
         * */
         if( (criteria.getMobileNumber()!=null 
                 || criteria.getIncidentId()!=null || criteria.getIds()!=null
-                || criteria.getServiceCode()!=null )
+                || criteria.getIncidentType()!=null )
                 && criteria.getTenantId()==null)
             throw new CustomException("INVALID_SEARCH","TenantId is mandatory search param");
 

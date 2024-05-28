@@ -58,7 +58,7 @@ public class IMQueryBuilder {
             }
           
         }
-        else if (criteria.getTenantId()!=null && criteria.getTenantId().contains(","))
+        else if (criteria.getPhcType()==null && criteria.getTenantId()!=null && criteria.getTenantId().contains(","))
         {
             //String tenantId = criteria.getTenantId();
             String[] tenantIdChunks = criteria.getTenantId().split(",");
@@ -68,7 +68,7 @@ public class IMQueryBuilder {
             addToPreparedStatement(preparedStmtList, tenantIdList);
         }
         else {
-            if (criteria.getTenantId() != null) {
+            if ( criteria.getPhcType()==null && criteria.getTenantId() != null) {
                 String tenantId = criteria.getTenantId();
                 String[] tenantIdChunks = tenantId.split("\\.");
 

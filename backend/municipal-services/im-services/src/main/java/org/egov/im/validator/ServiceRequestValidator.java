@@ -254,7 +254,7 @@ public class ServiceRequestValidator {
             throw new CustomException("INVALID SEARCH","Search on applicationStatus is not allowed");
 
         if(criteria.getPhcType()!=null && !allowedParams.contains("phcType"))
-            throw new CustomException("INVALID SEARCH","Search on mobileNumber is not allowed");
+            throw new CustomException("INVALID SEARCH","Search on PHCType is not allowed");
 
         if(criteria.getIds()!=null && !allowedParams.contains("ids"))
             throw new CustomException("INVALID SEARCH","Search on ids is not allowed");

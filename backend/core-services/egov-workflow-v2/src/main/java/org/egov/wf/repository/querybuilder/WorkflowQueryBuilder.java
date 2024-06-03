@@ -145,6 +145,11 @@ public class WorkflowQueryBuilder {
                     "SELECT max(lastmodifiedTime) from eg_wf_processinstance_v2 as pi_inner where pi_inner.businessid = pi_outer.businessid " +
                     ") ");
         }
+        else 
+        {
+        	 with_query_builder.append(" 1=1");
+        }
+        
         
         if(criteria.getAssignee()!=null){
             with_query_builder.append(" and id in (select processinstanceid from eg_wf_assignee_v2 asg_inner where asg_inner.assignee = ?) ");
@@ -156,10 +161,21 @@ public class WorkflowQueryBuilder {
         	
         {
         	  if (!criteria.getHistory()) {
+        		  
+        		  if(!criteria.getTenantId().contains(","))
+        		  {
                   with_query_builder.append(" pi_outer.lastmodifiedTime = (" +
                           "SELECT max(lastmodifiedTime) from eg_wf_processinstance_v2 as pi_inner where pi_inner.businessid = pi_outer.businessid and tenantid = ? " +
                           ") ");
                   preparedStmtList.add(criteria.getTenantId());
+        		  }
+        		  else
+        		  {
+        			  with_query_builder.append(" pi_outer.lastmodifiedTime = (" +
+                              "SELECT max(lastmodifiedTime) from eg_wf_processinstance_v2 as pi_inner where pi_inner.businessid = pi_outer.businessid and tenantid IN (\").append(createQuery(ids)).append(\")\") " +
+                              ") ");
+                      preparedStmtList.add(criteria.getTenantId());
+        		  }
               }
 
               if (criteria.getHistory())

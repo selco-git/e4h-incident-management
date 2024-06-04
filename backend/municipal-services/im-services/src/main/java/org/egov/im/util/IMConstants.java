@@ -73,6 +73,8 @@ public class IMConstants {
     public static final String CITIZEN = "CITIZEN";
 
     public static final String EMPLOYEE = "EMPLOYEE";
+    
+    public static final String CRM = "CRM";
 
     public static final String COMMENT = "COMMENT";
 

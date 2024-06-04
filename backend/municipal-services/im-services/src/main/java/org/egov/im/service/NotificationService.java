@@ -79,6 +79,7 @@ public class NotificationService {
             Map<String, List<String>> finalMessage = getFinalMessage(request, topic, applicationStatus);
             String reporterMobileNumber = request.getIncident().getReporter().getMobileNumber();
             String employeeMobileNumber = null;
+            String citizenMobileNumber = null;
 
             if(applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(APPLY)) {
                 employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
@@ -170,14 +171,24 @@ public class NotificationService {
         String messageForCitizen = null;
         String messageForEmployee = null;
         String defaultMessage = null;
+        Boolean crmUser=false;
 
         String localisedStatus = notificationUtil.getCustomizedMsgForPlaceholder(localizationMessage,"CS_COMMON_"+incidentWrapper.getIncident().getApplicationStatus());
-//Pending for Assignment
         /**
          * Confirmation SMS to citizens, when they will raise any complaint
          */
         if(incidentWrapper.getIncident().getApplicationStatus().equalsIgnoreCase(PENDINGFORASSIGNMENT) && incidentWrapper.getWorkflow().getAction().equalsIgnoreCase(APPLY)) {
+            List<Role> roles =request.getRequestInfo().getUserInfo().getRoles();
+            for(Role role: roles)
+            {
+            	if(role.getTenantId().equalsIgnoreCase("pg"))
+            		crmUser=true;
+            }
+            if(crmUser)
+            messageForEmployee = notificationUtil.getCustomizedMsg(request.getWorkflow().getAction(), applicationStatus, CRM, localizationMessage);
+            else
             messageForEmployee = notificationUtil.getCustomizedMsg(request.getWorkflow().getAction(), applicationStatus, EMPLOYEE, localizationMessage);
+
             if (messageForEmployee == null) {
                 log.info("No message Found For Employee On Topic : " + topic);
                 return null;
@@ -188,11 +199,11 @@ public class NotificationService {
          * SMS to citizens and employee both, when a complaint is assigned to an employee
          */
         if(incidentWrapper.getIncident().getApplicationStatus().equalsIgnoreCase(PENDINGATVENDOR) && incidentWrapper.getWorkflow().getAction().equalsIgnoreCase(ASSIGN)) {
-            messageForCitizen = notificationUtil.getCustomizedMsg(request.getWorkflow().getAction(), applicationStatus, CITIZEN, localizationMessage);
-            if (messageForCitizen == null) {
-                log.info("No message Found For Citizen On Topic : " + topic);
-                return null;
-            }
+//            messageForCitizen = notificationUtil.getCustomizedMsg(request.getWorkflow().getAction(), applicationStatus, CITIZEN, localizationMessage);
+//            if (messageForCitizen == null) {
+//                log.info("No message Found For Citizen On Topic : " + topic);
+//                return null;
+//            }
 
             messageForEmployee = notificationUtil.getCustomizedMsg(request.getWorkflow().getAction(), applicationStatus, EMPLOYEE, localizationMessage);
             if (messageForEmployee == null) {
@@ -324,11 +335,11 @@ public class NotificationService {
          * SMS to citizens and employee, when the complaint has been re-opened on citizen request
          */
         if(incidentWrapper.getIncident().getApplicationStatus().equalsIgnoreCase(PENDINGFORASSIGNMENT) && incidentWrapper.getWorkflow().getAction().equalsIgnoreCase(PGR_WF_REOPEN)) {
-            messageForCitizen = notificationUtil.getCustomizedMsg(request.getWorkflow().getAction(), applicationStatus, CITIZEN, localizationMessage);
-            if (messageForCitizen == null) {
-                log.info("No message Found For Citizen On Topic : " + topic);
-                return null;
-            }
+//            messageForCitizen = notificationUtil.getCustomizedMsg(request.getWorkflow().getAction(), applicationStatus, CITIZEN, localizationMessage);
+//            if (messageForCitizen == null) {
+//                log.info("No message Found For Citizen On Topic : " + topic);
+//                return null;
+//            }
 
             messageForEmployee = notificationUtil.getCustomizedMsg(request.getWorkflow().getAction(), applicationStatus, EMPLOYEE, localizationMessage);
             if (messageForEmployee == null) {
@@ -342,7 +353,7 @@ public class NotificationService {
                 return null;
             }
 
-            ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),ASSIGN);
+            ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),PGR_WF_RESOLVE);
 
             if(defaultMessage.contains("{status}"))
                 defaultMessage = defaultMessage.replace("{status}", localisedStatus);
@@ -382,6 +393,9 @@ public class NotificationService {
 
             if(defaultMessage.contains("{status}"))
                 defaultMessage = defaultMessage.replace("{status}", localisedStatus);
+            
+            if (messageForEmployee.contains("{emp_name}"))
+            	messageForEmployee = messageForEmployee.replace("{emp_name}", processInstance.getAssignes().get(0).getName());
 
             if (messageForCitizen.contains("{emp_name}"))
                 messageForCitizen = messageForCitizen.replace("{emp_name}", processInstance.getAssignes().get(0).getName());
@@ -487,10 +501,10 @@ public class NotificationService {
         //String appLink = notificationUtil.getShortnerURL(config.getMobileDownloadLink());
 
         if(messageForCitizen != null) {
-            messageForCitizen = messageForCitizen.replace("{complaint_type}", localisedComplaint);
-            messageForCitizen = messageForCitizen.replace("{id}", incidentWrapper.getIncident().getIncidentId());
-            messageForCitizen = messageForCitizen.replace("{date}", date.format(formatter));
-            messageForCitizen = messageForCitizen.replace("{download_link}", config.getMobileDownloadLink());
+        	messageForEmployee = messageForEmployee.replace("{ticket_type}", incidentWrapper.getIncident().getIncidentType());
+            messageForEmployee = messageForEmployee.replace("{incidentId}", incidentWrapper.getIncident().getIncidentId());
+            messageForEmployee = messageForEmployee.replace("{date}", date.format(formatter));
+            messageForEmployee = messageForEmployee.replace("{download_link}", config.getMobileDownloadLink());
         }
 
         if(messageForEmployee != null) {
@@ -501,7 +515,7 @@ public class NotificationService {
         }
 
 
-        //message.put(CITIZEN, Arrays.asList(new String[] {messageForCitizen, defaultMessage}));
+        message.put(CITIZEN, Arrays.asList(new String[] {messageForCitizen, defaultMessage}));
         message.put(EMPLOYEE, Arrays.asList(messageForEmployee));
         log.info("message being sent is  "+ messageForEmployee);
         return message;

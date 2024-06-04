@@ -484,20 +484,20 @@ public class NotificationService {
                 .atZone(ZoneId.systemDefault()).toLocalDate();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
 
-        String appLink = notificationUtil.getShortnerURL(config.getMobileDownloadLink());
+        //String appLink = notificationUtil.getShortnerURL(config.getMobileDownloadLink());
 
         if(messageForCitizen != null) {
             messageForCitizen = messageForCitizen.replace("{complaint_type}", localisedComplaint);
             messageForCitizen = messageForCitizen.replace("{id}", incidentWrapper.getIncident().getIncidentId());
             messageForCitizen = messageForCitizen.replace("{date}", date.format(formatter));
-            messageForCitizen = messageForCitizen.replace("{download_link}", appLink);
+            messageForCitizen = messageForCitizen.replace("{download_link}", config.getMobileDownloadLink());
         }
 
         if(messageForEmployee != null) {
             messageForEmployee = messageForEmployee.replace("{ticket_type}", incidentWrapper.getIncident().getIncidentType());
             messageForEmployee = messageForEmployee.replace("{incidentId}", incidentWrapper.getIncident().getIncidentId());
             messageForEmployee = messageForEmployee.replace("{date}", date.format(formatter));
-            messageForEmployee = messageForEmployee.replace("{download_link}", appLink);
+            messageForEmployee = messageForEmployee.replace("{download_link}", config.getMobileDownloadLink());
         }
 
 

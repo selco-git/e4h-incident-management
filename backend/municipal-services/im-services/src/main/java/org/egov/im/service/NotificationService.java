@@ -80,9 +80,26 @@ public class NotificationService {
             String reporterMobileNumber = request.getIncident().getReporter().getMobileNumber();
             String employeeMobileNumber = null;
             String citizenMobileNumber = null;
+            Boolean crmUser=false;
 
             if(applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(APPLY)) {
                 employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
+                
+                Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINT_ASSESSOR");
+                
+                List<Role> roles =request.getRequestInfo().getUserInfo().getRoles();
+                for(Role role: roles)
+                {
+                	if(role.getTenantId().equalsIgnoreCase("pg")) {
+                		crmUser=true;
+                		break;}
+                }
+                if(crmUser)
+                    employeeMobileNumber = reassigneeDetails.get("employeeMobile");
+                else
+                    employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
+
+
             }
             else if (applicationStatus.equalsIgnoreCase(PENDINGATVENDOR) && action.equalsIgnoreCase(ASSIGN)){
                 employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
@@ -183,8 +200,9 @@ public class NotificationService {
             List<Role> roles =request.getRequestInfo().getUserInfo().getRoles();
             for(Role role: roles)
             {
-            	if(role.getTenantId().equalsIgnoreCase("pg"))
+            	if(role.getTenantId().equalsIgnoreCase("pg")) {
             		crmUser=true;
+            		break;}
             }
             if(crmUser)
             messageForEmployee = notificationUtil.getCustomizedMsg(request.getWorkflow().getAction(), applicationStatus, CRM, localizationMessage);
@@ -223,7 +241,7 @@ public class NotificationService {
 //                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
 
 
-            Map<String, String> reassigneeDetails  = getHRMSEmployee(request);
+            Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINT_RESOLVER");
 
             if(messageForEmployee.contains("{ulb}")) {
                 String localisationMessageForPlaceholder =  notificationUtil.getLocalizationMessages(request.getIncident().getTenantId(), request.getRequestInfo(),COMMON_MODULE);
@@ -458,12 +476,12 @@ public class NotificationService {
                 defaultMessage = defaultMessage.replace("{status}", localisedStatus);
 
 
-            Map<String, String> reassigneeDetails  = getHRMSEmployee(request);
-            if (messageForCitizen.contains("{emp_department}"))
-                messageForCitizen = messageForCitizen.replace("{emp_department}",reassigneeDetails.get(DEPARTMENT));
-
-            if (messageForCitizen.contains("{emp_designation}"))
-                messageForCitizen = messageForCitizen.replace("{emp_designation}",reassigneeDetails.get(DESIGNATION));
+           // Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINT_RESOLVER");
+//            if (messageForCitizen.contains("{emp_department}"))
+//                messageForCitizen = messageForCitizen.replace("{emp_department}",reassigneeDetails.get(DEPARTMENT));
+//
+//            if (messageForCitizen.contains("{emp_designation}"))
+//                messageForCitizen = messageForCitizen.replace("{emp_designation}",reassigneeDetails.get(DESIGNATION));
 
             if (messageForCitizen.contains("{emp_name}"))
                 messageForCitizen = messageForCitizen.replace("{emp_name}", fetchUserByUUID(request.getWorkflow().getAssignes().get(0), request.getRequestInfo(), request.getIncident().getTenantId()).getName());
@@ -652,17 +670,23 @@ public class NotificationService {
 
     }
 
-    public Map<String, String> getHRMSEmployee(IncidentRequest request){
+    public Map<String, String> getHRMSEmployee(IncidentRequest request,String role){
         Map<String, String> reassigneeDetails = new HashMap<>();
         List<String> mdmsDepartmentList = null;
         List<String> hrmsDepartmentList = null;
         List<String> designation = null;
         List<String> employeeName = null;
+        List<String> employeeMobile = null;
+
         String departmentFromMDMS;
 
         String localisationMessageForPlaceholder =  notificationUtil.getLocalizationMessages(request.getIncident().getTenantId(), request.getRequestInfo(),COMMON_MODULE);
         //HRSMS CALL
-        StringBuilder url = hrmsUtils.getHRMSURI(request.getWorkflow().getAssignes(),request.getIncident().getTenantId(),"COMPLAINT_RESOLVER");
+        StringBuilder url=null;
+        if(request.getWorkflow().getAssignes()!=null)
+            url = hrmsUtils.getHRMSURI(request.getWorkflow().getAssignes(),request.getIncident().getTenantId(),role);
+        else
+            url = hrmsUtils.getHRMSURI(null,request.getIncident().getTenantId(),role);
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(request.getRequestInfo()).build();
         Object response = serviceRequestRepository.fetchResult(url, requestInfoWrapper);
 
@@ -692,7 +716,8 @@ public class NotificationService {
 //        try{
 //            designation = JsonPath.read(response, designationJsonPath);
           employeeName = JsonPath.read(response, HRMS_EMP_NAME_JSONPATH);
-//        }
+          employeeMobile=JsonPath.read(response,HRMS_EMP_MOBILE_JSONPATH);
+        		  //}
 //        catch (Exception e){
 //            throw new CustomException("JSONPATH_ERROR","Failed to parse mdms response for department");
 //        }
@@ -701,6 +726,8 @@ public class NotificationService {
 //
 //        reassigneeDetails.put("designation",localisedDesignation);
        reassigneeDetails.put("employeeName",employeeName.get(0));
+       reassigneeDetails.put("employeeMobile",employeeMobile.get(0));
+
 
         return reassigneeDetails;
     }

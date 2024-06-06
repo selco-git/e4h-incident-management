@@ -71,10 +71,18 @@ public class HRMSUtil {
 
         StringBuilder builder = new StringBuilder(config.getHrmsHost());
         builder.append(config.getHrmsEndPoint());
+        if(uuids!=null) {
         builder.append("?uuids=");
         builder.append(StringUtils.join(uuids, ","));
         builder.append("&tenantId=");
         builder.append(tenantId);
+
+        }
+        else
+        {
+        	 builder.append("?tenantId=");
+             builder.append(tenantId);
+        }
         
         builder.append("&roles=");
         builder.append(role);

@@ -93,12 +93,12 @@ public class NotificationService {
             else  if (applicationStatus.equalsIgnoreCase(RESOLVED)  && action.equalsIgnoreCase(PGR_WF_RESOLVE)){
                 employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),PGR_WF_RESOLVE);
-                citizenMobileNumber=processInstance.getAssignes().get(0).getMobileNumber();
+                citizenMobileNumber=processInstance.getAssigner().getMobileNumber();
             }
             else  if(applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(PGR_WF_REOPEN)) {
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),PGR_WF_RESOLVE);
-                employeeMobileNumber = processInstance.getAssignes().get(0).getMobileNumber();
-            }
+                employeeMobileNumber = processInstance.getAssigner().getMobileNumber();
+                }
             else  if (applicationStatus.equalsIgnoreCase(CLOSED_AFTER_RESOLUTION) && action.equalsIgnoreCase(CLOSE)) {
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),PGR_WF_RESOLVE);
                 employeeMobileNumber = processInstance.getAssignes().get(0).getMobileNumber();
@@ -112,16 +112,16 @@ public class NotificationService {
             }
 
             if(!StringUtils.isEmpty(finalMessage)) {
-                if (config.getIsUserEventsNotificationEnabled() != null && config.getIsUserEventsNotificationEnabled()) {
-                    for (Map.Entry<String, List<String>> entry : finalMessage.entrySet()) {
-                        for (String msg : entry.getValue()) {
-                            EventRequest eventRequest = enrichEventRequest(request, msg);
-                            if (eventRequest != null) {
-                                notificationUtil.sendEventNotification(tenantId, eventRequest);
-                            }
-                        }
-                    }
-                }
+//                if (config.getIsUserEventsNotificationEnabled() != null && config.getIsUserEventsNotificationEnabled()) {
+//                    for (Map.Entry<String, List<String>> entry : finalMessage.entrySet()) {
+//                        for (String msg : entry.getValue()) {
+//                            EventRequest eventRequest = enrichEventRequest(request, msg);
+//                            if (eventRequest != null) {
+//                                notificationUtil.sendEventNotification(tenantId, eventRequest);
+//                            }
+//                        }
+//                    }
+//                }
 
                 if (config.getIsSMSEnabled() != null && config.getIsSMSEnabled()) {
 
@@ -213,14 +213,14 @@ public class NotificationService {
                 return null;
             }
 
-            defaultMessage = notificationUtil.getDefaultMsg(CITIZEN, localizationMessage);
-            if (defaultMessage == null) {
-                log.info("No default message Found For Topic : " + topic);
-                return null;
-            }
-
-            if(defaultMessage.contains("{status}"))
-                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
+//            defaultMessage = notificationUtil.getDefaultMsg(CITIZEN, localizationMessage);
+//            if (defaultMessage == null) {
+//                log.info("No default message Found For Topic : " + topic);
+//                return null;
+//            }
+//
+//            if(defaultMessage.contains("{status}"))
+//                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
 
 
             Map<String, String> reassigneeDetails  = getHRMSEmployee(request);
@@ -232,7 +232,8 @@ public class NotificationService {
             }
 
             if (messageForEmployee.contains("{emp_name}"))
-                messageForEmployee = messageForEmployee.replace("{emp_name}", fetchUserByUUID(request.getWorkflow().getAssignes().get(0), request.getRequestInfo(), request.getIncident().getTenantId()).getName());
+                messageForEmployee = messageForEmployee.replace("{emp_name}",reassigneeDetails.get("employeeName"));
+            // messageForEmployee = messageForEmployee.replace("{emp_name}",fetchUserByUUID(request.getWorkflow().getAssignes().get(0), request.getRequestInfo(), request.getIncident().getTenantId()).getName());
 
             if(messageForEmployee.contains("{ao_designation}")){
                 String localisationMessageForPlaceholder =  notificationUtil.getLocalizationMessages(request.getIncident().getTenantId(), request.getRequestInfo(),COMMON_MODULE);
@@ -367,7 +368,7 @@ public class NotificationService {
             }
 
             if (messageForEmployee.contains("{emp_name}"))
-                messageForEmployee = messageForEmployee.replace("{emp_name}", processInstance.getAssignes().get(0).getName());
+                messageForEmployee = messageForEmployee.replace("{emp_name}", processInstance.getAssigner()!=null ?processInstance.getAssigner().getName():"NA");
         }
 
         /**
@@ -397,11 +398,10 @@ public class NotificationService {
 //                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
 //            
             if (messageForEmployee.contains("{emp_name}"))
-            	messageForEmployee = messageForEmployee.replace("{emp_name}", processInstance.getAssignes().get(0).getName());
-
-            if (messageForCitizen.contains("{emp_name}"))
-                messageForCitizen = messageForCitizen.replace("{emp_name}", processInstance.getAssignes().get(0).getName());
-        }
+            	messageForEmployee = messageForEmployee.replace("{emp_name}", request.getRequestInfo().getUserInfo()!=null?request.getRequestInfo().getUserInfo().getName():processInstance.getAssigner().getName());            
+            if (messageForCitizen.contains("{emp_name}"))     
+            	messageForCitizen = messageForCitizen.replace("{emp_name}", request.getRequestInfo().getUserInfo()!=null?request.getRequestInfo().getUserInfo().getName():processInstance.getAssigner().getName());          
+            	}
 
         /**
          * SMS to citizens and employee, when the complaint has been re-opened on citizen request
@@ -493,7 +493,7 @@ public class NotificationService {
         }
 
 
-        String localisedComplaint = notificationUtil.getCustomizedMsgForPlaceholder(localizationMessage,"im.complaint.category."+request.getIncident().getIncidentType());
+        //String localisedComplaint = notificationUtil.getCustomizedMsgForPlaceholder(localizationMessage,"im.complaint.category."+request.getIncident().getIncidentType());
 
         Long createdTime = incidentWrapper.getIncident().getAuditDetails().getCreatedTime();
         LocalDate date = Instant.ofEpochMilli(createdTime > 10 ? createdTime : createdTime * 1000)
@@ -503,10 +503,10 @@ public class NotificationService {
         //String appLink = notificationUtil.getShortnerURL(config.getMobileDownloadLink());
 
         if(messageForCitizen != null) {
-        	messageForEmployee = messageForEmployee.replace("{ticket_type}", incidentWrapper.getIncident().getIncidentType());
-            messageForEmployee = messageForEmployee.replace("{incidentId}", incidentWrapper.getIncident().getIncidentId());
-            messageForEmployee = messageForEmployee.replace("{date}", date.format(formatter));
-            messageForEmployee = messageForEmployee.replace("{download_link}", config.getMobileDownloadLink());
+        	messageForCitizen = messageForCitizen.replace("{ticket_type}", incidentWrapper.getIncident().getIncidentType());
+        	messageForCitizen = messageForCitizen.replace("{incidentId}", incidentWrapper.getIncident().getIncidentId());
+        	messageForCitizen = messageForCitizen.replace("{date}", date.format(formatter));
+        	messageForCitizen = messageForCitizen.replace("{download_link}", config.getMobileDownloadLink());
         }
 
         if(messageForEmployee != null) {
@@ -516,8 +516,8 @@ public class NotificationService {
             messageForEmployee = messageForEmployee.replace("{download_link}", config.getMobileDownloadLink());
         }
 
-
-        message.put(CITIZEN, Arrays.asList(new String[] {messageForCitizen, defaultMessage}));
+        if(messageForCitizen!=null)
+        message.put(CITIZEN, Arrays.asList(new String[] {messageForCitizen}));
         message.put(EMPLOYEE, Arrays.asList(messageForEmployee));
         log.info("message being sent is  "+ messageForEmployee);
         return message;
@@ -662,45 +662,45 @@ public class NotificationService {
 
         String localisationMessageForPlaceholder =  notificationUtil.getLocalizationMessages(request.getIncident().getTenantId(), request.getRequestInfo(),COMMON_MODULE);
         //HRSMS CALL
-        StringBuilder url = hrmsUtils.getHRMSURI(request.getWorkflow().getAssignes());
+        StringBuilder url = hrmsUtils.getHRMSURI(request.getWorkflow().getAssignes(),request.getIncident().getTenantId(),"COMPLAINT_RESOLVER");
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(request.getRequestInfo()).build();
         Object response = serviceRequestRepository.fetchResult(url, requestInfoWrapper);
 
         //MDMS CALL
-        Object mdmsData = mdmsUtils.mDMSCall(request);
-        String jsonPath = MDMS_DEPARTMENT_SEARCH.replace("{SERVICEDEF}",request.getIncident().getIncidentType());
-
-        try{
-            mdmsDepartmentList = JsonPath.read(mdmsData,jsonPath);
-            hrmsDepartmentList = JsonPath.read(response, HRMS_DEPARTMENT_JSONPATH);
-        }
-        catch (Exception e){
-            throw new CustomException("JSONPATH_ERROR","Failed to parse mdms response for department");
-        }
-
-        if(CollectionUtils.isEmpty(mdmsDepartmentList))
-            throw new CustomException("PARSING_ERROR","Failed to fetch department from mdms data for serviceCode: "+request.getIncident().getIncidentType());
-        else departmentFromMDMS = mdmsDepartmentList.get(0);
-
-        if(hrmsDepartmentList.contains(departmentFromMDMS)){
-            String localisedDept = notificationUtil.getCustomizedMsgForPlaceholder(localisationMessageForPlaceholder,"COMMON_MASTERS_DEPARTMENT_"+departmentFromMDMS);
-            reassigneeDetails.put("department",localisedDept);
-        }
-
-        String designationJsonPath = HRMS_DESIGNATION_JSONPATH.replace("{department}",departmentFromMDMS);
-
-        try{
-            designation = JsonPath.read(response, designationJsonPath);
-            employeeName = JsonPath.read(response, HRMS_EMP_NAME_JSONPATH);
-        }
-        catch (Exception e){
-            throw new CustomException("JSONPATH_ERROR","Failed to parse mdms response for department");
-        }
-
-        String localisedDesignation = notificationUtil.getCustomizedMsgForPlaceholder(localisationMessageForPlaceholder,"COMMON_MASTERS_DESIGNATION_"+designation.get(0));
-
-        reassigneeDetails.put("designation",localisedDesignation);
-        reassigneeDetails.put("employeeName",employeeName.get(0));
+//        Object mdmsData = mdmsUtils.mDMSCall(request);
+//        String jsonPath = MDMS_DEPARTMENT_SEARCH.replace("{SERVICEDEF}",request.getIncident().getIncidentType());
+//
+//        try{
+//            mdmsDepartmentList = JsonPath.read(mdmsData,jsonPath);
+//            hrmsDepartmentList = JsonPath.read(response, HRMS_DEPARTMENT_JSONPATH);
+//        }
+//        catch (Exception e){
+//            throw new CustomException("JSONPATH_ERROR","Failed to parse mdms response for department");
+//        }
+//
+//        if(CollectionUtils.isEmpty(mdmsDepartmentList))
+//            throw new CustomException("PARSING_ERROR","Failed to fetch department from mdms data for serviceCode: "+request.getIncident().getIncidentType());
+//        else departmentFromMDMS = mdmsDepartmentList.get(0);
+//
+//        if(hrmsDepartmentList.contains(departmentFromMDMS)){
+//            String localisedDept = notificationUtil.getCustomizedMsgForPlaceholder(localisationMessageForPlaceholder,"COMMON_MASTERS_DEPARTMENT_"+departmentFromMDMS);
+//            reassigneeDetails.put("department",localisedDept);
+//        }
+//
+//        String designationJsonPath = HRMS_DESIGNATION_JSONPATH.replace("{department}",departmentFromMDMS);
+//
+//        try{
+//            designation = JsonPath.read(response, designationJsonPath);
+          employeeName = JsonPath.read(response, HRMS_EMP_NAME_JSONPATH);
+//        }
+//        catch (Exception e){
+//            throw new CustomException("JSONPATH_ERROR","Failed to parse mdms response for department");
+//        }
+//
+//        String localisedDesignation = notificationUtil.getCustomizedMsgForPlaceholder(localisationMessageForPlaceholder,"COMMON_MASTERS_DESIGNATION_"+designation.get(0));
+//
+//        reassigneeDetails.put("designation",localisedDesignation);
+       reassigneeDetails.put("employeeName",employeeName.get(0));
 
         return reassigneeDetails;
     }

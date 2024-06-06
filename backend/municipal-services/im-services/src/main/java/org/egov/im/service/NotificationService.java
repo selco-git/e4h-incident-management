@@ -319,15 +319,15 @@ public class NotificationService {
                 log.info("No message Found For Employee On Topic : " + topic);
                 return null;
             }
-
-            defaultMessage = notificationUtil.getDefaultMsg(CITIZEN, localizationMessage);
-            if (defaultMessage == null) {
-                log.info("No default message Found For Topic : " + topic);
-                return null;
-            }
-
-            if(defaultMessage.contains("{status}"))
-                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
+//
+//            defaultMessage = notificationUtil.getDefaultMsg(CITIZEN, localizationMessage);
+//            if (defaultMessage == null) {
+//                log.info("No default message Found For Topic : " + topic);
+//                return null;
+//            }
+//
+//            if(defaultMessage.contains("{status}"))
+//                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
 
             if (messageForEmployee.contains("{additional_comments}"))
             	messageForEmployee = messageForEmployee.replace("{additional_comments}", incidentWrapper.getWorkflow().getComments());
@@ -349,16 +349,16 @@ public class NotificationService {
                 return null;
             }
 
-            defaultMessage = notificationUtil.getDefaultMsg(CITIZEN, localizationMessage);
-            if (defaultMessage == null) {
-                log.info("No default message Found For Topic : " + topic);
-                return null;
-            }
+//            defaultMessage = notificationUtil.getDefaultMsg(CITIZEN, localizationMessage);
+//            if (defaultMessage == null) {
+//                log.info("No default message Found For Topic : " + topic);
+//                return null;
+//            }
 
             ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),PGR_WF_RESOLVE);
 
-            if(defaultMessage.contains("{status}"))
-                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
+//            if(defaultMessage.contains("{status}"))
+//                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
 
             if(messageForEmployee.contains("{ulb}")) {
                 String localisationMessageForPlaceholder =  notificationUtil.getLocalizationMessages(request.getIncident().getTenantId(), request.getRequestInfo(),COMMON_MODULE);
@@ -385,17 +385,17 @@ public class NotificationService {
                 return null;
             }
 
-            defaultMessage = notificationUtil.getDefaultMsg(CITIZEN, localizationMessage);
-            if (defaultMessage == null) {
-                log.info("No default message Found For Topic : " + topic);
-                return null;
-            }
+//            defaultMessage = notificationUtil.getDefaultMsg(CITIZEN, localizationMessage);
+//            if (defaultMessage == null) {
+//                log.info("No default message Found For Topic : " + topic);
+//                return null;
+//            }
 
             ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),PGR_WF_RESOLVE);
 
-            if(defaultMessage.contains("{status}"))
-                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
-            
+//            if(defaultMessage.contains("{status}"))
+//                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
+//            
             if (messageForEmployee.contains("{emp_name}"))
             	messageForEmployee = messageForEmployee.replace("{emp_name}", processInstance.getAssignes().get(0).getName());
 
@@ -413,11 +413,11 @@ public class NotificationService {
                 return null;
             }
 
-            defaultMessage = notificationUtil.getDefaultMsg(CITIZEN, localizationMessage);
-            if (defaultMessage == null) {
-                log.info("No default message Found For Topic : " + topic);
-                return null;
-            }
+//            defaultMessage = notificationUtil.getDefaultMsg(CITIZEN, localizationMessage);
+//            if (defaultMessage == null) {
+//                log.info("No default message Found For Topic : " + topic);
+//                return null;
+//            }
 
             ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),PGR_WF_RESOLVE);
 

@@ -18,9 +18,11 @@ public class IMConstants {
 
     public static final String USERTYPE_CITIZEN = "CITIZEN";
 
-    public static final String PGR_MODULE = "im-services";
+    public static final String PGR_MODULENAME = "im-services";
 
     public static final String PGR_WF_REOPEN = "REOPEN";
+    
+    public static final String PGR_MODULE = "rainmaker-im";
 
     public static final String MDMS_SERVICEDEF = "ServiceDefs";
 

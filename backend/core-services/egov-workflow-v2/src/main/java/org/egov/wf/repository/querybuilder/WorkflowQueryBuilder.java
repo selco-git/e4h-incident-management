@@ -179,6 +179,10 @@ public class WorkflowQueryBuilder {
                               addToPreparedStatement(preparedStmtList, tenantIds);
         		  }
               }
+        	  else 
+              {
+              	 with_query_builder.append(" 1=1");
+              }
         	  if(!criteria.getTenantId().contains(",")) {
         		  if (criteria.getHistory())
         			  with_query_builder.append(" pi_outer.tenantid=? ");

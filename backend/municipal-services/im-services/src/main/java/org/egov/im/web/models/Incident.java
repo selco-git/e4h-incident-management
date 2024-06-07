@@ -60,6 +60,10 @@ public class Incident   {
         @JsonProperty("accountId")
         private String accountId = null;
 
+        
+        @SafeHtml
+        @JsonProperty("reporterTenant")
+        private String reporterTenant = null;
 
         @CharacterConstraint(size = 600)
         @JsonProperty("additionalDetail")

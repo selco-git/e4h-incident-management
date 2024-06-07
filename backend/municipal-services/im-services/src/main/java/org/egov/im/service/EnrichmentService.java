@@ -50,6 +50,8 @@ public class EnrichmentService {
         Workflow workflow = incidentRequest.getWorkflow();
         String tenantId = incident.getTenantId();
 
+        incident.setAccountId(incidentRequest.getIncident().getReporter().getUuid().toString());
+        incident.setReporterTenant(incidentRequest.getIncident().getReporter().getTenantId());
 //        // Enrich accountId of the logged in citizen
 //        if(requestInfo.getUserInfo().getType().equalsIgnoreCase(USERTYPE_CITIZEN))
 //        	incidentRequest.getIncident().setAccountId(requestInfo.getUserInfo().getUuid());

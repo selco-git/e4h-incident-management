@@ -185,7 +185,7 @@ public class WorkflowQueryBuilder {
               }
         	  if(!criteria.getTenantId().contains(",")) {
         		  if (criteria.getHistory())
-        			  with_query_builder.append(" pi_outer.tenantid=? ");
+        			  with_query_builder.append(" AND pi_outer.tenantid=? ");
         		  else
         			  with_query_builder.append(" AND pi_outer.tenantid=? ");
         		  preparedStmtList.add(criteria.getTenantId());

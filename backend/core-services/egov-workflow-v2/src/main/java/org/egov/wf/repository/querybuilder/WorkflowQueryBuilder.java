@@ -171,7 +171,7 @@ public class WorkflowQueryBuilder {
         		  }
         		  else
         		  {
-                      List<String> tenantIds=Arrays.asList(criteria.getTenantId().split(",", -1));	
+                      List<String> tenantIds=Arrays.asList(criteria.getTenantId().split(","));	
 
         			  with_query_builder.append(" pi_outer.lastmodifiedTime = (" +
                               "SELECT max(lastmodifiedTime) from eg_wf_processinstance_v2 as pi_inner where pi_inner.businessid = pi_outer.businessid and tenantid IN (")

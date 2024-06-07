@@ -85,7 +85,7 @@ public class NotificationService {
             if(applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(APPLY)) {
                 employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
                 
-                Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINT_ASSESSOR");
+                Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
                 
                 List<Role> roles =request.getRequestInfo().getUserInfo().getRoles();
                 for(Role role: roles)
@@ -118,7 +118,7 @@ public class NotificationService {
                 }
             else  if (applicationStatus.equalsIgnoreCase(CLOSED_AFTER_RESOLUTION) && action.equalsIgnoreCase(CLOSE)) {
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),PGR_WF_RESOLVE);
-                employeeMobileNumber = processInstance.getAssignes().get(0).getMobileNumber();
+                employeeMobileNumber = processInstance.getAssigner().getMobileNumber();
             }
             else if(applicationStatus.equalsIgnoreCase(PENDINGATVENDOR) && action.equalsIgnoreCase(REASSIGN))
             {
@@ -251,7 +251,7 @@ public class NotificationService {
 
             if (messageForEmployee.contains("{emp_name}"))
                 messageForEmployee = messageForEmployee.replace("{emp_name}",reassigneeDetails.get("employeeName"));
-            // messageForEmployee = messageForEmployee.replace("{emp_name}",fetchUserByUUID(request.getWorkflow().getAssignes().get(0), request.getRequestInfo(), request.getIncident().getTenantId()).getName());
+             //messageForEmployee = messageForEmployee.replace("{emp_name}",fetchUserByUUID(request.getWorkflow().getAssignes().get(0), request.getRequestInfo(), request.getIncident().getTenantId()).getName());
 
             if(messageForEmployee.contains("{ao_designation}")){
                 String localisationMessageForPlaceholder =  notificationUtil.getLocalizationMessages(request.getIncident().getTenantId(), request.getRequestInfo(),COMMON_MODULE);

@@ -184,9 +184,10 @@ public class WorkflowQueryBuilder {
         			  with_query_builder.append(" pi_outer.tenantid=? ");
         		  else
         			  with_query_builder.append(" AND pi_outer.tenantid=? ");
+        		  preparedStmtList.add(criteria.getTenantId());
         	  }
 
-              preparedStmtList.add(criteria.getTenantId());
+             
               
               if(criteria.getAssignee()!=null){
                   with_query_builder.append(" and id in (select processinstanceid from eg_wf_assignee_v2 asg_inner where asg_inner.assignee = ?) AND pi_outer.tenantid = ? ");

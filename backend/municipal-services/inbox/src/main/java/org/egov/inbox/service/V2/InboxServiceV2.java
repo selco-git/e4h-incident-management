@@ -149,13 +149,13 @@ public class InboxServiceV2 {
         if (StatusIdNameMap.values().size() > 0) {
             if (!CollectionUtils.isEmpty(processCriteria.getStatus())) {
                 processCriteria.getStatus().forEach(statusUuid -> {
-                    if(StatusIdNameMap.keySet().contains(statusUuid)){
+                    if(StatusIdNameMap.values().contains(statusUuid)){
                         actionableStatusUuid.add(statusUuid);
                     }
                 });
                 inboxRequest.getInbox().getProcessSearchCriteria().setStatus(actionableStatusUuid);
             } else {
-                inboxRequest.getInbox().getProcessSearchCriteria().setStatus(new ArrayList<>(StatusIdNameMap.keySet()));
+            	inboxRequest.getInbox().getProcessSearchCriteria().setStatus(new ArrayList<>(StatusIdNameMap.values()));
             }
         }else{
             inboxRequest.getInbox().getProcessSearchCriteria().setStatus(new ArrayList<>());

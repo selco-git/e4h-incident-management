@@ -39,7 +39,7 @@ public class UserService {
      */
     public void callUserService(IncidentRequest request){
 
-        if(!StringUtils.isEmpty(request.getIncident().getReporter().getUuid()))
+        if(!StringUtils.isEmpty(request.getIncident().getAccountId()))
             enrichUser(request);
         else
             upsertUser(request);

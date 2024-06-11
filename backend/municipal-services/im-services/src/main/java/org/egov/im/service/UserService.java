@@ -186,7 +186,7 @@ public class UserService {
         if(!StringUtils.isEmpty(userName))
             userSearchRequest.setUserName(userName);
 
-        log.info(userSearchRequest.toString());        
+        log.info(stateLevelTenant+","+accountId);        
         StringBuilder uri = new StringBuilder(config.getUserHost()).append(config.getUserSearchEndpoint());
         return userUtils.userCall(userSearchRequest,uri);
 

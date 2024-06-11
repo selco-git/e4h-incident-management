@@ -42,8 +42,8 @@ public class UserService {
      */
     public void callUserService(IncidentRequest request){
 
-        if(!StringUtils.isEmpty(request.getIncident().getAccountId()))
-            enrichUser(request);
+        if(!StringUtils.isEmpty(request.getIncident().getReporter().getUuid()))
+        		enrichUser(request);
         else
             upsertUser(request);
 
@@ -106,7 +106,7 @@ public class UserService {
     private void enrichUser(IncidentRequest request){
 
         RequestInfo requestInfo = request.getRequestInfo();
-        String accountId = request.getIncident().getAccountId();
+        String accountId = request.getIncident().getReporter().getUuid();
         String tenantId = request.getIncident().getReporter().getTenantId();
 
         UserDetailResponse userDetailResponse = searchUser(tenantId,accountId,null);

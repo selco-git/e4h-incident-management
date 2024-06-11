@@ -103,7 +103,7 @@ public class UserService {
     private void enrichUser(IncidentRequest request){
 
         RequestInfo requestInfo = request.getRequestInfo();
-        String accountId = request.getIncident().getReporter().getUuid();
+        String accountId = request.getIncident().getAccountId();
         String tenantId = request.getIncident().getReporter().getTenantId();
 
         UserDetailResponse userDetailResponse = searchUser(tenantId,accountId,null);

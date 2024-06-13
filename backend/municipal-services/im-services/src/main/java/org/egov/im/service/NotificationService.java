@@ -153,7 +153,7 @@ public class NotificationService {
                         if (entry.getKey().equalsIgnoreCase(CITIZEN)) {
                             for (String msg : entry.getValue()) {
                                 List<SMSRequest> smsRequests = new ArrayList<>();
-                                smsRequests = enrichSmsRequest(reporterMobileNumber, msg);
+                                smsRequests = enrichSmsRequest(citizenMobileNumber, msg);
                                 if (!CollectionUtils.isEmpty(smsRequests)) {
                                     notificationUtil.sendSMS(tenantId, smsRequests);
                                 }
@@ -557,7 +557,7 @@ public class NotificationService {
         if(messageForCitizen!=null)
         message.put(CITIZEN, Arrays.asList(new String[] {messageForCitizen}));
         message.put(EMPLOYEE, Arrays.asList(messageForEmployee));
-        log.info("message being sent is  "+ messageForEmployee);
+        log.info("message being sent is  "+ messageForEmployee + " , " + messageForCitizen);
         return message;
     }
 

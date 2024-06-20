@@ -121,7 +121,14 @@ public class NotificationService {
             else  if(applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(IM_WF_REOPEN)) {
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),IM_WF_RESOLVE);
                 employeeMobileNumber = processInstance.getAssigner().getMobileNumber();
-                citizenMobileNumber=request.getIncident().getReporter().getMobileNumber();
+                
+                Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
+                
+               if(request.getIncident().getReporterTenant().equalsIgnoreCase("pg"))
+            	   citizenMobileNumber = reassigneeDetails.get("employeeMobile");
+                else
+                   citizenMobileNumber = request.getIncident().getReporter().getMobileNumber();
+                
                 }
             else  if (applicationStatus.equalsIgnoreCase(CLOSED_AFTER_RESOLUTION) && action.equalsIgnoreCase(CLOSE)) {
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),IM_WF_RESOLVE);

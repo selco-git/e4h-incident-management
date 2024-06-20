@@ -41,6 +41,11 @@ public class Incident   {
         private String incidentSubType = null;
 		
 		
+		@NotNull
+	    @SafeHtml
+	    @JsonProperty("reporterType")
+	    private String reporterType = null;
+		
         @SafeHtml
         @JsonProperty("id")
         private String id = null;

@@ -110,7 +110,8 @@ public class NotificationService {
                 employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
             }
             else if(applicationStatus.equalsIgnoreCase(REJECTED) && action.equalsIgnoreCase(REJECT)) {
-                employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
+            	 Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
+                 employeeMobileNumber = reassigneeDetails.get("employeeMobile");
             }
             else  if (applicationStatus.equalsIgnoreCase(RESOLVED)  && action.equalsIgnoreCase(IM_WF_RESOLVE)){
                 employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();

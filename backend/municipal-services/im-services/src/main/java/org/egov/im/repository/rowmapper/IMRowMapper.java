@@ -42,8 +42,8 @@ public class IMRowMapper implements ResultSetExtractor<List<Incident>> {
                 id = rs.getString("ser_id");
                 String IncidentType = rs.getString("IncidentType");
                 String IncidentSubType = rs.getString("IncidentSubType");
-                
                 String PhcType = rs.getString("PhcType");
+                String reporterType = rs.getString("reporterType");
                 String PhcSubType = rs.getString("PhcSubType");
                 String District = rs.getString("District");
                 String Block = rs.getString("Block");
@@ -78,6 +78,7 @@ public class IMRowMapper implements ResultSetExtractor<List<Incident>> {
                         .accountId(accountId)
                         .reporterTenant(reporterTenant)
                         .reporter(u)
+                        .reporterType(reporterType)
                         .auditDetails(auditDetails)
                         .build();
 

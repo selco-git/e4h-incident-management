@@ -172,7 +172,7 @@ public class IMQueryBuilder {
 
         addOrderByClause(builder, criteria);
 
-        addLimitAndOffset(builder, criteria, preparedStmtList);
+        //addLimitAndOffset(builder, criteria, preparedStmtList);
 
         return builder.toString();
     }

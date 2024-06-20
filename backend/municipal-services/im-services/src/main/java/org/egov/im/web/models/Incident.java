@@ -41,7 +41,7 @@ public class Incident   {
         private String incidentSubType = null;
 		
 		
-		@NotNull
+		
 	    @SafeHtml
 	    @JsonProperty("reporterType")
 	    private String reporterType = null;

@@ -25,13 +25,16 @@ public class WorkflowService {
     private ServiceRequestRepository repository;
 
     private ObjectMapper mapper;
+    
+    private NotificationService notificationService;
 
 
     @Autowired
-    public WorkflowService(IMConfiguration imConfiguration, ServiceRequestRepository repository, ObjectMapper mapper) {
+    public WorkflowService(IMConfiguration imConfiguration, ServiceRequestRepository repository, ObjectMapper mapper,NotificationService notificationService) {
         this.imConfiguration = imConfiguration;
         this.repository = repository;
         this.mapper = mapper;
+        this.notificationService=notificationService;
     }
 
     /*
@@ -100,12 +103,6 @@ public class WorkflowService {
     }
 
 
-    public void enrichmentForSendBackToCititzen() {
-        /*
-         * If send bac to citizen action is taken assignes should be set to accountId
-         *
-         * */
-    }
 
 
     public List<IncidentWrapper> enrichWorkflow(RequestInfo requestInfo, List<IncidentWrapper> incidentWrappers) {
@@ -177,7 +174,12 @@ public class WorkflowService {
 
         Incident incident = request.getIncident();
         Workflow workflow = request.getWorkflow();
-
+        if(request.getWorkflow().getAction().equalsIgnoreCase("RESOLVE") || request.getWorkflow().getAction().equalsIgnoreCase("REJECT"))
+        {
+        	Map<String, String> reassigneeDetails  = notificationService.getHRMSEmployee(request,"COMPLAINANT");
+        	List<String> assignee=Arrays.asList(reassigneeDetails.get("employeeUUID"));
+        	workflow.setAssignes(assignee);
+        }
         ProcessInstance processInstance = new ProcessInstance();
         processInstance.setBusinessId(incident.getIncidentId());
         processInstance.setAction(request.getWorkflow().getAction());

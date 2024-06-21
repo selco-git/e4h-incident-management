@@ -37,7 +37,10 @@ public class IMConstants {
     public static final String HRMS_DESIGNATION_JSONPATH = "$.Employees.*.assignments[?(@.department=='{department}')].designation";
 
     public static final String HRMS_EMP_NAME_JSONPATH = "$.Employees.*.user.name";
+    
     public static final String HRMS_EMP_MOBILE_JSONPATH = "$.Employees.*.user.mobileNumber";
+    
+    public static final String HRMS_EMP_UUID_JSONPATH = "$.Employees.*.user.uuid";
 
     public static final String PENDING_FOR_REASSIGNMENT = "PENDINGFORREASSIGNMENT";
 

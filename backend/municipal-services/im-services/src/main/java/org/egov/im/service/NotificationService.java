@@ -705,6 +705,7 @@ public class NotificationService {
         List<String> designation = null;
         List<String> employeeName = null;
         List<String> employeeMobile = null;
+        List<String> employeeUUID=null;
 
         String departmentFromMDMS;
 
@@ -745,6 +746,7 @@ public class NotificationService {
 //            designation = JsonPath.read(response, designationJsonPath);
           employeeName = JsonPath.read(response, HRMS_EMP_NAME_JSONPATH);
           employeeMobile=JsonPath.read(response,HRMS_EMP_MOBILE_JSONPATH);
+          employeeUUID=JsonPath.read(response,HRMS_EMP_UUID_JSONPATH);
         		  //}
 //        catch (Exception e){
 //            throw new CustomException("JSONPATH_ERROR","Failed to parse mdms response for department");
@@ -756,6 +758,7 @@ public class NotificationService {
        reassigneeDetails.put("employeeName",employeeName.get(0));
        reassigneeDetails.put("employeeMobile",employeeMobile.get(0));
 
+       reassigneeDetails.put("employeeUUID",employeeUUID.get(0));
 
         return reassigneeDetails;
     }

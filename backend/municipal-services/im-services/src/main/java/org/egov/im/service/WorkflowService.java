@@ -176,6 +176,7 @@ public class WorkflowService {
         Workflow workflow = request.getWorkflow();
         if(request.getWorkflow().getAction().equalsIgnoreCase("RESOLVE") || request.getWorkflow().getAction().equalsIgnoreCase("REJECT"))
         {
+        	workflow.setAssignes(null);
         	Map<String, String> reassigneeDetails  = notificationService.getHRMSEmployee(request,"COMPLAINANT");
         	List<String> assignee=Arrays.asList(reassigneeDetails.get("employeeUUID"));
         	workflow.setAssignes(assignee);

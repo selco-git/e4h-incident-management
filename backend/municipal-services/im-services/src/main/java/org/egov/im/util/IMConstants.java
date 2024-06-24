@@ -137,6 +137,7 @@ public class IMConstants {
     public static final String DATE_PATTERN = "dd/MM/yyyy";
 
     public static final String IM_WF_RESOLVE = "RESOLVE";
+    
     public static final String IM_WF_SENDBACK = "SENDBACK";
 
     public static final String USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";

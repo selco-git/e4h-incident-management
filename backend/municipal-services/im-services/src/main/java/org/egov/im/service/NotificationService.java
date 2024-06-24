@@ -395,6 +395,7 @@ public class NotificationService {
 //            }
 
             ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),IM_WF_RESOLVE);
+            ProcessInstance processInstanceReject = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),REJECT);
 
 //            if(defaultMessage.contains("{status}"))
 //                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
@@ -406,7 +407,7 @@ public class NotificationService {
             }
 
             if (messageForEmployee.contains("{emp_name}"))
-                messageForEmployee = messageForEmployee.replace("{emp_name}", processInstance.getAssigner()!=null ?processInstance.getAssigner().getName():"NA");
+                messageForEmployee = messageForEmployee.replace("{emp_name}", processInstance.getAssigner()!=null ?processInstance.getAssigner().getName():processInstanceReject.getAssigner().getName());
         }
 
         /**

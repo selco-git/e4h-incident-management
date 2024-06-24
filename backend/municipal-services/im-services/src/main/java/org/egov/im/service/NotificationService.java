@@ -81,40 +81,24 @@ public class NotificationService {
             String employeeMobileNumber = null;
             String citizenMobileNumber = null;
             Boolean crmUser=false;
-
+            Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
             if(applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(APPLY)) {
-                employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
-                
-                Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
-                
-                List<Role> roles =request.getRequestInfo().getUserInfo().getRoles();
-                for(Role role: roles)
-                {
-                	if(role.getTenantId().equalsIgnoreCase("pg")) {
-                		crmUser=true;
-                		break;}
-                }
-                if(crmUser)
-                    employeeMobileNumber = reassigneeDetails.get("employeeMobile");
-                else
-                    employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
-
-
+          
+                 employeeMobileNumber = reassigneeDetails.get("employeeMobile");
             }
             else if (applicationStatus.equalsIgnoreCase(PENDINGATVENDOR) && action.equalsIgnoreCase(ASSIGN)){
-                employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
+            	employeeMobileNumber = reassigneeDetails.get("employeeMobile");
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),ASSIGN);
                 citizenMobileNumber=processInstance.getAssignes().get(0).getMobileNumber();
             }
             else if (applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(SENDBACK)){
-                employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
+            	employeeMobileNumber = reassigneeDetails.get("employeeMobile");
             }
             else if(applicationStatus.equalsIgnoreCase(REJECTED) && action.equalsIgnoreCase(REJECT)) {
-            	 Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
                  employeeMobileNumber = reassigneeDetails.get("employeeMobile");
             }
             else  if (applicationStatus.equalsIgnoreCase(RESOLVED)  && action.equalsIgnoreCase(IM_WF_RESOLVE)){
-                employeeMobileNumber = request.getIncident().getReporter().getMobileNumber();
+            	employeeMobileNumber = reassigneeDetails.get("employeeMobile");
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),IM_WF_RESOLVE);
                 citizenMobileNumber=processInstance.getAssigner().getMobileNumber();
             }
@@ -124,14 +108,9 @@ public class NotificationService {
                     processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),REJECT);
 
                 employeeMobileNumber = processInstance.getAssigner().getMobileNumber();
-                
-                Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
-                
-               if(request.getIncident().getReporterTenant().equalsIgnoreCase("pg"))
-            	   citizenMobileNumber = reassigneeDetails.get("employeeMobile");
-                else
-                   citizenMobileNumber = request.getIncident().getReporter().getMobileNumber();
-                
+                               
+            	citizenMobileNumber = reassigneeDetails.get("employeeMobile");
+
                 }
             else  if (applicationStatus.equalsIgnoreCase(CLOSED_AFTER_RESOLUTION) && action.equalsIgnoreCase(CLOSE)) {
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),IM_WF_RESOLVE);

@@ -84,9 +84,11 @@ public class NotificationService {
             Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
             if(applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(APPLY)) {
           
-                 employeeMobileNumber = reassigneeDetails.get("employeeMobile");
+                    employeeMobileNumber = reassigneeDetails.get("employeeMobile");
             }
             else if (applicationStatus.equalsIgnoreCase(PENDINGATVENDOR) && action.equalsIgnoreCase(ASSIGN)){
+            	request.getWorkflow().setAssignes(null);
+            	reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
             	employeeMobileNumber = reassigneeDetails.get("employeeMobile");
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),ASSIGN);
                 citizenMobileNumber=processInstance.getAssignes().get(0).getMobileNumber();
@@ -683,20 +685,14 @@ public class NotificationService {
 
     public Map<String, String> getHRMSEmployee(IncidentRequest request,String role){
         Map<String, String> reassigneeDetails = new HashMap<>();
-        List<String> mdmsDepartmentList = null;
-        List<String> hrmsDepartmentList = null;
-        List<String> designation = null;
+    
         List<String> employeeName = null;
         List<String> employeeMobile = null;
         List<String> employeeUUID=null;
 
-        String departmentFromMDMS;
-
-        String localisationMessageForPlaceholder =  notificationUtil.getLocalizationMessages(request.getIncident().getTenantId(), request.getRequestInfo(),COMMON_MODULE);
-        //HRSMS CALL
         StringBuilder url=null;
         if(request.getWorkflow().getAssignes()!=null)
-            url = hrmsUtils.getHRMSURI(request.getWorkflow().getAssignes(),request.getIncident().getTenantId(),role);
+        	url = hrmsUtils.getHRMSURI(request.getWorkflow().getAssignes(),request.getIncident().getTenantId(),role);
         else
             url = hrmsUtils.getHRMSURI(null,request.getIncident().getTenantId(),role);
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(request.getRequestInfo()).build();

@@ -81,25 +81,28 @@ public class NotificationService {
             String employeeMobileNumber = null;
             String citizenMobileNumber = null;
             Boolean crmUser=false;
-            Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
+            
             if(applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(APPLY)) {
-          
-                    employeeMobileNumber = reassigneeDetails.get("employeeMobile");
+            	Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
+                employeeMobileNumber = reassigneeDetails.get("employeeMobile");
             }
             else if (applicationStatus.equalsIgnoreCase(PENDINGATVENDOR) && action.equalsIgnoreCase(ASSIGN)){
             	request.getWorkflow().setAssignes(null);
-            	reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
+            	Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
             	employeeMobileNumber = reassigneeDetails.get("employeeMobile");
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),ASSIGN);
                 citizenMobileNumber=processInstance.getAssignes().get(0).getMobileNumber();
             }
             else if (applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(SENDBACK)){
+            	Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
             	employeeMobileNumber = reassigneeDetails.get("employeeMobile");
             }
             else if(applicationStatus.equalsIgnoreCase(REJECTED) && action.equalsIgnoreCase(REJECT)) {
+            	Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
                  employeeMobileNumber = reassigneeDetails.get("employeeMobile");
             }
             else  if (applicationStatus.equalsIgnoreCase(RESOLVED)  && action.equalsIgnoreCase(IM_WF_RESOLVE)){
+            	Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
             	employeeMobileNumber = reassigneeDetails.get("employeeMobile");
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),IM_WF_RESOLVE);
                 citizenMobileNumber=processInstance.getAssigner().getMobileNumber();
@@ -110,7 +113,7 @@ public class NotificationService {
                     processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),REJECT);
 
                 employeeMobileNumber = processInstance.getAssigner().getMobileNumber();
-                               
+                Map<String, String> reassigneeDetails  = getHRMSEmployee(request,"COMPLAINANT");
             	citizenMobileNumber = reassigneeDetails.get("employeeMobile");
 
                 }

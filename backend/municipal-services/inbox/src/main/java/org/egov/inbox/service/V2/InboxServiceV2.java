@@ -71,9 +71,15 @@ public class InboxServiceV2 {
         hashParamsWhereverRequiredBasedOnConfiguration(inboxRequest.getInbox().getModuleSearchCriteria(), inboxQueryConfiguration);
         List<Inbox> items = getInboxItems(inboxRequest, inboxQueryConfiguration.getIndex());
         enrichProcessInstanceInInboxItems(items);
-        Integer totalCount = CollectionUtils.isEmpty(inboxRequest.getInbox().getProcessSearchCriteria().getStatus()) ? 0 : getTotalApplicationCount(inboxRequest, inboxQueryConfiguration.getIndex());
-        List<HashMap<String, Object>> statusCountMap = CollectionUtils.isEmpty(inboxRequest.getInbox().getProcessSearchCriteria().getStatus()) ? new ArrayList<>() : getStatusCountMap(inboxRequest, inboxQueryConfiguration.getIndex());
-        Integer nearingSlaCount = CollectionUtils.isEmpty(inboxRequest.getInbox().getProcessSearchCriteria().getStatus()) ? 0 : getApplicationsNearingSlaCount(inboxRequest, inboxQueryConfiguration.getIndex());
+        //Integer totalCount = CollectionUtils.isEmpty(inboxRequest.getInbox().getProcessSearchCriteria().getStatus()) ? 0 : getTotalApplicationCount(inboxRequest, inboxQueryConfiguration.getIndex());
+        //List<HashMap<String, Object>> statusCountMap = CollectionUtils.isEmpty(inboxRequest.getInbox().getProcessSearchCriteria().getStatus()) ? new ArrayList<>() : getStatusCountMap(inboxRequest, inboxQueryConfiguration.getIndex());
+        //Integer nearingSlaCount = CollectionUtils.isEmpty(inboxRequest.getInbox().getProcessSearchCriteria().getStatus()) ? 0 : getApplicationsNearingSlaCount(inboxRequest, inboxQueryConfiguration.getIndex());
+        
+        Integer totalCount = getTotalApplicationCount(inboxRequest, inboxQueryConfiguration.getIndex());
+        List<HashMap<String, Object>> statusCountMap = getStatusCountMap(inboxRequest, inboxQueryConfiguration.getIndex());
+        Integer nearingSlaCount = getApplicationsNearingSlaCount(inboxRequest, inboxQueryConfiguration.getIndex());
+        
+        
         InboxResponse inboxResponse = InboxResponse.builder().items(items).totalCount(totalCount).statusMap(statusCountMap).nearingSlaCount(nearingSlaCount).build();
 
         return inboxResponse;
@@ -182,8 +188,8 @@ public class InboxServiceV2 {
         Map<String, Object> finalQueryBody = queryBuilder.getStatusCountQuery(inboxRequest);
         StringBuilder uri = getURI(indexName, SEARCH_PATH);
         Map<String, Object> response = (Map<String, Object>) serviceRequestRepository.fetchESResult(uri, finalQueryBody);
-        Set<String> actionableStatuses = new HashSet<>(inboxRequest.getInbox().getProcessSearchCriteria().getStatus());
-        HashMap<String, Object> statusCountMap = parseStatusCountMapFromAggregationResponse(response, actionableStatuses);
+        //Set<String> actionableStatuses = new HashSet<>(inboxRequest.getInbox().getProcessSearchCriteria().getStatus());
+        HashMap<String, Object> statusCountMap = parseStatusCountMapFromAggregationResponse(response);
         List<HashMap<String, Object>> transformedStatusMap = transformStatusMap(inboxRequest, statusCountMap);
         return transformedStatusMap;
     }
@@ -236,13 +242,13 @@ public class InboxServiceV2 {
         return statusCountMapTransformed;
     }
 
-    private HashMap<String, Object> parseStatusCountMapFromAggregationResponse(Map<String, Object> response, Set<String> actionableStatuses) {
+    private HashMap<String, Object> parseStatusCountMapFromAggregationResponse(Map<String, Object> response) {
         List<HashMap<String, Object>> statusCountResponse = new ArrayList<>();
         if(!CollectionUtils.isEmpty((Map<String, Object>) response.get(AGGREGATIONS_KEY))){
             List<Map<String, Object>> statusCountBuckets = JsonPath.read(response, STATUS_COUNT_AGGREGATIONS_BUCKETS_PATH);
             HashMap<String, Object> statusCountMap = new HashMap<>();
             statusCountBuckets.forEach(bucket -> {
-                if(actionableStatuses.contains(bucket.get(KEY)))
+                //if(actionableStatuses.contains(bucket.get(KEY)))
                     statusCountMap.put((String)bucket.get(KEY), bucket.get(DOC_COUNT_KEY));
             });
             statusCountResponse.add(statusCountMap);

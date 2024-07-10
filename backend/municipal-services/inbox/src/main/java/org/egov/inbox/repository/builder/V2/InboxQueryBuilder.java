@@ -270,6 +270,7 @@ public class InboxQueryBuilder implements QueryBuilderInterface {
     public Map<String, Object> getStatusCountQuery(InboxRequest inboxRequest) {
         Map<String, Object> baseEsQuery = getBaseESQueryBody(inboxRequest, Boolean.FALSE);
         appendStatusCountAggsNode(baseEsQuery);
+        log.info("status query====",baseEsQuery );
         return baseEsQuery;
     }
 
@@ -282,6 +283,7 @@ public class InboxQueryBuilder implements QueryBuilderInterface {
         Long gteParam = currenTimeInMillis - slotLimit;
 
         appendNearingSlaCountClause(baseEsQuery, gteParam, lteParam);
+        log.info("+++++++++++++++NEARING SLA QUERY+++++++++++++++++",baseEsQuery);
         return baseEsQuery;
     }
 

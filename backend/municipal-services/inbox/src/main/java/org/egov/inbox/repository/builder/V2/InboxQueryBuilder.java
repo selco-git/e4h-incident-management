@@ -268,7 +268,7 @@ public class InboxQueryBuilder implements QueryBuilderInterface {
 
     @Override
     public Map<String, Object> getStatusCountQuery(InboxRequest inboxRequest) {
-        Map<String, Object> baseEsQuery = getBaseESQueryBody(inboxRequest, Boolean.FALSE);
+        Map<String, Object> baseEsQuery = getESQuery(inboxRequest, Boolean.FALSE);
         appendStatusCountAggsNode(baseEsQuery);
         log.info("status query====",baseEsQuery );
         return baseEsQuery;

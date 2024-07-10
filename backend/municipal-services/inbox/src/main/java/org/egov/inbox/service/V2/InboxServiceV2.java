@@ -321,6 +321,7 @@ public class InboxServiceV2 {
 
             });
         }else{
+        	log.info("Fetching Nearing SLA Count");
             businessServiceVsStateUuids.keySet().forEach(businessService -> {
                 HashSet<String> setOfUuids = businessServiceVsStateUuids.get(businessService);
                 businessServiceVsUuidsBasedOnSearchCriteria.put(businessService, new ArrayList<>(setOfUuids));
@@ -337,7 +338,7 @@ public class InboxServiceV2 {
         for(int i = 0; i < businessServices.size(); i++){
             String businessService = businessServices.get(i);
             Long businessServiceSla = businessServiceSlaMap.get(businessService);
-            inboxRequest.getInbox().getProcessSearchCriteria().setStatus(businessServiceVsUuidsBasedOnSearchCriteria.get(businessService));
+            //inboxRequest.getInbox().getProcessSearchCriteria().setStatus(businessServiceVsUuidsBasedOnSearchCriteria.get(businessService));
             Map<String, Object> finalQueryBody = queryBuilder.getNearingSlaCountQuery(inboxRequest, businessServiceSla);
             StringBuilder uri = getURI(indexName, COUNT_PATH);
             Map<String, Object> response = (Map<String, Object>) serviceRequestRepository.fetchESResult(uri, finalQueryBody);

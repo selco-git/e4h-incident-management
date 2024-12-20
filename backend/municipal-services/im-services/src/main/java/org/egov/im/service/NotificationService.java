@@ -80,6 +80,7 @@ public class NotificationService {
             String reporterMobileNumber = request.getIncident().getReporter().getMobileNumber();
             String employeeMobileNumber = null;
             String citizenMobileNumber = null;
+            String crmMobileNumber = null;
             Boolean crmUser=false;
             
             if(applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(APPLY)) {
@@ -106,6 +107,8 @@ public class NotificationService {
             	employeeMobileNumber = reassigneeDetails.get("employeeMobile");
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),IM_WF_RESOLVE);
                 citizenMobileNumber=processInstance.getAssigner().getMobileNumber();
+                processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),ASSIGN);
+                crmMobileNumber=processInstance.getAssignes().get(0).getMobileNumber();
             }
             else  if(applicationStatus.equalsIgnoreCase(PENDINGFORASSIGNMENT) && action.equalsIgnoreCase(IM_WF_REOPEN)) {
                 ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),IM_WF_RESOLVE);
@@ -153,7 +156,7 @@ public class NotificationService {
                                     notificationUtil.sendSMS(tenantId, smsRequests);
                                 }
                             }
-                        } else {
+                        } else if (entry.getKey().equalsIgnoreCase(EMPLOYEE)) {
                             for (String msg : entry.getValue()) {
                                 List<SMSRequest> smsRequests = new ArrayList<>();
                                 smsRequests = enrichSmsRequest(employeeMobileNumber, msg);
@@ -161,6 +164,17 @@ public class NotificationService {
                                     notificationUtil.sendSMS(tenantId, smsRequests);
                                 }
                             }
+                        }
+                        else {
+                        	
+                                for (String msg : entry.getValue()) {
+                                    List<SMSRequest> smsRequests = new ArrayList<>();
+                                    smsRequests = enrichSmsRequest(crmMobileNumber, msg);
+                                    if (!CollectionUtils.isEmpty(smsRequests)) {
+                                        notificationUtil.sendSMS(tenantId, smsRequests);
+                                    }
+                                }
+                            
                         }
                     }
 
@@ -190,6 +204,7 @@ public class NotificationService {
 
         String messageForCitizen = null;
         String messageForEmployee = null;
+        String messageForCRM=null;
         String defaultMessage = null;
         Boolean crmUser=false;
 
@@ -408,6 +423,12 @@ public class NotificationService {
                 log.info("No message Found For Citizen On Topic : " + topic);
                 return null;
             }
+            
+            messageForCRM = notificationUtil.getCustomizedMsg(request.getWorkflow().getAction(), applicationStatus, CRM, localizationMessage);
+            if (messageForCRM == null) {
+                log.info("No message Found For CRM On Topic : " + topic);
+                return null;
+            }
 
 //            defaultMessage = notificationUtil.getDefaultMsg(CITIZEN, localizationMessage);
 //            if (defaultMessage == null) {
@@ -550,10 +571,19 @@ public class NotificationService {
             messageForEmployee = messageForEmployee.replace("{download_link}", config.getMobileDownloadLink());
         }
 
+        
+        if(messageForEmployee != null) {
+            messageForEmployee = messageForEmployee.replace("{ticket_type}", incidentWrapper.getIncident().getIncidentType());
+            messageForEmployee = messageForEmployee.replace("{incidentId}", incidentWrapper.getIncident().getIncidentId());
+            messageForEmployee = messageForEmployee.replace("{date}", date.format(formatter));
+            messageForEmployee = messageForEmployee.replace("{download_link}", config.getMobileDownloadLink());
+        }
         if(messageForCitizen!=null)
         message.put(CITIZEN, Arrays.asList(new String[] {messageForCitizen}));
         message.put(EMPLOYEE, Arrays.asList(messageForEmployee));
-        log.info("message being sent is  "+ messageForEmployee + " , " + messageForCitizen);
+        message.put(CRM, Arrays.asList(messageForCRM));
+
+        log.info("message being sent is  "+ messageForEmployee + " , " + messageForCitizen + " , " + messageForCRM );
         return message;
     }
 

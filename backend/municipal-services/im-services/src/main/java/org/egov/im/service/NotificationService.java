@@ -572,15 +572,16 @@ public class NotificationService {
         }
 
         
-        if(messageForEmployee != null) {
-            messageForEmployee = messageForEmployee.replace("{ticket_type}", incidentWrapper.getIncident().getIncidentType());
-            messageForEmployee = messageForEmployee.replace("{incidentId}", incidentWrapper.getIncident().getIncidentId());
-            messageForEmployee = messageForEmployee.replace("{date}", date.format(formatter));
-            messageForEmployee = messageForEmployee.replace("{download_link}", config.getMobileDownloadLink());
+        if(messageForCRM != null) {
+        	messageForCRM = messageForCRM.replace("{ticket_type}", incidentWrapper.getIncident().getIncidentType());
+        	messageForCRM = messageForCRM.replace("{incidentId}", incidentWrapper.getIncident().getIncidentId());
+        	messageForCRM = messageForCRM.replace("{date}", date.format(formatter));
+        	messageForCRM = messageForCRM.replace("{download_link}", config.getMobileDownloadLink());
         }
         if(messageForCitizen!=null)
         message.put(CITIZEN, Arrays.asList(new String[] {messageForCitizen}));
         message.put(EMPLOYEE, Arrays.asList(messageForEmployee));
+        if(messageForCRM!=null)
         message.put(CRM, Arrays.asList(messageForCRM));
 
         log.info("message being sent is  "+ messageForEmployee + " , " + messageForCitizen + " , " + messageForCRM );

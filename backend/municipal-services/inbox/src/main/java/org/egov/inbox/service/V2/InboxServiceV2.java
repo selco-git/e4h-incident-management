@@ -198,7 +198,12 @@ public class InboxServiceV2 {
 
         Long currentDate = System.currentTimeMillis(); //current time
         Map<String, Object> auditDetails = (Map<String, Object>) ((Map<String, Object>) data).get(AUDIT_DETAILS_KEY);
-        String stateUuid = JsonPath.read(data, STATE_UUID_PATH);
+        
+        String stateUuid =null;
+        
+        if(JsonPath.read(data,"$.currentProcessInstance")!=null)
+        	stateUuid= JsonPath.read(data, STATE_UUID_PATH);
+        if(stateUuid !=null) {
         if(stateUuidSlaMap.containsKey(stateUuid)){
             if (!ObjectUtils.isEmpty(auditDetails.get(LAST_MODIFIED_TIME_KEY))) {
                 Long lastModifiedTime = ((Number) auditDetails.get(LAST_MODIFIED_TIME_KEY)).longValue();
@@ -213,7 +218,7 @@ public class InboxServiceV2 {
 
                 return Long.valueOf(Math.round((businessServiceSLA - (currentDate - createdTime)) / ((double) (24 * 60 * 60 * 1000))));
             }
-        }
+        }}
         return null;
     }
 

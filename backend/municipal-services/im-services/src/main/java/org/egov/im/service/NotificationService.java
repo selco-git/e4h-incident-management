@@ -481,9 +481,9 @@ public class NotificationService {
 
             ProcessInstance processInstance = getEmployeeName(incidentWrapper.getIncident().getTenantId(),incidentWrapper.getIncident().getIncidentId(),request.getRequestInfo(),IM_WF_RESOLVE);
 
-            if(defaultMessage.contains("{status}"))
-                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
-
+//            if(defaultMessage.contains("{status}"))
+//                defaultMessage = defaultMessage.replace("{status}", localisedStatus);
+//
 
 //            if(messageForEmployee.contains("{rating}"))
 //                messageForEmployee=messageForEmployee.replace("{rating}",incidentWrapper.getIncident().getRating().toString());

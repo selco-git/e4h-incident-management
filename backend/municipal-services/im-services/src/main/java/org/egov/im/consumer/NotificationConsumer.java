@@ -87,7 +87,7 @@ public class NotificationConsumer {
 			log.debug("BPA Received: " + processInstanceRequest.getImEscalationInstance().get(0).getBusinessId());
 
 		} catch (final Exception e) {
-			log.error("Error while listening to value: " + record + " on topic: " + topic + ": " + e);
+			log.error("Error while listening to valueeee : " + record + " on topic: " + topic + ": " + e);
 		}
 		log.debug("BPA Received: " + processInstanceRequest.getImEscalationInstance().get(0).getBusinessId());
 

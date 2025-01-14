@@ -110,7 +110,7 @@ public class EscalationService {
             	List<IMEscalationInstance> processInstances=new ArrayList<IMEscalationInstance>();
             	processInstances.add(processInstance);
             	IMEscalationRequest processInstanceRequest=new IMEscalationRequest();
-            	processInstanceRequest.setBPAEscalationInstance(processInstances);
+            	processInstanceRequest.setImEscalationInstance(processInstances);
             	log.info("pushing to topic:  "+escalation.getTopic());
             	producer.push(escalation.getTopic(),processInstanceRequest);
             }

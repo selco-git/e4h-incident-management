@@ -34,17 +34,17 @@ import lombok.ToString;
 @ToString
 public class IMEscalationRequest {
    
-        @JsonProperty("BPAEscalationInstances")
+        @JsonProperty("IMEscalationInstances")
         @Valid
         @NotNull
-        private List<IMEscalationInstance> bPAEscalationInstance;
+        private List<IMEscalationInstance> imEscalationInstance;
 
 
         public IMEscalationRequest addProcessInstanceItem(IMEscalationInstance bPAEscalationInstance) {
-            if (this.bPAEscalationInstance == null) {
-            this.bPAEscalationInstance = new ArrayList<>();
+            if (this.imEscalationInstance == null) {
+            this.imEscalationInstance = new ArrayList<>();
             }
-        this.bPAEscalationInstance.add(bPAEscalationInstance);
+        this.imEscalationInstance.add(bPAEscalationInstance);
         return this;
         }
 

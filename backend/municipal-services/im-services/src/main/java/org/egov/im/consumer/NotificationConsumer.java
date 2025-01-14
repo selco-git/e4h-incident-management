@@ -46,7 +46,7 @@ public class NotificationConsumer {
      * @param topic
      */
 
-    @KafkaListener(topics = {"${im.kafka.create.topic}","${im.kafka.update.topic}","${im.autoescalate.topic}"})
+    @KafkaListener(topics = {"${im.kafka.create.topic}","${im.kafka.update.topic}"})
     public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
         	IncidentRequest request = mapper.convertValue(record, IncidentRequest.class);
@@ -78,7 +78,7 @@ public class NotificationConsumer {
 			requestInfo.setAuthToken(processInstanceRequest.getImEscalationInstance().get(0).getAuthToken());
 			requestInfo.setUserInfo(processInstanceRequest.getImEscalationInstance().get(0).getUserInfo());
 
-			RequestSearchCriteria criteria = new RequestSearchCriteria();
+		RequestSearchCriteria criteria = new RequestSearchCriteria();
 			criteria.setTenantId(processInstanceRequest.getImEscalationInstance().get(0).getTenantId());
 			criteria.setIncidentId(processInstanceRequest.getImEscalationInstance().get(0).getBusinessId());
 			incidents = imService.search(requestInfo,criteria);

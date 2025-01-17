@@ -305,7 +305,7 @@ public class InboxQueryBuilder implements QueryBuilderInterface {
         Map<String, Object> statusCountNode = (Map<String, Object>) aggsNode.get("statusCount");
         statusCountNode.put("terms", new HashMap<>());
         Map<String, Object> innerTermsQuery = (Map<String, Object>) statusCountNode.get("terms");
-        innerTermsQuery.put("field", "Data.currentProcessInstance.state.uuid.keyword");
+        innerTermsQuery.put("field", "Data.incident.applicationStatus.keyword");
         baseEsQuery.put("aggs", aggsNode);
     }
 
